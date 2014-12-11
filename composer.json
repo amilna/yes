@@ -1,0 +1,21 @@
+{
+    "name": "amilna/yii2-yes",
+    "description": "Yii Ecommerce Support",
+    "type": "yii2-extension",
+    "keywords": ["yii2","extension","shoping cart","e-commerce"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Satrio Arditama",
+            "email": "iyo@amilna.com"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "amilna\\yes\\": ""
+        }
+    }
+}
