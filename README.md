@@ -7,13 +7,18 @@ Installation
 
 The preferred way to install this extension is through [composer](http://getcomposer.org/download/).
 
-Either run
+add following config into file composer.json in webroot aplication:
+"repositories":[ { "type": "git", "url": "https://github.com/amilna/yes"" }]
+
+then run
 
 ```
-php composer.phar require --prefer-dist amilna/yii2-yes "*"
+php composer.phar require amilna/yii2-yes "dev-master"
 ```
 
-or add
+or 
+
+download the extentsion package and extract it into vendor, then add:
 
 ```
 "amilna/yii2-yes": "*"
