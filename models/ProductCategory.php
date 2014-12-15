@@ -9,6 +9,7 @@ use Yii;
  *
  * @property integer $id
  * @property string $name
+ * @property string $description
  * @property string $picture
  */
 class ProductCategory extends \yii\db\ActiveRecord
@@ -28,7 +29,8 @@ class ProductCategory extends \yii\db\ActiveRecord
     {
         return [
             [['name'], 'required'],
-            [['name', 'picture'], 'string']
+            [['description', 'picture'], 'string'],
+            [['name'], 'string', 'max' => 255]
         ];
     }
 
@@ -40,6 +42,7 @@ class ProductCategory extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'name' => Yii::t('app', 'Name'),
+            'description' => Yii::t('app', 'Description'),
             'picture' => Yii::t('app', 'Picture'),
         ];
     }
