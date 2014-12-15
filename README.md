@@ -8,7 +8,7 @@ Installation
 The preferred way to install this extension is through [composer](http://getcomposer.org/download/).
 
 add following config into file composer.json in webroot aplication:
-"repositories":[ { "type": "git", "url": "https://github.com/amilna/yes" }]
+"repositories":[ { "type": "git", "url": "https://github.com/amilna/yes"" }]
 
 then run
 
@@ -26,11 +26,13 @@ download the extentsion package and extract it into vendor, then add:
 
 to the require section of your `composer.json` file.
 
+then add:
+"yes" => [
+            "class" => "amilna\yes\Module",
+        ],
 
-Do db migration
----------------
+inside modules section of `config\main.php` file.
 
-php yii migrate --migrationPath=@amilna/yes/migrations
 
 Usage
 -----
