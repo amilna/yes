@@ -8,7 +8,7 @@ Installation
 The preferred way to install this extension is through [composer](http://getcomposer.org/download/).
 
 add following config into file composer.json in webroot aplication:
-"repositories":[ { "type": "git", "url": "https://github.com/amilna/yes"}]
+"repositories":[ { "type": "git", "url": "https://github.com/amilna/yes" }]
 
 then run
 
