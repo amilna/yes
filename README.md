@@ -18,7 +18,7 @@ php composer.phar require amilna/yii2-yes "dev-master"
 
 or 
 
-download the extentsion package and extract it into vendor, then add:
+download the extension package and extract it into vendor, then add:
 
 ```
 "amilna/yii2-yes": "*"
