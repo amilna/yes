@@ -12,7 +12,8 @@
     ],
     "require": {
         "yiisoft/yii2": "*",
-	"kartik-v/yii2-widgets": "*"
+	"kartik-v/yii2-widgets": "*",
+	"kartik-v/yii2-money": "*"
     },
     "autoload": {
         "psr-4": {
