@@ -14,6 +14,7 @@
         "yiisoft/yii2": "*",
 	"kartik-v/yii2-widgets": "*",
 	"kartik-v/yii2-money": "*",
+	"kartik-v/yii2-grid": "*",
 	"2amigos/yii2-grid-view-library" : "*"
     },
     "autoload": {
