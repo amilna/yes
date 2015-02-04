@@ -18,6 +18,7 @@
 	"kartik-v/yii2-money": "*",
 	"kartik-v/yii2-date-range": "*",
 	"kartik-v/yii2-grid": "*",
+	"iutbay/yii2-kcfinder" : "*"
 	"2amigos/yii2-grid-view-library" : "*"
     },
     "autoload": {
