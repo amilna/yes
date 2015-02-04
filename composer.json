@@ -3,9 +3,7 @@
     "description": "Yii Ecommerce Support",
     "type": "yii2-extension",
     "keywords": ["yii2","extension","shoping cart","e-commerce"],
-    "license": "MIT",
-    "minimum-stability": "dev",
-    "prefer-stable": true,	
+    "license": "MIT",    
     "authors": [
         {
             "name": "Satrio Arditama",
