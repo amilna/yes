@@ -16,6 +16,7 @@
 	"kartik-v/yii2-editable": "*",
 	"kartik-v/yii2-widgets": "*",
 	"kartik-v/yii2-money": "*",
+	"kartik-v/yii2-daterange": "*",
 	"kartik-v/yii2-grid": "*",
 	"2amigos/yii2-grid-view-library" : "*"
     },
