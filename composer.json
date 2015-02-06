@@ -3,7 +3,7 @@
     "description": "Yii Ecommerce Support",
     "type": "yii2-extension",
     "keywords": ["yii2","extension","shoping cart","e-commerce"],
-    "license": "MIT",    
+    "license": "BSD-3-Clause",
     "authors": [
         {
             "name": "Satrio Arditama",
@@ -13,13 +13,13 @@
     "require": {
         "yiisoft/yii2": "*",
 	"kartik-v/yii2-mpdf": "*",
-	"kartik-v/yii2-editable": "*",
 	"kartik-v/yii2-widgets": "*",
-	"kartik-v/yii2-money": "*",
 	"kartik-v/yii2-date-range": "*",
 	"kartik-v/yii2-grid": "*",
+	"vova07/yii2-imperavi-widget": "*",
 	"iutbay/yii2-kcfinder" : "*",
-	"2amigos/yii2-grid-view-library" : "*"
+	"iutbay/yii2-fontawesome" : "*",
+	"amilna/yii2-yap" : "*"
     },
     "autoload": {
         "psr-4": {
