@@ -1,6 +1,6 @@
 Yes
 ============
-Yii2 E-commerce Support, includes categories,products,orders,sales,customers,payment and confirmations. (support mysql and postgresql)
+Yii2 E-commerce Support, includes categories, products, orders, sales, customers, payment and confirmations. (support mysql and postgresql)
 
 Installation
 ------------
