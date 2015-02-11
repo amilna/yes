@@ -1,43 +1,59 @@
-YES
-===
-Yii Ecommerce Support
+Yes
+============
+Yii2 E-commerce Support, includes categories,products,orders,sales,customers,payment and confirmations. (support mysql and postgresql)
 
 Installation
 ------------
 
 The preferred way to install this extension is through [composer](http://getcomposer.org/download/).
 
-add following config into file composer.json in webroot aplication:
-"repositories":[ { "type": "git", "url": "https://github.com/amilna/yes"" }]
-
-then run
+Either run
 
 ```
-php composer.phar require amilna/yii2-yes "dev-master"
+php composer.phar require --prefer-dist amilna/yii2-yes "dev-master"
 ```
 
-or 
-
-download the extension package and extract it into vendor, then add:
+or add
 
 ```
-"amilna/yii2-yes": "*"
+"amilna/yii2-yes": "dev-master"
 ```
 
 to the require section of your `composer.json` file.
 
-then add:
-"yes" => [
-            "class" => "amilna\yes\Module",
-        ],
+Since this extensions still use lib in dev stages, be sure also add following line in `composer.json` file.
 
-inside modules section of `config\main.php` file.
+```json
+"repositories":[
+		
+		{
+			"type": "vcs",
+			"url": "https://github.com/aaiyo/yii2-kcfinder"
+		}	
+   ]
+```
 
+run migration for database
+
+```
+./yii migrate --migrationPath=@amilna/yes/migrations
+```
+
+add in modules section of main config
+
+```
+	'gridview' =>  [
+		'class' => 'kartik\grid\Module',
+	],
+	'yes' => [
+		'class' => 'amilna\yes\Module',
+	],
+```
 
 Usage
 -----
 
-Once the extension is installed, simply use it in your code by  :
+Once the extension is installed, check the url:
+[your application base url]/index.php/yes
 
-```php
-<?= \amilna\yes\AutoloadExample::widget(); ?>```
+
