@@ -134,4 +134,9 @@ class Category extends \yii\db\ActiveRecord
     {
         return $this->hasMany(CatPro::className(), ['category_id' => 'id']);
     }
+
+	public function	parents($id = false)
+    {
+		return $this->findBySql("SELECT id,title FROM ".$this->tableName().($id?" WHERE id != :id":"")." order by title",($id?['id'=>$id]:[]))->all();		
+	}	    
 }

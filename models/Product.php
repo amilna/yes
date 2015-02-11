@@ -3,6 +3,7 @@
 namespace amilna\yes\models;
 
 use Yii;
+use dektrium\user\models\User;
 
 /**
  * This is the model class for table "{{%yes_product}}".
@@ -65,7 +66,7 @@ class Product extends \yii\db\ActiveRecord
             'tags' => Yii::t('app', 'Tags'),
             'images' => Yii::t('app', 'Images'),
             'author_id' => Yii::t('app', 'Author ID'),
-            'isfeatured' => Yii::t('app', 'Is Featured?'),
+            'isfeatured' => Yii::t('app', 'Is Promoted?'),
             'status' => Yii::t('app', 'Status'),
             'time' => Yii::t('app', 'Time'),
             'isdel' => Yii::t('app', 'Isdel'),
@@ -88,6 +89,10 @@ class Product extends \yii\db\ActiveRecord
 							1=>Yii::t('app','Available'),
 							2=>Yii::t('app','Upcoming'),
 							3=>Yii::t('app','Out of Stock'),
+						],			
+			'isfeatured'=>[							
+							0=>Yii::t('app','No'),							
+							1=>Yii::t('app','Promoted'),						
 						],			
 						
 		];				
@@ -143,8 +148,44 @@ class Product extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getCatPros()
+    public function getCatPro()
     {
         return $this->hasMany(CatPro::className(), ['product_id' => 'id']);
     }
+    
+    public function getTags()
+	{
+		$models = $this->find()->all();
+		$tags = [];
+		foreach ($models as $m)
+		{
+			$ts = explode(",",$m->tags);
+			foreach ($ts as $t)
+			{	
+				if (!in_array($t,$tags))
+				{
+					array_push($tags,$t);	
+				}
+			}	
+		}
+		return $tags;
+	}
+	
+	public function getRecent($limit = 5)
+	{
+		return $this->find()->orderBy('id desc')->limit($limit)->all();		
+	}
+	
+	public function getArchived($limit = 6)
+	{
+		$res =  $this->db->createCommand("SELECT 
+				substring(concat('',time) from 1 for 7) as month
+				FROM ".$this->tableName()." as p
+				GROUP BY month				
+				ORDER BY month desc
+				LIMIT :limit")
+				->bindValues(["limit"=>$limit])->queryAll();						
+        
+        return ($res == null?[]:$res);        
+	}
 }
