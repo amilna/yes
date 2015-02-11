@@ -65,29 +65,31 @@ class Product extends \yii\db\ActiveRecord
             'tags' => Yii::t('app', 'Tags'),
             'images' => Yii::t('app', 'Images'),
             'author_id' => Yii::t('app', 'Author ID'),
-            'isfeatured' => Yii::t('app', 'Isfeatured'),
+            'isfeatured' => Yii::t('app', 'Is Featured?'),
             'status' => Yii::t('app', 'Status'),
             'time' => Yii::t('app', 'Time'),
             'isdel' => Yii::t('app', 'Isdel'),
         ];
     }
 	
-	/* uncomment to undisplay deleted records (assumed the table has column isdel)
+	/* uncomment to undisplay deleted records (assumed the table has column isdel) */
 	public static function find()
 	{
 		return parent::find()->where(['{{%yes_product}}.isdel' => 0]);
 	}
-	*/
+	
     
 	public function itemAlias($list,$item = false,$bykey = false)
 	{
 		$lists = [
-			/* example list of item alias for a field with name field
-			'afield'=>[							
-							0=>Yii::t('app','an alias of 0'),							
-							1=>Yii::t('app','an alias of 1'),														
+			/* example list of item alias for a field with name field */
+			'status'=>[							
+							0=>Yii::t('app','Draft'),							
+							1=>Yii::t('app','Available'),
+							2=>Yii::t('app','Upcoming'),
+							3=>Yii::t('app','Out of Stock'),
 						],			
-			*/			
+						
 		];				
 		
 		if (isset($lists[$list]))
@@ -133,16 +135,16 @@ class Product extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getYesSales()
+    public function getSales()
     {
-        return $this->hasMany(YesSale::className(), ['product_id' => 'id']);
+        return $this->hasMany(Sale::className(), ['product_id' => 'id']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getYesCatPros()
+    public function getCatPros()
     {
-        return $this->hasMany(YesCatPro::className(), ['product_id' => 'id']);
+        return $this->hasMany(CatPro::className(), ['product_id' => 'id']);
     }
 }

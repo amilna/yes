@@ -68,22 +68,25 @@ class Order extends \yii\db\ActiveRecord
         ];
     }
 	
-	/* uncomment to undisplay deleted records (assumed the table has column isdel)
+	/* uncomment to undisplay deleted records (assumed the table has column isdel) */
 	public static function find()
 	{
 		return parent::find()->where(['{{%yes_order}}.isdel' => 0]);
 	}
-	*/
+	
     
 	public function itemAlias($list,$item = false,$bykey = false)
 	{
 		$lists = [
-			/* example list of item alias for a field with name field
-			'afield'=>[							
-							0=>Yii::t('app','an alias of 0'),							
-							1=>Yii::t('app','an alias of 1'),														
+			/* example list of item alias for a field with name field */
+			'status'=>[							
+							0=>Yii::t('app','order request'),							
+							1=>Yii::t('app','payment accepted'),
+							2=>Yii::t('app','shipping product'),
+							3=>Yii::t('app','order completed'),
+							4=>Yii::t('app','make complain'),
 						],			
-			*/			
+						
 		];				
 		
 		if (isset($lists[$list]))
@@ -121,9 +124,9 @@ class Order extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getYesConfirmations()
+    public function getConfirmations()
     {
-        return $this->hasMany(YesConfirmation::className(), ['order_id' => 'id']);
+        return $this->hasMany(Confirmation::className(), ['order_id' => 'id']);
     }
 
     /**
@@ -131,14 +134,14 @@ class Order extends \yii\db\ActiveRecord
      */
     public function getCustomer()
     {
-        return $this->hasOne(YesCustomer::className(), ['id' => 'customer_id']);
+        return $this->hasOne(Customer::className(), ['id' => 'customer_id']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getYesSales()
+    public function getSales()
     {
-        return $this->hasMany(YesSale::className(), ['order_id' => 'id']);
+        return $this->hasMany(Sale::className(), ['order_id' => 'id']);
     }
 }

@@ -65,12 +65,12 @@ class Confirmation extends \yii\db\ActiveRecord
         ];
     }
 	
-	/* uncomment to undisplay deleted records (assumed the table has column isdel)
+	/* uncomment to undisplay deleted records (assumed the table has column isdel) */
 	public static function find()
 	{
 		return parent::find()->where(['{{%yes_confirmation}}.isdel' => 0]);
 	}
-	*/
+	
     
 	public function itemAlias($list,$item = false,$bykey = false)
 	{
@@ -120,7 +120,7 @@ class Confirmation extends \yii\db\ActiveRecord
      */
     public function getOrder()
     {
-        return $this->hasOne(YesOrder::className(), ['id' => 'order_id']);
+        return $this->hasOne(Order::className(), ['id' => 'order_id']);
     }
 
     /**
@@ -128,6 +128,6 @@ class Confirmation extends \yii\db\ActiveRecord
      */
     public function getPayment()
     {
-        return $this->hasOne(YesPayment::className(), ['id' => 'payment_id']);
+        return $this->hasOne(Payment::className(), ['id' => 'payment_id']);
     }
 }

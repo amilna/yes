@@ -60,12 +60,12 @@ class Sale extends \yii\db\ActiveRecord
         ];
     }
 	
-	/* uncomment to undisplay deleted records (assumed the table has column isdel)
+	/* uncomment to undisplay deleted records (assumed the table has column isdel) */
 	public static function find()
 	{
 		return parent::find()->where(['{{%yes_sale}}.isdel' => 0]);
 	}
-	*/
+	
     
 	public function itemAlias($list,$item = false,$bykey = false)
 	{
@@ -115,7 +115,7 @@ class Sale extends \yii\db\ActiveRecord
      */
     public function getProduct()
     {
-        return $this->hasOne(YesProduct::className(), ['id' => 'product_id']);
+        return $this->hasOne(Product::className(), ['id' => 'product_id']);
     }
 
     /**
@@ -123,6 +123,6 @@ class Sale extends \yii\db\ActiveRecord
      */
     public function getOrder()
     {
-        return $this->hasOne(YesOrder::className(), ['id' => 'order_id']);
+        return $this->hasOne(Order::className(), ['id' => 'order_id']);
     }
 }

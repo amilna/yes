@@ -53,22 +53,23 @@ class Payment extends \yii\db\ActiveRecord
         ];
     }
 	
-	/* uncomment to undisplay deleted records (assumed the table has column isdel)
+	/* uncomment to undisplay deleted records (assumed the table has column isdel) */
 	public static function find()
 	{
 		return parent::find()->where(['{{%yes_payment}}.isdel' => 0]);
 	}
-	*/
+	
     
 	public function itemAlias($list,$item = false,$bykey = false)
 	{
 		$lists = [
-			/* example list of item alias for a field with name field
-			'afield'=>[							
-							0=>Yii::t('app','an alias of 0'),							
-							1=>Yii::t('app','an alias of 1'),														
+			/* example list of item alias for a field with name field */
+			'status'=>[							
+							0=>Yii::t('app','disabled'),
+							1=>Yii::t('app','enabled'),
+							2=>Yii::t('app','closed'),
 						],			
-			*/			
+						
 		];				
 		
 		if (isset($lists[$list]))
@@ -106,8 +107,8 @@ class Payment extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getYesConfirmations()
+    public function getConfirmations()
     {
-        return $this->hasMany(YesConfirmation::className(), ['payment_id' => 'id']);
+        return $this->hasMany(Confirmation::className(), ['payment_id' => 'id']);
     }
 }

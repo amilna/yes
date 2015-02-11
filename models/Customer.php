@@ -59,22 +59,23 @@ class Customer extends \yii\db\ActiveRecord
         ];
     }
 	
-	/* uncomment to undisplay deleted records (assumed the table has column isdel)
+	/* uncomment to undisplay deleted records (assumed the table has column isdel) */
 	public static function find()
 	{
 		return parent::find()->where(['{{%yes_customer}}.isdel' => 0]);
 	}
-	*/
+	
     
 	public function itemAlias($list,$item = false,$bykey = false)
 	{
 		$lists = [
-			/* example list of item alias for a field with name field
-			'afield'=>[							
-							0=>Yii::t('app','an alias of 0'),							
-							1=>Yii::t('app','an alias of 1'),														
+			/* example list of item alias for a field with name field */
+			'last_action'=>[							
+							0=>Yii::t('app','say Hi / asking product'),							
+							1=>Yii::t('app','make order request'),
+							2=>Yii::t('app','buy product'),							
 						],			
-			*/			
+						
 		];				
 		
 		if (isset($lists[$list]))
@@ -114,6 +115,6 @@ class Customer extends \yii\db\ActiveRecord
      */
     public function getYesOrders()
     {
-        return $this->hasMany(YesOrder::className(), ['customer_id' => 'id']);
+        return $this->hasMany(Order::className(), ['customer_id' => 'id']);
     }
 }

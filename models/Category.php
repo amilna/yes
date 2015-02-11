@@ -61,12 +61,12 @@ class Category extends \yii\db\ActiveRecord
         ];
     }
 	
-	/* uncomment to undisplay deleted records (assumed the table has column isdel)
+	/* uncomment to undisplay deleted records (assumed the table has column isdel) */
 	public static function find()
 	{
 		return parent::find()->where(['{{%yes_category}}.isdel' => 0]);
 	}
-	*/
+	
     
 	public function itemAlias($list,$item = false,$bykey = false)
 	{
@@ -130,8 +130,8 @@ class Category extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getYesCatPros()
+    public function getCatPros()
     {
-        return $this->hasMany(YesCatPro::className(), ['category_id' => 'id']);
+        return $this->hasMany(CatPro::className(), ['category_id' => 'id']);
     }
 }

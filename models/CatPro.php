@@ -47,12 +47,12 @@ class CatPro extends \yii\db\ActiveRecord
         ];
     }
 	
-	/* uncomment to undisplay deleted records (assumed the table has column isdel)
+	/* uncomment to undisplay deleted records (assumed the table has column isdel) */
 	public static function find()
 	{
 		return parent::find()->where(['{{%yes_cat_pro}}.isdel' => 0]);
 	}
-	*/
+	
     
 	public function itemAlias($list,$item = false,$bykey = false)
 	{
@@ -102,7 +102,7 @@ class CatPro extends \yii\db\ActiveRecord
      */
     public function getCategory()
     {
-        return $this->hasOne(YesCategory::className(), ['id' => 'category_id']);
+        return $this->hasOne(Category::className(), ['id' => 'category_id']);
     }
 
     /**
@@ -110,6 +110,6 @@ class CatPro extends \yii\db\ActiveRecord
      */
     public function getProduct()
     {
-        return $this->hasOne(YesProduct::className(), ['id' => 'product_id']);
+        return $this->hasOne(Product::className(), ['id' => 'product_id']);
     }
 }
