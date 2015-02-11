@@ -17,10 +17,17 @@
 	"kartik-v/yii2-date-range": "*",
 	"kartik-v/yii2-grid": "*",
 	"vova07/yii2-imperavi-widget": "*",
-	"iutbay/yii2-kcfinder" : "*",
-	"iutbay/yii2-fontawesome" : "*",
-	"amilna/yii2-yap" : "*"
+	"himiklab/yii2-colorbox-widget" : "*",
+	"iutbay/yii2-fontawesome": "*",
+	"iutbay/yii2-kcfinder" : "dev-master",
+	"amilna/yii2-yap": "*"
     },
+    "repositories":[		
+		{
+			"type": "vcs",
+			"url": "https://github.com/aaiyo/yii2-kcfinder"
+		}
+    ],	    
     "autoload": {
         "psr-4": {
             "amilna\\yes\\": ""
