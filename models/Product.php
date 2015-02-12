@@ -133,7 +133,7 @@ class Product extends \yii\db\ActiveRecord
      */
     public function getAuthor()
     {
-        $userClass = Yii::$app->getModule('blog')->userClass;
+        $userClass = Yii::$app->getModule('yes')->userClass;
         return $this->hasOne($userClass::className(), ['id' => 'author_id']);
     }
 

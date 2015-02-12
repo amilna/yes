@@ -179,7 +179,8 @@ class ProductSearch extends Product
 			$query->andFilterWhere($p);
 		}
 		
-		$query->andFilterWhere(['like','lower({{%user}}.username)',strtolower($this->author)]);
+		$userClass = Yii::$app->getModule('yes')->userClass;
+		$query->andFilterWhere(['like','lower('.$userClass::tableName().'.username)',strtolower($this->author)]);
 		
 		$query->andFilterWhere(['like','lower(title)',strtolower($this->search)])
 				->orFilterWhere(['like','lower(description)',strtolower($this->search)])
