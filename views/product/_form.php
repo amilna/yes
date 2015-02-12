@@ -66,7 +66,16 @@ foreach ($model->catPro as $c)
 				</div>						
 			</div>
 			<?= $form->field($model, 'description')->textArea(['maxlength' => 155,'placeholder'=>Yii::t('app','This description also used as meta description')]) ?>
-			<?= $form->field($model, 'data')->textArea(['placeholder'=>Yii::t('app','Product Data')]) ?>
+			<?/*= $form->field($model, 'data')->textArea(['placeholder'=>Yii::t('app','Product Data')]) */?>
+			
+			<div class="row">		
+				<div class="col-sm-12">
+					<div class="well data">		
+						<h4><?= Yii::t('app','Product Data') ?> <small class="pull-right"><?= Yii::t('app','list of details/data that needed for transaction') ?>  <a id="data-add" class="btn btn-sm btn-default">Add Data</a></small></h4>				
+						<br>
+					</div>
+				</div>				
+			</div>
 
 			<?php 
 			use vova07\imperavi\Widget;
@@ -158,3 +167,30 @@ foreach ($model->catPro as $c)
     <?php ActiveForm::end(); ?>
 
 </div>
+
+
+<div id="template_form_details" class="hidden">
+	<div id="detail_:N" class="detail">	
+		<div class="row">			
+			<div class="col-xs-3" style="padding-right:0px;">																						
+				<div class="kv-plugin-loading loading-w0:N">&nbsp;</div>				
+				<?= Html::dropDownList("Product[data][:N][type]",false,["list","text","number","label","hidden"],["id"=>"w0:N","class"=>"form-control kv-hide input-md data-:T-type","placeholder"=>Yii::t("app","Select data type..."),"style"=>"width:100%","data-krajee-select2"=>"select2_x"]) ?>
+			</div>	
+			<div class="col-xs-3" style="padding-left:0px;">																						
+				<?= Html::textInput("Product[data][:N][label]",false,["id"=>"Product_data_:N_label","class"=>"form-control","placeholder"=>Yii::t("app","Label or name"),"style"=>"width:100%"]) ?>
+			</div>
+			<div class="col-xs-6" style="padding-left:0px;">																										
+				<div class="input-group">				  
+				  <input name="Product[data][:N][value]" id="Product_data_:N_value" type="text" class="form-control" placeholder="<?= Yii::t("app","Default value or list of items (separete with commas)")?>">
+				  <div id="data-del:N" title="<?= Yii::t('app','Remove Data')?>" class="input-group-addon" style="cursor:pointer;">x</div>
+				</div>
+			</div>			
+		</div>				
+	</div>	
+</div>
+
+
+<?php
+
+$this->render('_script',['model'=>$model]);
+

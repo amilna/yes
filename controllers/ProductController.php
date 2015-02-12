@@ -174,9 +174,23 @@ class ProductController extends Controller
         if (Yii::$app->request->post())        
         {
 			$post = Yii::$app->request->post();						
-			$category = $post['Product']['category'];
-			$images = $post['Product']['images'];
-			$post['Product']['images'] = json_encode($images);
+			$category = [];
+			$data = [];
+			$images = [];
+			if (isset($post['Product']['category']))
+			{
+				$category = $post['Product']['category'];
+			}
+			if (isset($post['Product']['data']))
+			{
+				$data = $post['Product']['data'];
+				$post['Product']['data'] = json_encode($data);
+			}	
+			if (isset($post['Product']['images']))
+			{
+				$images = $post['Product']['images'];
+				$post['Product']['images'] = json_encode($images);			
+			}	
 			$model->load($post);
 			
 			if ($model->save()) {
@@ -203,6 +217,7 @@ class ProductController extends Controller
 						);	
 						
 				$model->images = $images;
+				$model->data = json_encode($data);
 			}
 		}	
         
@@ -223,10 +238,24 @@ class ProductController extends Controller
         
 		if (Yii::$app->request->post())        
         {
-			$post = Yii::$app->request->post();						
-			$category = $post['Product']['category'];
-			$images = $post['Product']['images'];
-			$post['Product']['images'] = json_encode($images);			
+			$post = Yii::$app->request->post();
+			$category = [];
+			$data = [];
+			$images = [];
+			if (isset($post['Product']['category']))
+			{
+				$category = $post['Product']['category'];
+			}
+			if (isset($post['Product']['data']))
+			{
+				$data = $post['Product']['data'];
+				$post['Product']['data'] = json_encode($data);
+			}	
+			if (isset($post['Product']['images']))
+			{
+				$images = $post['Product']['images'];
+				$post['Product']['images'] = json_encode($images);			
+			}	
 			$model->load($post);
 			
 			if ($model->save()) {
@@ -248,8 +277,8 @@ class ProductController extends Controller
 								
 				return $this->redirect(['view', 'id' => $model->id]);            
 			} 
-		}	
-        
+		}	                
+                
         $model->images = json_decode($model->images);
         
         return $this->render('create', [

@@ -76,8 +76,8 @@ $this->params['breadcrumbs'][] = $this->title;
 				'attribute' => 'search',
 				'format'=>'html',
 				'value' => function($data){
-					$images = json_decode($data->images);
-					return Html::img(str_replace("/upload/","/upload/.thumbs/",$images[0]),['class'=>'pull-left','style'=>'margin:0 10px 10px 0'])." ".$data->title;
+					$images = json_decode($data->images);					
+					return (isset($images[0])?Html::img(str_replace("/upload/","/upload/.thumbs/",$images[0]),['class'=>'pull-left','style'=>'margin:0 10px 10px 0']):"")." ".$data->title;
 				},
             ],            
             'description',
