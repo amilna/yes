@@ -3,7 +3,6 @@
 namespace amilna\yes\models;
 
 use Yii;
-use dektrium\user\models\User;
 
 /**
  * This is the model class for table "{{%yes_product}}".
@@ -134,7 +133,8 @@ class Product extends \yii\db\ActiveRecord
      */
     public function getAuthor()
     {
-        return $this->hasOne(User::className(), ['id' => 'author_id']);
+        $userClass = Yii::$app->getModule('blog')->userClass;
+        return $this->hasOne($userClass::className(), ['id' => 'author_id']);
     }
 
     /**
