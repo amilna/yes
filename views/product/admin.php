@@ -82,6 +82,36 @@ $this->params['breadcrumbs'][] = $this->title;
             ],            
             'description',
             //'content:ntext',
+            [				
+				'attribute' => 'price',				
+				'value'=>function($data){										
+					$module = Yii::$app->getModule('yes');
+					return number_format($data->price,2,$module->currency["decimal_separator"],$module->currency["thousand_separator"]);
+				},				
+				'hAlign'=>'right',
+				'pageSummary'=>function ($summary, $data, $widget) { 					
+					$module = Yii::$app->getModule('yes');
+					$r = 0;
+					foreach($data as $d)
+					{
+						$r += floatval(str_replace($module->currency["thousand_separator"],"",$d));
+					}
+					return number_format($r,2,$module->currency["decimal_separator"],$module->currency["thousand_separator"]);
+				},
+				'pageSummaryFunc'=>'sum'
+				
+			],
+			[				
+				'attribute' => 'discount',
+				'value'=>function($data){										
+					$module = Yii::$app->getModule('yes');
+					return number_format($data->discount,2,$module->currency["decimal_separator"],$module->currency["thousand_separator"]);
+				},				
+				'hAlign'=>'right',
+				'pageSummary'=>true,
+				'pageSummaryFunc'=>'avg'
+				
+			],            
             'tags',
             [
 				'attribute' => 'author',
@@ -136,7 +166,7 @@ $this->params['breadcrumbs'][] = $this->title;
 					
 				],
             ],
-            'data:ntext',
+            //'data:ntext',
             // 'tags',
             // 'images:ntext',
             // 'author_id',

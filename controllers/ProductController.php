@@ -169,7 +169,7 @@ class ProductController extends Controller
     {
         $model = new Product();
 		$model->time = date("Y-m-d H:i:s");	
-        $model->author_id = Yii::$app->user->id;
+        $model->author_id = Yii::$app->user->id;        
 
         if (Yii::$app->request->post())        
         {
@@ -191,7 +191,7 @@ class ProductController extends Controller
 				$images = $post['Product']['images'];
 				$post['Product']['images'] = json_encode($images);			
 			}	
-			$model->load($post);
+			$model->load($post);			
 			
 			if ($model->save()) {
 				

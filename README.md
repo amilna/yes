@@ -48,6 +48,7 @@ add in modules section of main config
 	'yes' => [
 		'class' => 'amilna\yes\Module',
 		/* 'userClass' => 'dektrium\user\models\User', // example if use another user class */
+		'currency' => ["symbol"=>"Rp","decimal_separator"=>",","thousand_separator"=>"."],
 	],
 ```
 

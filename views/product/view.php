@@ -1,11 +1,15 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use yii\widgets\DetailView;
 use amilna\yes\models\Category;
 use himiklab\colorbox\Colorbox;
 use amilna\elevatezoom\ElevateZoom;
+
+use kartik\widgets\Select2;
+use kartik\touchspin\TouchSpin;
 
 /* @var $this yii\web\View */
 /* @var $model amilna\yes\models\Product */
@@ -15,6 +19,7 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Products'), 'url' =>
 $this->params['breadcrumbs'][] = $this->title;
 
 $cat = new Category();
+$module = Yii::$app->getModule("yes");
 ?>
 <div class="product-view">
 
@@ -48,6 +53,14 @@ $cat = new Category();
 								'baseUrl'=>Yii::$app->urlManager->baseUrl.'/upload',
 								'smallPrefix'=>'/.thumbs',
 								'mediumPrefix'=>'',
+								'options'=>[		
+									'zoomType'=> "lens", 
+									'containLensZoom'=> false,		
+									'borderSize'=>0,
+									'scrollZoom'=> true, 
+									'gallery'=>'galez',		
+									'cursor'=>'crosshair',			
+								]
 							]);
 						}
 						
@@ -55,14 +68,102 @@ $cat = new Category();
 					?>					
 						<br>	
 						</div>
-						<div class="col-sm-6">
-							<?= $model->description ?>
-						</div>	
-					</div>
-				</div>
-				<div>
-					<?= $model->content ?>
-				</div>				
+						
+						<?= $model->description ?>
+						<div class="well col-sm-6 pull-right" style="margin-top:20px">
+														
+							<h3><?php 
+								$price = ($model->discount > 0?$model->price*$model->discount/100:$model->price);
+								echo $module->currency["symbol"].number_format($price,2,$module->currency["decimal_separator"],$module->currency["thousand_separator"]); 
+							?></h3>
+							<hr>
+							<?php
+							echo Html::hiddenInput('Orders[][product_id]',$model->id,[]);
+							echo Html::hiddenInput('Orders[][product_price]',$price,[]);
+							
+							echo '<div class="form-group"><label class="control-label">'.Yii::t("app","Quantity").'</label>';
+							echo TouchSpin::widget([
+										'name' => 'Orders[][product_qty]',
+										'value' => 0,
+										'options' => ['class'=>'item-chart'],
+										'pluginOptions'=>[
+											'min'=>0,												
+											'step'=>1,
+											'handle'=>'triangle',
+											'tooltip'=>'always'
+										]
+									]);
+							echo '</div>';																
+						
+							$data = json_decode($model->data);							
+							foreach ($data as $d) {
+								$type = $d->type;																
+								if ($type == 0)
+								{
+									$options = [];
+									$deval = "";
+									foreach (explode(",",$d->value) as $v)
+									{
+										$options[trim($v)] = trim($v);	
+										$deval = $deval == ""?trim($v):$deval;
+									}
+									
+									echo '<div class="form-group"><label class="control-label">'.$d->label.'</label>';
+									echo Select2::widget([
+										'name' => 'Orders[]['.$d->label.']', 
+										'data' => $options,
+										'value' => $deval,
+										'options' => [
+											'placeholder' => Yii::t('app','Select ').$d->label,
+											'class'=>'item-chart'
+										],
+									]);	
+									echo '</div>';
+								}
+								else if ($type == 1)
+								{
+									echo '<div class="form-group"><label class="control-label">'.$d->label.'</label>';
+									echo Html::textInput('Orders[]['.$d->label.']',$d->value,["class"=>"form-control item-chart","placeholder"=>Yii::t("app",$d->label),"style"=>"width:100%"]);
+									echo '</div>';	
+								}
+								else if ($type == 2)
+								{
+									echo '<div class="form-group"><label class="control-label">'.$d->label.'</label>';
+									echo TouchSpin::widget([
+											'name' => 'Orders[]['.$d->label.']', 										
+											'value' => ($d->value == null?0:$d->value),
+											'options'=>["class"=>"item-chart"],
+											'pluginOptions'=>[
+												'min'=>0,												
+												'step'=>1,
+												'handle'=>'triangle',
+												'tooltip'=>'always'
+											]
+										]);									
+									echo '</div>';	
+								}
+								else if ($type == 3)
+								{
+									echo '<div class="form-group"><label class="control-label">'.$d->label.'</label>';
+									echo Html::textArea('Orders[]['.$d->label.']',$d->value,["class"=>"form-control item-chart","placeholder"=>Yii::t("app",$d->label),"style"=>"width:100%"]);
+									echo '</div>';
+								}
+								else if ($type == 4)
+								{
+									echo '<div class="form-group"><label class="control-label">'.$d->value.'</label>';
+								}							
+								else if ($type == 5)
+								{
+									echo Html::hiddenInput('Orders[]['.$d->label.']',$d->value,["class"=>"form-control item-chart"]);
+								}
+							}							
+							?>
+							<a class="btn btn-primary"><?= Yii::t("app","Add to Chart")?></a>
+						</div>
+													
+						<?= $model->content ?>
+					</div>	
+				</div>		
 			</div>
 		</div>
 		<!-- End Product -->

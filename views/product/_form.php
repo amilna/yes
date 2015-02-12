@@ -137,6 +137,25 @@ foreach ($model->catPro as $c)
 					?>
 				</div>	
 				
+				<br>
+				<?php		
+					$module = Yii::$app->getModule('yes');
+					echo $form->field($model, 'price')->widget(MaskMoney::classname(), [								
+							'pluginOptions' => [
+								'prefix' => $module->currency["symbol"],
+								'suffix' => '',
+								'thousands' => $module->currency["thousand_separator"],
+								'decimal' => $module->currency["decimal_separator"],
+								'precision' => 2, 
+								'allowNegative' => false
+							],
+							'options'=>['style'=>'text-align:right']
+						]);
+											
+				?>						
+				
+				<?= $form->field($model, 'discount')->textInput(['type'=>'number','placeholder'=>Yii::t('app','Discount if sale')]) ?>
+				
 				<?= $form->field($model, 'status')->widget(Select2::classname(), [			
 						'data' => $model->itemAlias('status'),				
 						'options' => ['placeholder' => Yii::t('app','Select product status...')],
@@ -174,7 +193,7 @@ foreach ($model->catPro as $c)
 		<div class="row">			
 			<div class="col-xs-3" style="padding-right:0px;">																						
 				<div class="kv-plugin-loading loading-w0:N">&nbsp;</div>				
-				<?= Html::dropDownList("Product[data][:N][type]",false,["list","text","number","label","hidden"],["id"=>"w0:N","class"=>"form-control kv-hide input-md data-:T-type","placeholder"=>Yii::t("app","Select data type..."),"style"=>"width:100%","data-krajee-select2"=>"select2_x"]) ?>
+				<?= Html::dropDownList("Product[data][:N][type]",false,["list","text","number","long message","label","hidden"],["id"=>"w0:N","class"=>"form-control kv-hide input-md data-:T-type","placeholder"=>Yii::t("app","Select data type..."),"style"=>"width:100%","data-krajee-select2"=>"select2_x"]) ?>
 			</div>	
 			<div class="col-xs-3" style="padding-left:0px;">																						
 				<?= Html::textInput("Product[data][:N][label]",false,["id"=>"Product_data_:N_label","class"=>"form-control","placeholder"=>Yii::t("app","Label or name"),"style"=>"width:100%"]) ?>
