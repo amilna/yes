@@ -37,6 +37,7 @@ $module = Yii::$app->getModule("yes");
 						<div class="col-sm-6">
 							
 					<?php
+						$images = null;
 						if ($model->images != null)
 						{
 							$images = json_decode($model->images);
@@ -78,14 +79,16 @@ $module = Yii::$app->getModule("yes");
 							?></h3>
 							<hr>
 							<?php
-							echo Html::hiddenInput('Orders[][product_id]',$model->id,[]);
-							echo Html::hiddenInput('Orders[][product_price]',$price,[]);
+							echo Html::hiddenInput('Orders[product_id]',$model->id,["id"=>"id","class"=>"item-shopcart"]);
+							echo Html::hiddenInput('Orders[product_title]',$model->title,["id"=>"title","class"=>"item-shopcart"]);
+							echo Html::hiddenInput('Orders[product_image]',($images == null?null:str_replace("/upload/","/upload/.thumbs/",$images[0])),["id"=>"image","class"=>"item-shopcart"]);
+							echo Html::hiddenInput('Orders[product_price]',$price,["id"=>"price","class"=>"item-shopcart"]);
 							
 							echo '<div class="form-group"><label class="control-label">'.Yii::t("app","Quantity").'</label>';
 							echo TouchSpin::widget([
-										'name' => 'Orders[][product_qty]',
+										'name' => 'Orders[product_qty]',
 										'value' => 0,
-										'options' => ['class'=>'item-chart'],
+										'options' => ["id"=>"quantity",'class'=>'item-shopcart'],
 										'pluginOptions'=>[
 											'min'=>0,												
 											'step'=>1,
@@ -110,12 +113,13 @@ $module = Yii::$app->getModule("yes");
 									
 									echo '<div class="form-group"><label class="control-label">'.$d->label.'</label>';
 									echo Select2::widget([
-										'name' => 'Orders[]['.$d->label.']', 
+										'name' => 'Orders[data]['.$d->label.']', 
 										'data' => $options,
 										'value' => $deval,
 										'options' => [
 											'placeholder' => Yii::t('app','Select ').$d->label,
-											'class'=>'item-chart'
+											'class'=>'item-shopcart',
+											"id"=>"data_".$d->label,
 										],
 									]);	
 									echo '</div>';
@@ -123,16 +127,16 @@ $module = Yii::$app->getModule("yes");
 								else if ($type == 1)
 								{
 									echo '<div class="form-group"><label class="control-label">'.$d->label.'</label>';
-									echo Html::textInput('Orders[]['.$d->label.']',$d->value,["class"=>"form-control item-chart","placeholder"=>Yii::t("app",$d->label),"style"=>"width:100%"]);
+									echo Html::textInput('Orders[data]['.$d->label.']',$d->value,["id"=>"data_".$d->label,"class"=>"form-control item-shopcart","placeholder"=>Yii::t("app",$d->label),"style"=>"width:100%"]);
 									echo '</div>';	
 								}
 								else if ($type == 2)
 								{
 									echo '<div class="form-group"><label class="control-label">'.$d->label.'</label>';
 									echo TouchSpin::widget([
-											'name' => 'Orders[]['.$d->label.']', 										
+											'name' => 'Orders[data]['.$d->label.']', 										
 											'value' => ($d->value == null?0:$d->value),
-											'options'=>["class"=>"item-chart"],
+											'options'=>["id"=>"data_".$d->label,"class"=>"item-shopcart"],
 											'pluginOptions'=>[
 												'min'=>0,												
 												'step'=>1,
@@ -145,20 +149,21 @@ $module = Yii::$app->getModule("yes");
 								else if ($type == 3)
 								{
 									echo '<div class="form-group"><label class="control-label">'.$d->label.'</label>';
-									echo Html::textArea('Orders[]['.$d->label.']',$d->value,["class"=>"form-control item-chart","placeholder"=>Yii::t("app",$d->label),"style"=>"width:100%"]);
+									echo Html::textArea('Orders[data]['.$d->label.']',$d->value,["id"=>"data_".$d->label,"class"=>"form-control item-shopcart","placeholder"=>Yii::t("app",$d->label),"style"=>"width:100%"]);
 									echo '</div>';
 								}
 								else if ($type == 4)
 								{
 									echo '<div class="form-group"><label class="control-label">'.$d->value.'</label>';
+									echo Html::hiddenInput('Orders[data]['.$d->label.']',$d->value,["id"=>"data_".$d->label,"class"=>"form-control item-shopcart"]);
 								}							
 								else if ($type == 5)
 								{
-									echo Html::hiddenInput('Orders[]['.$d->label.']',$d->value,["class"=>"form-control item-chart"]);
+									echo Html::hiddenInput('Orders[data]['.$d->label.']',$d->value,["id"=>"data_".$d->label,"class"=>"form-control item-shopcart"]);
 								}
 							}							
 							?>
-							<a class="btn btn-primary"><?= Yii::t("app","Add to Chart")?></a>
+							<a id="order_itemcart_<?=$model->id?>" class="btn btn-primary order_itemcart"><?= Yii::t("app","Add to Chart")?></a>
 						</div>
 													
 						<?= $model->content ?>
@@ -181,18 +186,18 @@ $module = Yii::$app->getModule("yes");
 				]) ?>
 			</p>
 			*/ ?> 
-			<h4>Search our Products</h4>
+			<h4><?= Yii::t("app","Search our Products")?></h4>
 			
 			<form action="index" method="get">
 				<div class="input-group">
 					<input class="form-control input-md" name="ProductSearch[search]" id="appendedInputButtons" type="text">
 					<span class="input-group-btn">
-						<button class="btn btn-md" type="button">Search</button>
+						<button class="btn btn-md" type="button"><?= Yii::t("app","Search")?></button>
 					</span>
 				</div>
 			</form>
-			
-			<h4>Recent Products</h4>
+			<hr>
+			<h4><?= Yii::t("app","Recent Products")?></h4>
 			<ul>
 				<?php
 					foreach ($model->getRecent() as $m)
@@ -201,7 +206,8 @@ $module = Yii::$app->getModule("yes");
 					}				
 				?>		
 			</ul>
-			<h4>Categories</h4>
+			<hr>
+			<h4><?= Yii::t("app","Categories")?></h4>
 			<ul>
 				<?php
 					foreach ($cat->parents() as $c)
@@ -210,7 +216,8 @@ $module = Yii::$app->getModule("yes");
 					}				
 				?>						
 			</ul>
-			<h4>Archive</h4>
+			<hr>
+			<h4><?= Yii::t("app","Archive")?></h4>
 			<ul>
 				<?php
 					foreach ($model->getArchived() as $m)
@@ -219,6 +226,12 @@ $module = Yii::$app->getModule("yes");
 					}				
 				?>				
 			</ul>
+			<hr>
+			<div id="shopcart-box">
+				<h4><?= Yii::t("app","Shoping Cart")?> <span id="shopcart-badge" class="badge"></span> <small class="pull-right"></small></h4>
+				<table class="table table-striped table-bordered">
+				</table>
+			</div>
 		</div>
 		<!-- End Sidebar -->
 	</div>
@@ -236,3 +249,8 @@ $module = Yii::$app->getModule("yes");
     ],
     'coreStyle' => 1
 ]) ?>
+
+<?php
+
+$this->render('_script_add',['model'=>$model]);
+
