@@ -160,35 +160,6 @@ class ProductController extends Controller
 		}        
     }
 	
-	public function actionAdd()
-	{
-		$result = array('status'=>0);
-		if (Yii::$app->request->post())        
-        {
-			$post = Yii::$app->request->post();			
-			$data = Yii::$app->session->get('YES_SHOPCART') == null?[]:Yii::$app->session->get('YES_SHOPCART');			
-			$item = $post['shopcart'];
-			if (!isset($data[$item['data']['id']]) )
-			{				
-				$data[$item['data']['id']] = $item['data'];				
-			}
-			else
-			{
-				if (isset($item['data']['quantity']))
-				{
-					$data[$item['data']['id']]['quantity'] = $item['data']['quantity'];
-				}
-				else
-				{					
-					unset($data[$item['data']['id']]);				
-				}	
-			}									
-			Yii::$app->session->set('YES_SHOPCART', $data);						
-			$result = array('status'=>1,'data'=>$data);			
-		}	
-		return \yii\helpers\Json::encode($result);	
-	}
-	
     /**
      * Creates a new Product model.
      * If creation is successful, the browser will be redirected to the 'view' page.

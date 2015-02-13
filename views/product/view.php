@@ -87,10 +87,10 @@ $module = Yii::$app->getModule("yes");
 							echo '<div class="form-group"><label class="control-label">'.Yii::t("app","Quantity").'</label>';
 							echo TouchSpin::widget([
 										'name' => 'Orders[product_qty]',
-										'value' => 0,
+										'value' => 1,
 										'options' => ["id"=>"quantity",'class'=>'item-shopcart'],
 										'pluginOptions'=>[
-											'min'=>0,												
+											'min'=>1,												
 											'step'=>1,
 											'handle'=>'triangle',
 											'tooltip'=>'always'
