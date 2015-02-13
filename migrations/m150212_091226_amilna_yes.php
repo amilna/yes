@@ -89,6 +89,7 @@ class m150212_091226_amilna_yes extends Migration
             'terminal' => Schema::TYPE_STRING . ' NOT NULL',
             'account' => Schema::TYPE_STRING . ' NOT NULL',
             'name' => Schema::TYPE_STRING . ' NOT NULL',
+            'data' => Schema::TYPE_TEXT . '',
             'status' => Schema::TYPE_SMALLINT. ' NOT NULL DEFAULT 1',
             'isdel' => Schema::TYPE_SMALLINT.' NOT NULL DEFAULT 0',
         ]);
