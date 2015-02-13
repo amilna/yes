@@ -194,10 +194,13 @@ $module = Yii::$app->getModule("yes");
 			}
 		);	
 		var val = {"shopcart":{}};
-		val["shopcart"]["data"] = data;		
-		console.log(val);
+		val["shopcart"]["data"] = data;				
 		addItem(val);		
 	});
+	
+	var shopcart = <?= json_encode(Yii::$app->session->get('YES_SHOPCART'))?>;
+	renderCart(shopcart);
+	
 <?php $this->endBlock(); ?>
 
 

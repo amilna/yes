@@ -156,6 +156,7 @@ $module = Yii::$app->getModule("yes");
 								{
 									echo '<div class="form-group"><label class="control-label">'.$d->value.'</label>';
 									echo Html::hiddenInput('Orders[data]['.$d->label.']',$d->value,["id"=>"data_".$d->label,"class"=>"form-control item-shopcart"]);
+									echo '</div>';
 								}							
 								else if ($type == 5)
 								{
