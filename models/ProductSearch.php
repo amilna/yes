@@ -183,39 +183,44 @@ class ProductSearch extends Product
 		$userClass = Yii::$app->getModule('yes')->userClass;
 		$query->andFilterWhere(['like','lower('.$userClass::tableName().'.username)',strtolower($this->author)]);
 		
-		$query->andFilterWhere(['like','lower(title)',strtolower($this->search)])
-				->orFilterWhere(['like','lower(description)',strtolower($this->search)])
-				->orFilterWhere(['like','lower(tags)',strtolower($this->search)])
-				->orFilterWhere(['like','lower(content)',strtolower($this->search)]);
-		
 		if ($this->category || $this->search)
 		{
 			$term = ($this->search?$this->search:$this->category);
 			$cquery =  new \yii\db\Query;
-			$cquery->select(["p.id"])
+			$cquery->select(["array_agg(p.id)"])
 					->from("{{%yes_product}} as p")
 					->leftJoin("{{%yes_cat_pro}} as cp","p.id = cp.product_id")
 					->leftJoin("{{%yes_category}} as c","cp.category_id = c.id");
 					
 			if ($this->category)
-			{
-				$query->andFilterWhere(["=","{{%yes_product}}.id",(-1)]);
+			{				
 				$cquery->where("lower(c.title) = '".strtolower($term)."'");
 			}
 			else
 			{
-				$cquery->where("lower(c.title) like '%".strtolower($term)."' or lower(c.description) like '%".strtolower($term)."'");
+				$cquery->where("lower(c.title) like '%".strtolower($term)."%' or lower(c.description) like '%".strtolower($term)."%'");
 			}		
 									
-			$res = $cquery->all();					
-			foreach ($res as $r)
+			$res = $cquery->scalar();
+			$res = ($res == ""?"{}":$res);
+				
+			if ($this->category)
 			{
-				$p = ["=","{{%yes_product}}.id",$r["id"]];
-				$query->orFilterWhere($p);				
+				$query->andFilterWhere(["OR","false","{{%yes_product}}.id = ANY ('".$res."')"]);				
 			}
-        
+			else
+			{		
+				$query->andFilterWhere(["OR","lower(title) like '%".strtolower($this->search)."%'",
+					["OR","lower(description) like '%".strtolower($this->search)."%'",
+						["OR","lower(tags) like '%".strtolower($this->search)."%'",
+							["OR","lower(content) like '%".strtolower($this->search)."%'",
+								"{{%yes_product}}.id = ANY ('".$res."')"
+							]
+						]
+					]
+				]);								
+			}
 		}
-		
         return $dataProvider;
     }
 }

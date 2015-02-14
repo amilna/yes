@@ -123,7 +123,7 @@ foreach ($model->catPro as $c)
 					],
 				]) ?>		
 				
-				<div clas="form-group">
+				<div class="form-group">
 					<label for="Product[category]"><?= Yii::t('app','Category') ?></label>
 					<?= Select2::widget([
 						'name' => 'Product[category]', 
@@ -201,7 +201,7 @@ foreach ($model->catPro as $c)
 			<div class="col-xs-6" style="padding-left:0px;">																										
 				<div class="input-group">				  
 				  <input name="Product[data][:N][value]" id="Product_data_:N_value" type="text" class="form-control" placeholder="<?= Yii::t("app","Default value or list of items (separete with commas)")?>">
-				  <div id="data-del:N" title="<?= Yii::t('app','Remove Data')?>" class="input-group-addon" style="cursor:pointer;">x</div>
+				  <div id="data-del:N" title="<?= Yii::t('app','Remove Data')?>" class="input-group-addon" style="cursor:pointer;"><i class="glyphicon glyphicon-trash"></i></div>
 				</div>
 			</div>			
 		</div>				

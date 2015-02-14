@@ -23,7 +23,7 @@ class PaymentSearch extends Payment
     {
         return [
             [['id', 'status', 'isdel'], 'integer'],
-            [['terminal', 'account', 'name'/*, 'confirmationsId'*/], 'safe'],
+            [['terminal', 'data' ,'account', 'name'/*, 'confirmationsId'*/], 'safe'],
         ];
     }
 

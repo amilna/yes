@@ -89,6 +89,7 @@ $this->params['breadcrumbs'][] = $this->title;
 					
 				],
             ],
+            'data:ntext',
             // 'isdel',
 
             ['class' => 'kartik\grid\ActionColumn'],

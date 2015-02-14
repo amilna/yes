@@ -32,7 +32,7 @@ class Order extends \yii\db\ActiveRecord
     {
         return '{{%yes_order}}';
     }
-
+			
     /**
      * @inheritdoc
      */
@@ -40,7 +40,7 @@ class Order extends \yii\db\ActiveRecord
     {
         return [
             [['customer_id', 'reference', 'data', 'log'], 'required'],
-            [['customer_id', 'status', 'isdel'], 'integer'],
+            [['status', 'isdel'], 'integer'],
             [['total'], 'number'],
             [['data', 'log'], 'string'],
             [['time', 'complete_time'], 'safe'],
@@ -58,7 +58,7 @@ class Order extends \yii\db\ActiveRecord
             'customer_id' => Yii::t('app', 'Customer ID'),
             'reference' => Yii::t('app', 'Reference'),
             'total' => Yii::t('app', 'Total'),
-            'data' => Yii::t('app', 'Data'),
+            'data' => Yii::t('app', 'Data'),            
             'status' => Yii::t('app', 'Status'),
             'time' => Yii::t('app', 'Time'),
             'complete_reference' => Yii::t('app', 'Complete Reference'),

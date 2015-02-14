@@ -229,9 +229,10 @@ $module = Yii::$app->getModule("yes");
 			</ul>
 			<hr>
 			<div id="shopcart-box">
-				<h4><?= Yii::t("app","Shoping Cart")?> <span id="shopcart-badge" class="badge"></span> <small class="pull-right"></small></h4>
+				<h4><?= Yii::t("app","Shopping Cart")?> <span id="shopcart-badge" class="badge"></span> <small class="pull-right"></small></h4>
 				<table class="table table-striped table-bordered">
 				</table>
+				<?= Html::a(Yii::t("app","Checkout"),["//yes/order/create"],["class"=>"btn btn-success pull-right"])?>
 			</div>
 		</div>
 		<!-- End Sidebar -->

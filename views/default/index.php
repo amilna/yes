@@ -13,7 +13,8 @@ use yii\helpers\Url;
         <p class="lead">You have successfully installed E-Commerce Support for your Yii-powered application.</p>
 
         <p><?= Html::a(Yii::t('app','Get start to manage a product category'),['//yes/category'],["class"=>"btn btn-lg btn-success"])?>
-        <?= Html::a(Yii::t('app','or Get start to manage a payment terminals'),['//yes/payment'],["class"=>"btn btn-lg btn-warning"])?>
+        <?= Html::a(Yii::t('app','or manage payment terminals'),['//yes/payment'],["class"=>"btn btn-lg btn-warning"])?>
+        <?= Html::a(Yii::t('app','or manage shippings'),['//yes/shipping'],["class"=>"btn btn-lg btn-default"])?>
         </p>
     </div>
 

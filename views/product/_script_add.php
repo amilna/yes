@@ -65,6 +65,10 @@ function enAsci(a,s) {
 <?php $this->endBlock(); ?>	
 	
 <?php $this->beginBlock('JS_END') ?>			
+	function toMoney(val)
+	{
+		return parseFloat(val).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,").replace(/\.00/g,"").replace(/\,/g,"<?= $module->currency["thousand_separator"]?>");
+	}
 	
 	function updateItem(val,idata,qty){	
 		
@@ -112,12 +116,20 @@ function enAsci(a,s) {
 					};
 				
 		ajaxPost(url,data,ok,err);
-	}	
+	}			
 	
-	function toMoney(val)
+	function updateTotal()
 	{
-		return parseFloat(val).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,").replace(/\.00/g,"").replace(/\,/g,"<?= $module->currency["thousand_separator"]?>");
-	}
+		var total = 0;
+		var n = 0;
+		$(".quantity_itemcart").each(function(n,d){			
+			total += $(d).val()*parseFloat($(d).attr("data-price"));	
+			n = n;
+		});		
+		
+		$("#shopcart-box h4 small").html("Total <?= $module->currency["symbol"]?>"+toMoney(total));
+		$("#shopcart-badge").html(n > 0?n:"");
+	}	
 	
 	function addCart(d)
 	{
@@ -141,19 +153,6 @@ function enAsci(a,s) {
 		$("#remove_itemcart_"+d["idata"]).parent().parent().parent().parent().remove();
 	}
 	
-	function updateTotal()
-	{
-		var total = 0;
-		var n = 0;
-		$(".quantity_itemcart").each(function(n,d){			
-			total += $(d).val()*parseFloat($(d).attr("data-price"));	
-			n = n;
-		});		
-		
-		$("#shopcart-box h4 small").html("Total <?= $module->currency["symbol"]?>"+toMoney(total));
-		$("#shopcart-badge").html(n > 0?n:"");
-	}	
-	
 	function renderCart(d)
 	{
 		var html = "";
@@ -175,18 +174,15 @@ function enAsci(a,s) {
 		
 		var idata = d["idata"];		
 		
-		html += "<tr><td style=\"vertical-align:middle;\"><div><img src=\""+image+"\" style=\"margin:4px;max-width:44px;float:left;\"></div>";
-		html += "<h6>"+title+" <small>"+remarks+"</small></h6>";									
-		html += "		<div class='' >";				  			
-		html += "		<div class='input-group'>";				  
-		//html += "		<?= $module->currency["symbol"]?>"+toMoney(price)+" <small style=\"color:#adadad;\">x</small>";					
-		html += "		  <div class=\"input-group-addon\" style=\"background:#fff\"><?= $module->currency["symbol"]?>"+toMoney(price)+" x </div>";
-		html += "		  <input type=\"number\" class=\"form-control quantity_itemcart\" data-price="+price+" id=\"quantity_itemcart_"+idata+"\" min=\"1\" max=\"999\" value=\""+quantity+"\"/>";
-		html += "		  <div id=\"remove_itemcart_"+idata+"\" class=\"remove_itemcart input-group-addon danger\" title=\"<?= Yii::t('app','Remove Data')?>\" style=\"cursor:pointer;\">x</div>";
-		html += "		</div>";						
-		html += "		</div>";		
-		html += "	</td>";						
-		html += "</tr>";								
+		html += "<tr><td style=\"vertical-align:middle;\">";
+		html += "	<div class=\"media\"><div class=\"media-left media-middle\"><img class=\"media-object\" src=\""+image+"\" style=\"margin-right:4px;max-width:44px;float:left;\"></div>";
+		html += "	<div class=\"media-body\"><h6>"+title+" <small>"+remarks+"</small></h6>";											
+		html += "	<div class='input-group'>";		
+		html += "		<div class=\"input-group-addon\" style=\"background:#fff\"><?= $module->currency["symbol"]?>"+toMoney(price)+" x </div>";
+		html += "		<input type=\"number\" class=\"form-control quantity_itemcart\" data-price="+price+" id=\"quantity_itemcart_"+idata+"\" min=\"1\" max=\"999\" value=\""+quantity+"\"/>";
+		html += "		<div id=\"remove_itemcart_"+idata+"\" class=\"remove_itemcart input-group-addon danger\" title=\"<?= Yii::t('app','Remove Item')?>\" style=\"cursor:pointer;\"><i class=\"glyphicon glyphicon-trash\"></i></div>";
+		html += "	</div></div></div>";								
+		html += "</td></tr>";													
 		return html;
 	}
 	
@@ -249,7 +245,7 @@ function enAsci(a,s) {
 	if (shopcart != null)
 	{
 		createCart(shopcart);
-	}
+	}		
 	
 <?php $this->endBlock(); ?>
 

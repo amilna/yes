@@ -18,11 +18,11 @@ $this->params['cboxTarget'] = [];
 <div class="post-index">
     
     <div class="pull-right col-md-3 col-xs-6">
-		<form action="index" method="get">
+		<form action="<?=Yii::$app->urlManager->createUrl("//yes/product")?>" method="get">
 			<div class="input-group">
 				<input class="form-control input-md" name="ProductSearch[search]" id="appendedInputButtons" type="text">
 				<span class="input-group-btn">
-					<button class="btn btn-md" type="button">Search</button>
+					<button class="btn btn-md" type="submit">Search</button>
 				</span>
 			</div>
 		</form>
