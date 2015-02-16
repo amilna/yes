@@ -15,6 +15,8 @@ use amilna\yes\models\Payment;
 /* @var $model amilna\yes\models\Order */
 /* @var $form yii\widgets\ActiveForm */
 
+$module = Yii::$app->getModule("yes");
+
 $listPayment = []+ArrayHelper::map(Payment::find()->where("status = 1")->all(), 'id', 'terminal');
 $payment = ($model->isNewRecord?$model->id['payment']:false);
 ?>
@@ -40,10 +42,10 @@ $payment = ($model->isNewRecord?$model->id['payment']:false);
 						<h3 class="text-center"><?= Yii::t("app","Customer Information")?></h3>
 						<div class="form-group">
 						<?= Html::label(Yii::t("app","Name"))?>
-						<?php 
+						<?php 							
 							$field = $form->field($model,"customer_id[name]");
 							$field->template = "{input}";
-							echo $field->widget(AutoComplete::classname(),[															
+							echo $field->widget(AutoComplete::classname(),[								
 								'clientOptions' => [
 									'source' => Yii::$app->urlManager->createUrl("//yes/customer/index?format=json&arraymap=name"),
 								],
@@ -82,6 +84,7 @@ $payment = ($model->isNewRecord?$model->id['payment']:false);
 							]);
 						?>		
 						</div> 
+						<hr>
 						<a onclick="$('#ordertab a[href=\'#address\']').tab('show')" class="btn btn-success btn-tab pull-right" ><?= Yii::t("app","Next") ?></a>
 					</div>
 				</div>					
@@ -91,7 +94,7 @@ $payment = ($model->isNewRecord?$model->id['payment']:false);
 					<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
 						<h3 class="text-center"><?= Yii::t("app","Shipping Adddress & Method")?></h3>
 						<div class="well addresses">
-							<h4><?= Yii::t('app','Addresses') ?> <small class="pull-right list-address"><a id="address-add" class="btn btn-sm btn-default">Add Address</a></small></h4>
+							<h4><?= Yii::t('app','Addresses') ?> <small class="pull-right list-address"></small></h4>
 							<br>
 							<?php	
 								$field = $form->field($model,"customer_id[address]");
@@ -106,12 +109,32 @@ $payment = ($model->isNewRecord?$model->id['payment']:false);
 							$field->template = "{input}";
 							echo $field->widget(AutoComplete::classname(),[								
 								'clientOptions' => [
-									'source' => Yii::$app->urlManager->createUrl("//yes/shipping/index?format=json&arraymap=search"),
+									'source' => Yii::$app->urlManager->createUrl("//yes/shipping/index?format=json&arraymap=label:search,value:Obj"),
 								],
 								'clientEvents' => [				
-									'select' => 'function(event, ui) {												
-													console.log(event,ui,"tes");							
+									'focus' => 'function(event, ui) {													
+													//console.log(JSON.parse(ui.item.value));	
+													renderShip(ui.item.value);
 												}',
+									'close' => 'function(event, ui) {													
+													var val = $("#order-data-city").val();
+													try{
+														val = JSON.parse(val);													
+														$("#order-data-city").val(val.city+" ("+val.area+")");
+													}
+													catch (e) 
+													{
+														//console.log("hapus");	
+														resetShip();
+													}																										
+												}',
+									'change'=> 'function(event, ui) {						
+													var cek = $(".radio-shipping-cost").html();
+													if (cek == "")
+													{																										
+														$("#order-data-city").val("");
+													}																										
+												}',			
 								],
 								'options'=>[
 									'class'=>'form-control required','maxlength' => 255,				
@@ -120,6 +143,9 @@ $payment = ($model->isNewRecord?$model->id['payment']:false);
 							]); 
 						?>
 						</div>
+						<div class="radio-shipping-cost">
+						</div>
+						<hr>
 						<a onclick="$('#ordertab a[href=\'#customer\']').tab('show')" class="btn btn-warning btn-tab pull-left" ><?= Yii::t("app","Previous") ?></a>
 						<a onclick="$('#ordertab a[href=\'#summary\']').tab('show')" class="btn btn-success btn-tab pull-right" ><?= Yii::t("app","Next") ?></a>
 					</div>
@@ -134,6 +160,16 @@ $payment = ($model->isNewRecord?$model->id['payment']:false);
 							<table class="table table-striped table-bordered">
 							</table>								
 						</div>
+						<div class="well">
+						<div id="order-shippingcost-label"></div>
+						<?= Html::hiddenInput('Order[data][shippingcost]',0,["id"=>"order-data-shippingcost","class"=>"form-control"]); ?>
+						<br>
+						<div id="order-vat-label"></div>						
+						<?= Html::hiddenInput('Order[data][vat]',0,["id"=>"order-data-vat","class"=>"form-control"]); ?>
+						<div id="order-grandtotal-label"></div>
+						<?= Html::hiddenInput('Order[total]',0,["id"=>"order-total","class"=>"form-control"]); ?>
+						</div>
+						<hr>
 						<a onclick="$('#ordertab a[href=\'#address\']').tab('show')" class="btn btn-warning btn-tab pull-left" ><?= Yii::t("app","Previous") ?></a>
 						<a onclick="$('#ordertab a[href=\'#payment\']').tab('show')" class="btn btn-success btn-tab pull-right" ><?= Yii::t("app","Next") ?></a>
 					</div>
@@ -170,7 +206,7 @@ $payment = ($model->isNewRecord?$model->id['payment']:false);
 						
 						?>	
 						</div>
-						
+						<hr>
 						<a onclick="$('#ordertab a[href=\'#summary\']').tab('show')" class="btn btn-warning btn-tab pull-left" ><?= Yii::t("app","Previous") ?></a>
 						<div class="form-group">
 							<?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-primary pull-right' : 'btn btn-primary pull-right']) ?>
@@ -182,19 +218,6 @@ $payment = ($model->isNewRecord?$model->id['payment']:false);
 		</div>
 	</div>	
 	
-	<div class="row">		
-		<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
-   
-
-		</div>
-		<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
-			
-
-		</div>	
-	</div>		    
-
-    
-
     <?php ActiveForm::end(); ?>
 
 </div>
@@ -202,3 +225,6 @@ $payment = ($model->isNewRecord?$model->id['payment']:false);
 <?php
 
 $this->render('@amilna/yes/views/product/_script_add',['model'=>$model]);
+$this->render('_script_ship',['model'=>$model]);
+$this->render('_script_customer',['model'=>$model]);
+$this->render('_script_load',['model'=>$model]);

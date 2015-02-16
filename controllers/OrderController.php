@@ -5,9 +5,11 @@ namespace amilna\yes\controllers;
 use Yii;
 use amilna\yes\models\Order;
 use amilna\yes\models\OrderSearch;
+use amilna\yes\models\Customer;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 
 /**
  * OrderController implements the CRUD actions for Order model.
@@ -34,7 +36,7 @@ class OrderController extends Controller
     public function actionIndex($format= false,$arraymap= false,$term = false)
     {
         $searchModel = new OrderSearch();        
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams+($term?['OrderSearch'=>[$arraymap=>$term]]:[]));
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams+($term?['OrderSearch'=>['search'=>$term]]:[]));
 
         if ($format == 'json')
         {
@@ -43,9 +45,9 @@ class OrderController extends Controller
 			{
 				$obj = $d->attributes;
 				if ($arraymap)
-				{
+				{					
 					$map = explode(",",$arraymap);
-					if (count($map) == 1 || $term)
+					if (count($map) == 1)
 					{
 						$obj = $d[$arraymap];
 					}
@@ -56,8 +58,8 @@ class OrderController extends Controller
 						{
 							$k = explode(":",$a);						
 							$v = (count($k) > 1?$k[1]:$k[0]);
-							$obj[$k[0]] = (isset($d[$v])?$d[$v]:null);
-						}
+							$obj[$k[0]] = ($v == "Obj"?json_encode($d->attributes):(isset($d[$v])?$d[$v]:null));
+						}				
 					}
 				}
 				
@@ -114,14 +116,59 @@ class OrderController extends Controller
     public function actionCreate()
     {
         $model = new Order();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
+		$model->time = date("Y-m-d H:i:s");	       
+		$model->status = 0;
+		$model->reference = "tes".time();
+		
+        if (Yii::$app->request->post())        
+        {
+			$post = Yii::$app->request->post();
+			$data = [];			
+			if (isset($post['Order']['data']))
+			{
+				$data = $post['Order']['data'];
+				if (isset($post['Order']['customer_id']))
+				{	
+					$data["customer"] = $post['Order']['customer_id'];
+					$customer = Customer::find()->where(["name"=>$data["customer"]["name"],"email"=>$data["customer"]["email"]])->one();
+					if (!$customer)
+					{
+						$customer = new Customer();	
+					}									
+					$shipping = json_decode($data["shipping"]);					
+					$phones = (empty($customer->phones)?[]:explode(",",$customer->phones));
+					$phones = array_unique(array_merge($phones,explode(",",$post['Order']['customer_id']['phones'])));
+					$addresses = array_unique(array_merge(json_decode($customer->addresses == null?"[]":$customer->addresses),array($post['Order']['customer_id']['address'].", code:".$shipping->code)));
+					$customer->phones = implode(",",$phones);
+					$customer->addresses = json_encode($addresses);
+					$customer->name = $data["customer"]["name"];
+					$customer->email = $data["customer"]["email"];
+					if ($customer->save())
+					{
+						$post['Order']['customer_id'] = $customer->id;	
+					}
+					else
+					{						
+						$post['Order']['customer_id'] = null;
+					}
+				}
+				$data["cart"] = json_encode(Yii::$app->session->get('YES_SHOPCART'));
+				$post['Order']['data'] = json_encode($data);
+			}				
+			$model->load($post);			
+			$model->log = json_encode($_SERVER);
+			
+			if ($model->save()) {
+				Yii::$app->session->set('YES_SHOPCART',null);
+				return $this->redirect(['view', 'id' => $model->id]);            
+			} else {										
+				$model->data = json_encode($data);				
+			}
+		}	
+        
+        return $this->render('create', [
+			'model' => $model,
+		]);
     }
 
     /**
@@ -132,15 +179,61 @@ class OrderController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }
+        $model = $this->findModel($id);        
+		
+        if (Yii::$app->request->post())        
+        {
+			$post = Yii::$app->request->post();
+			$data = [];			
+			if (isset($post['Order']['data']))
+			{
+				$data = $post['Order']['data'];
+				if (isset($post['Order']['customer_id']))
+				{	
+					$data["customer"] = $post['Order']['customer_id'];
+					$customer = Customer::find()->where(["name"=>$data["customer"]["name"],"email"=>$data["customer"]["email"]])->one();
+					if (!$customer)
+					{
+						$customer = new Customer();	
+					}									
+					$shipping = json_decode($data["shipping"]);					
+					$phones = (empty($customer->phones)?[]:explode(",",$customer->phones));
+					$phones = array_unique(array_merge($phones,explode(",",$post['Order']['customer_id']['phones'])));
+					$addresses = array_unique(array_merge(json_decode($customer->addresses == null?"[]":$customer->addresses),array($post['Order']['customer_id']['address'].", code:".$shipping->code)));
+					$customer->phones = implode(",",$phones);
+					$customer->addresses = json_encode($addresses);
+					$customer->name = $data["customer"]["name"];
+					$customer->email = $data["customer"]["email"];
+					if ($customer->save())
+					{
+						$post['Order']['customer_id'] = $customer->id;	
+					}
+					else
+					{						
+						$post['Order']['customer_id'] = null;
+					}
+				}
+				$data["cart"] = json_encode(Yii::$app->session->get('YES_SHOPCART'));	
+				$post['Order']['data'] = json_encode($data);
+			}				
+			$model->load($post);			
+			$model->log = json_encode($_SERVER);
+			
+			if ($model->save()) {				
+				Yii::$app->session->set('YES_SHOPCART',null);
+				return $this->redirect(['view', 'id' => $model->id]);            
+			}
+		}
+		else
+		{	                      
+			$data = json_decode($model->data);        
+			$cart = json_decode($data->cart);
+			Yii::$app->session->set('YES_SHOPCART',ArrayHelper::toArray($cart));
+		}
+        
+        return $this->render('update', [
+			'model' => $model,
+		]);
     }
 
     /**
@@ -183,6 +276,9 @@ class OrderController extends Controller
 			$post = Yii::$app->request->post();			
 			$data = Yii::$app->session->get('YES_SHOPCART') == null?[]:Yii::$app->session->get('YES_SHOPCART');			
 			$item = $post['shopcart'];						
+			//print_r($data);
+			//die();
+			
 			
 			if (!isset($data[$item['data']['idata']]) )
 			{								

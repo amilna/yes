@@ -120,16 +120,53 @@ function enAsci(a,s) {
 	
 	function updateTotal()
 	{
+		var weight = 0;
 		var total = 0;
 		var n = 0;
 		$(".quantity_itemcart").each(function(n,d){			
 			total += $(d).val()*parseFloat($(d).attr("data-price"));	
+			weight += $(d).val()*parseFloat($(d).attr("data-weight"));	
 			n = n;
 		});		
 		
+		//console.log(total);
+		
 		$("#shopcart-box h4 small").html("Total <?= $module->currency["symbol"]?>"+toMoney(total));
 		$("#shopcart-badge").html(n > 0?n:"");
+		$("#shopcart-box h4").attr("data-weight",weight);
+		$("#shopcart-box h4").attr("data-total",total);
+		
+		/* update ship cost */
+		var unitcost = parseFloat($("#order-shippingcost-label h4").attr("data-unitcost"));
+		var cost = unitcost*weight;
+		$("#order-shippingcost-label h4 small").html("Total <?=$module->currency["symbol"]?>"+toMoney(cost));				
+		$("#order-data-shippingcost").val(cost);
+		
+		/* update vat */
+		updateVat();
 	}	
+
+	function updateVat()
+	{	
+		var total = parseFloat($("#shopcart-box h4").attr("data-total"));
+		var shipcost = parseFloat($("#order-data-shippingcost").val());
+		shipcost = (isNaN(shipcost)?0:shipcost);
+		//console.log(total,shipcost);
+		var defvat = <?=$module->defaults["vat"]?$module->defaults["vat"]:0?>;	
+		var vat = (defvat?(total+shipcost)*defvat:0);	
+		
+		var html = "";	
+		if (defvat)
+		{
+			html = "<h4><?=Yii::t("app","VAT (Value Added Taxes)")." <small class='pull-right'>Total ".$module->currency["symbol"]?>"+toMoney(vat)+"</small></h4>";
+			$("#order-data-vat").val(vat);
+		}	
+		var grand = total+shipcost+vat;
+		var gtml = "<h3><?=Yii::t("app","Total Payment")." <small class='pull-right'>Grand Total ".$module->currency["symbol"]?>"+toMoney(grand)+"</small></h3>";	
+		$("#order-vat-label").html(html);	
+		$("#order-grandtotal-label").html(gtml);
+		$("#order-total").val(grand);
+	}
 	
 	function addCart(d)
 	{
@@ -160,6 +197,7 @@ function enAsci(a,s) {
 		var title = d["title"];
 		var image = d["image"];									
 		var price = d["price"];
+		var weight = <?= $module->defaults["weight"] ?>;
 		var quantity = d["quantity"];									
 		var datas = {};
 		var remarks = "";		
@@ -167,8 +205,15 @@ function enAsci(a,s) {
 		{
 			if (key.substr(0,5) == "data_") {
 				datas[key.replace("data_","")] = d[key];
-				remarks += (remarks == ""?"":", ")+key.replace("data_","")+": "+d[key];
-				
+				if (key.replace("data_","") == "weight")
+				{
+					weight = parseFloat(d[key]);
+					weight = (isNaN(weight)?<?= $module->defaults["weight"] ?>:weight);
+				}
+				else
+				{
+					remarks += (remarks == ""?"":", ")+key.replace("data_","")+": "+d[key];				
+				}	
 			}
 		}
 		
@@ -179,7 +224,7 @@ function enAsci(a,s) {
 		html += "	<div class=\"media-body\"><h6>"+title+" <small>"+remarks+"</small></h6>";											
 		html += "	<div class='input-group'>";		
 		html += "		<div class=\"input-group-addon\" style=\"background:#fff\"><?= $module->currency["symbol"]?>"+toMoney(price)+" x </div>";
-		html += "		<input type=\"number\" class=\"form-control quantity_itemcart\" data-price="+price+" id=\"quantity_itemcart_"+idata+"\" min=\"1\" max=\"999\" value=\""+quantity+"\"/>";
+		html += "		<input type=\"number\" class=\"form-control quantity_itemcart\" data-price="+price+" data-weight="+weight+" id=\"quantity_itemcart_"+idata+"\" min=\"1\" max=\"999\" value=\""+quantity+"\"/>";
 		html += "		<div id=\"remove_itemcart_"+idata+"\" class=\"remove_itemcart input-group-addon danger\" title=\"<?= Yii::t('app','Remove Item')?>\" style=\"cursor:pointer;\"><i class=\"glyphicon glyphicon-trash\"></i></div>";
 		html += "	</div></div></div>";								
 		html += "</td></tr>";													
@@ -188,26 +233,29 @@ function enAsci(a,s) {
 	
 	function createCart(data)
 	{				
-		var html = "";				
-		$.each(data, function(id,d)
-		{											
-			html += renderCart(d);																	
-		});																
-																								
-		$("#shopcart-box .table").html(html);
-		updateTotal();										
-		
-		$("#shopcart-box .table .quantity_itemcart").change(function(){
-			var id = $(this).attr("id").replace("quantity_itemcart_","");
-			var qty = $(this).val();			
-			updateItem(undefined,id,qty);
-		});
-		
-		$("#shopcart-box .table .remove_itemcart").click(function(){
-			var id = $(this).attr("id").replace("remove_itemcart_","");									
-			updateItem(undefined,id);										
-		});				
-		
+		//console.log(data);
+		if (data != null)
+		{			
+			var html = "";				
+			$.each(data, function(id,d)
+			{											
+				html += renderCart(d);																	
+			});																
+																									
+			$("#shopcart-box .table").html(html);
+			updateTotal();										
+			
+			$("#shopcart-box .table .quantity_itemcart").change(function(){
+				var id = $(this).attr("id").replace("quantity_itemcart_","");
+				var qty = $(this).val();			
+				updateItem(undefined,id,qty);
+			});
+			
+			$("#shopcart-box .table .remove_itemcart").click(function(){
+				var id = $(this).attr("id").replace("remove_itemcart_","");									
+				updateItem(undefined,id);										
+			});				
+		}
 	}
 	
 	$(".order_itemcart").click(function()
@@ -242,10 +290,15 @@ function enAsci(a,s) {
 	});
 	
 	var shopcart = <?= json_encode(Yii::$app->session->get('YES_SHOPCART'))?>;
+	//if (shopcart != null && <?= $model->isNewRecord?"true":"false"?>)
 	if (shopcart != null)
 	{
-		createCart(shopcart);
-	}		
+		createCart(shopcart);		
+	}
+	else
+	{
+		updateTotal();		
+	}	
 	
 <?php $this->endBlock(); ?>
 

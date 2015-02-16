@@ -3,16 +3,16 @@
 namespace amilna\yes\controllers;
 
 use Yii;
-use amilna\yes\models\Shipping;
-use amilna\yes\models\ShippingSearch;
+use amilna\yes\models\Customer;
+use amilna\yes\models\CustomerSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * ShippingController implements the CRUD actions for Shipping model.
+ * CustomerController implements the CRUD actions for Customer model.
  */
-class ShippingController extends Controller
+class CustomerController extends Controller
 {
     public function behaviors()
     {
@@ -27,18 +27,17 @@ class ShippingController extends Controller
     }
 
     /**
-     * Lists all Shipping models.
+     * Lists all Customer models.
      * @params string $format, array $arraymap, string $term
      * @return mixed
      */
     public function actionIndex($format= false,$arraymap= false,$term = false)
     {
-        $searchModel = new ShippingSearch();        
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams+($term?['ShippingSearch'=>["search"=>$term]]:[]));				
+        $searchModel = new CustomerSearch();        
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams+($term?['CustomerSearch'=>['search'=>$term]]:[]));
 		
 		$post = Yii::$app->request->post();
 		$format = (isset($post["format"])?$post["format"]:$format);
-		$term = (isset($post["term"])?$post["term"]:$term);
 		
         if ($format == 'json')
         {
@@ -47,19 +46,19 @@ class ShippingController extends Controller
 			{
 				$obj = $d->attributes;
 				if ($arraymap)
-				{					
+				{
 					$map = explode(",",$arraymap);
 					if (count($map) == 1)
-					{						
-						$obj = (isset($d[$arraymap])?$d[$arraymap]:null);						
+					{
+						$obj = $d[$arraymap];
 					}
 					else
-					{						
+					{
 						$obj = [];					
 						foreach ($map as $a)
 						{
 							$k = explode(":",$a);						
-							$v = (count($k) > 1?$k[1]:$k[0]);							
+							$v = (count($k) > 1?$k[1]:$k[0]);
 							$obj[$k[0]] = ($v == "Obj"?json_encode($d->attributes):(isset($d[$v])?$d[$v]:null));
 						}
 					}
@@ -89,7 +88,7 @@ class ShippingController extends Controller
     }
 
     /**
-     * Displays a single Shipping model.
+     * Displays a single Customer model.
      * @param integer $id
      * @additionalParam string $format
      * @return mixed
@@ -111,40 +110,25 @@ class ShippingController extends Controller
     }
 
     /**
-     * Creates a new Shipping model.
+     * Creates a new Customer model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Shipping();
+        $model = new Customer();
 
-		if (Yii::$app->request->post())        
-        {
-			$post = Yii::$app->request->post();									
-			$data = [];						
-			if (isset($post['Shipping']['data']))
-			{
-				$data = $post['Shipping']['data'];
-				$post['Shipping']['data'] = json_encode($data);
-			}				
-			$model->load($post);			
-			
-			if ($model->save()) {																
-				return $this->redirect(['view', 'id' => $model->id]);            
-			} else {				
-				$model->data = json_encode($data);
-			}
-		}	
-        
-		return $this->render('create', [
-			'model' => $model,
-		]);
-        
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            return $this->render('create', [
+                'model' => $model,
+            ]);
+        }
     }
 
     /**
-     * Updates an existing Shipping model.
+     * Updates an existing Customer model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -153,30 +137,17 @@ class ShippingController extends Controller
     {
         $model = $this->findModel($id);
 
-
-		if (Yii::$app->request->post())        
-        {
-			$post = Yii::$app->request->post();									
-			$data = [];						
-			if (isset($post['Shipping']['data']))
-			{
-				$data = $post['Shipping']['data'];
-				$post['Shipping']['data'] = json_encode($data);
-			}				
-			$model->load($post);			
-			
-			if ($model->save()) {																
-				return $this->redirect(['view', 'id' => $model->id]);            			
-			}
-		}					
-        
-		return $this->render('update', [
-			'model' => $model,
-		]);
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            return $this->render('update', [
+                'model' => $model,
+            ]);
+        }
     }
 
     /**
-     * Deletes an existing Shipping model.
+     * Deletes an existing Customer model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -192,18 +163,97 @@ class ShippingController extends Controller
     }
 
     /**
-     * Finds the Shipping model based on its primary key value.
+     * Finds the Customer model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Shipping the loaded model
+     * @return Customer the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Shipping::findOne($id)) !== null) {
+        if (($model = Customer::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+    
+    public function actionSearch($format= false,$arraymap= false,$term = false)
+    {        		
+		$post = Yii::$app->request->post();
+		$format = (isset($post["format"])?$post["format"]:$format);
+		$term = (isset($post["term"])?$post["term"]:$term);				
+		
+		$sql = "name=:name";
+		$search = [":name"=>$term];
+		$arraymap = "name";
+		$rs = false;
+		if (isset($post["email"]))		
+		{
+			if (!empty($post["email"]))
+			{
+				$sql .= " AND email = :email";
+				$search[":email"] = $post["email"];				
+				$rs = true;
+			}			
+		}
+		if (isset($post["phones"]))		
+		{
+			if (!empty($post["phones"]))
+			{
+				$sql .= " AND concat(',',phones,',') LIKE :phones";
+				$search[":phones"] = "%,".$post["phones"].",%";				
+				$rs = true;
+			}			
+		}
+		
+		if ($rs)
+		{
+			$arraymap = "name,email,phones,addresses";			
+		}
+		
+		$models = Customer::find()->where($sql,$search)->all();	
+		
+		//print_r($search);
+		//die($sql);	
+        if ($format == 'json')
+        {
+			$model = [];
+			foreach ($models as $d)
+			{
+				$obj = $d->attributes;
+				if ($arraymap)
+				{
+					$map = explode(",",$arraymap);
+					if (count($map) == 1)
+					{
+						$obj = $d[$arraymap];
+					}
+					else
+					{
+						$obj = [];					
+						foreach ($map as $a)
+						{
+							$k = explode(":",$a);						
+							$v = (count($k) > 1?$k[1]:$k[0]);
+							$obj[$k[0]] = ($v == "Obj"?json_encode($d->attributes):(isset($d[$v])?$d[$v]:null));
+						}
+					}
+				}
+				
+				if ($term)
+				{
+					if (!in_array($obj,$model))
+					{
+						array_push($model,$obj);
+					}
+				}
+				else
+				{	
+					array_push($model,$obj);
+				}
+			}			
+			return \yii\helpers\Json::encode($model);	
+		}		
+    }    
 }
