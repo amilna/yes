@@ -117,4 +117,22 @@ class Customer extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Order::className(), ['customer_id' => 'id']);
     }
+    
+    public function getPhones()
+	{
+		$models = $this->find()->all();
+		$phones = [];
+		foreach ($models as $m)
+		{
+			$ts = explode(",",$m->phones);
+			foreach ($ts as $t)
+			{	
+				if (!in_array($t,$phones))
+				{
+					array_push($phones,$t);	
+				}
+			}	
+		}
+		return $phones;
+	}
 }

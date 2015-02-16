@@ -109,5 +109,11 @@ class Shipping extends \yii\db\ActiveRecord
     {
 		return $this->city." (".$this->area.")";
 	}	
+	
+	public function toMoney($val,$dec = 2,$sym = true)
+    {
+		$module = Yii::$app->getModule("yes");
+		return ($sym?$module->currency["symbol"]:"").number_format($val,$dec,$module->currency["decimal_separator"],$module->currency["thousand_separator"]);	
+	}
 		
 }

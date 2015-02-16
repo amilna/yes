@@ -9,6 +9,7 @@ use amilna\yap\GridView;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = Yii::t('app', 'Customers');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'YES'), 'url' => ['/yes/default']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="customer-index">
@@ -70,13 +71,46 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'kartik\grid\SerialColumn'],
 
-            'id',
+            //'id',
             'name',
-            'phones:ntext',
-            'addresses:ntext',
             'email:email',
-            // 'last_time',
-            // 'last_action',
+            'phones:ntext',
+            'addresses:ntext',            
+            [				
+				'attribute' => 'last_time',
+				'value' => 'last_time',				
+				'filterType'=>GridView::FILTER_DATE_RANGE,
+				'filterWidgetOptions'=>[
+					'pluginOptions' => [
+						'format' => 'YYYY-MM-DD HH:mm:ss',				
+						'todayHighlight' => true,
+						'timePicker'=>true,
+						'timePickerIncrement'=>15,
+						'opens'=>'left'
+					],
+					'pluginEvents' => [
+					"apply.daterangepicker" => 'function() {									
+									$(this).change();
+								}',
+					],			
+				],
+			],  
+			[				
+				'attribute'=>'last_action',				
+				'value'=>function($data){										
+					return $data->itemAlias('last_action',$data->last_action);
+				},
+				'filterType'=>GridView::FILTER_SELECT2,				
+				'filterWidgetOptions'=>[
+					'data'=>$searchModel->itemAlias('last_action'),
+					'options' => ['placeholder' => Yii::t('app','Last action...')],
+					'pluginOptions' => [
+						'allowClear' => true
+					],
+					
+				],
+            ],
+            //'last_action',
             // 'isdel',
 
             ['class' => 'kartik\grid\ActionColumn'],

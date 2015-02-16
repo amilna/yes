@@ -15,7 +15,7 @@ class OrderSearch extends Order
 
 	
 	/*public $confirmationsId;*/
-	/*public $customerId;*/
+	public $customerName;
 	/*public $salesId;*/
 
     /**
@@ -25,7 +25,7 @@ class OrderSearch extends Order
     {
         return [
             [['id', 'customer_id', 'status', 'isdel'], 'integer'],
-            [['reference', 'total', 'data', 'time', 'complete_reference', 'complete_time', 'log'/*, 'confirmationsId', 'customerId', 'salesId'*/], 'safe'],
+            [['reference', 'customerName','total', 'data', 'time', 'complete_reference', 'complete_time', 'log'/*, 'confirmationsId', 'customerId', 'salesId'*/], 'safe'],
         ];
     }
 
@@ -124,21 +124,23 @@ class OrderSearch extends Order
         $query = Order::find();
         
                 
-        $query->joinWith([/*'confirmations', 'customer', 'sales'*/]);
+        $query->joinWith(['customer'/*'confirmations', 'customer', 'sales'*/]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
         
+        
+        $dataProvider->sort->attributes['customerName'] = [			
+			'asc' => ['{{%yes_customer}}.name' => SORT_ASC],
+			'desc' => ['{{%yes_customer}}.name' => SORT_DESC],
+		];
+		
         /* uncomment to sort by relations table on respective column
 		$dataProvider->sort->attributes['confirmationsId'] = [			
 			'asc' => ['{{%confirmations}}.id' => SORT_ASC],
 			'desc' => ['{{%confirmations}}.id' => SORT_DESC],
-		];
-		$dataProvider->sort->attributes['customerId'] = [			
-			'asc' => ['{{%customer}}.id' => SORT_ASC],
-			'desc' => ['{{%customer}}.id' => SORT_DESC],
-		];
+		];		
 		$dataProvider->sort->attributes['salesId'] = [			
 			'asc' => ['{{%sales}}.id' => SORT_ASC],
 			'desc' => ['{{%sales}}.id' => SORT_DESC],
@@ -163,6 +165,9 @@ class OrderSearch extends Order
 		{
 			$query->andFilterWhere($p);
 		}
+		
+		$query->andFilterWhere(['like','lower({{%yes_customer}}.name)',strtolower($this->customerName)]);
+		
         return $dataProvider;
     }
 }

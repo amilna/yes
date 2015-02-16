@@ -75,7 +75,20 @@ $this->params['breadcrumbs'][] = $this->title;
             'code',
             'city',
             'area',
-            'data:ntext',
+            //'data:ntext',
+            [
+				'attribute'=>'data',
+				'format'=>'html',
+				'value'=>function($data){																				
+					$model = json_decode($data->data);
+					$html = Yii::t("app","Providers");
+					foreach ($model as $m)
+					{
+						$html .= "<h5>".$m->provider." <small>".$data->toMoney($m->cost).", ".$m->remarks."</small></h5>";
+					}										
+					return $html;
+				},				
+            ], 
             // 'status',
             // 'isdel',
 

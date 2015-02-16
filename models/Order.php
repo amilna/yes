@@ -144,4 +144,21 @@ class Order extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Sale::className(), ['order_id' => 'id']);
     }
+    
+    public function toMoney($val,$dec = 2,$sym = true)
+    {
+		$module = Yii::$app->getModule("yes");
+		return ($sym?$module->currency["symbol"]:"").number_format($val,$dec,$module->currency["decimal_separator"],$module->currency["thousand_separator"]);	
+	}
+	
+	public function toHex($string)
+	{		
+		$hex = '';
+		for ($i=0; $i<strlen($string); $i++){
+			$ord = ord($string[$i]);
+			$hexCode = dechex($ord);
+			$hex .= '%'.substr('0'.$hexCode, -2);
+		}
+		return $hex;
+	}
 }

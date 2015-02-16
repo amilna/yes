@@ -3,6 +3,7 @@
 namespace amilna\yes\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%yes_payment}}".
@@ -62,13 +63,16 @@ class Payment extends \yii\db\ActiveRecord
     
 	public function itemAlias($list,$item = false,$bykey = false)
 	{
+		$terminals = ArrayHelper::map($this->find()->all(), 'id', 'terminal');
+		
 		$lists = [
 			/* example list of item alias for a field with name field */
 			'status'=>[							
 							0=>Yii::t('app','disabled'),
 							1=>Yii::t('app','enabled'),
 							2=>Yii::t('app','closed'),
-						],			
+						],
+			'terminal'=>$terminals,					
 						
 		];				
 		
