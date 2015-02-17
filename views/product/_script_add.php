@@ -158,7 +158,7 @@ function enAsci(a,s) {
 		var html = "";	
 		if (defvat)
 		{
-			html = "<h4><?=Yii::t("app","VAT (Value Added Taxes)")." <small class='pull-right'>Total ".$module->currency["symbol"]?>"+toMoney(vat)+"</small></h4>";
+			html = "<h4><?=Yii::t("app","VAT")." <small>(".Yii::t("app","Value Added Tax").")</small> <small class='pull-right'>Total ".$module->currency["symbol"]?>"+toMoney(vat)+"</small></h4>";
 			$("#order-data-vat").val(vat);
 		}	
 		var grand = total+shipcost+vat;

@@ -145,12 +145,10 @@ $this->params['breadcrumbs'][] = $this->title;
 				},
 				'pageSummaryFunc'=>'sum'
 				
-			],
-            [				
-				'attribute'=>'status',				
-				'value'=>function($data){										
-					return $data->itemAlias('status',$data->status);
-				},
+			],            
+            [	
+				'class' => 'kartik\grid\EditableColumn',
+				'attribute'=>'status',
 				'filterType'=>GridView::FILTER_SELECT2,				
 				'filterWidgetOptions'=>[
 					'data'=>$searchModel->itemAlias('status'),
@@ -160,6 +158,47 @@ $this->params['breadcrumbs'][] = $this->title;
 					],
 					
 				],
+				'value'=>function($data){										
+					return $data->itemAlias('status',$data->status);
+				},
+				'editableOptions'=> function ($model, $key, $index) {
+					return [
+						'header'=>'Name', 
+						'size'=>'sm',
+						'inputType' => \kartik\editable\Editable::INPUT_SELECT2,
+						'options' => [
+							'data'=>$model->itemAlias('status'),
+							'options' => ['placeholder' => Yii::t('app','Filter by status...')],
+							'pluginOptions' => [
+								'allowClear' => false
+							],							
+						],
+						'placement'=>'left',	
+						'showButtons'=>false,	
+						'resetButton'=>false,
+						'afterInput' => function ($form, $widget) use ($model, $index) {
+							echo '<div class="form-group">';
+								echo Html::textInput(substr($model->className(),strrpos($model->className(),"\\")+1)."[".$index."][complete_reference]",$model->complete_reference,
+									["class"=>"form-control","placeholder"=>Yii::t("app","Complete Reference")]);							
+							echo '</div>';
+						},
+						'pluginEvents'=>[
+							'editableSuccess'=>"function(event, val, form, data) { 
+													var model = JSON.parse(data.data);													
+													for (m in model)
+													{
+														$('tr[data-key='+data.id+'] td').each(function(n,d){															
+															if (n == m) {
+																$(d).html(model[m]);
+															}
+														});																												
+													}													
+												}",
+						],
+					];
+				},
+				'hAlign'=>'right',
+            
             ],
             'complete_reference',
             //'data:ntext',

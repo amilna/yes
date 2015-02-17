@@ -74,7 +74,7 @@ class OrderSearch extends Order
 				}
 				else
 				{					
-					array_push($params,["=", ($tab?$tab.".":"").$field, str_replace(["<",">","="],"",$number[0])]);
+					array_push($params,["=s", ($tab?$tab.".":"").$field, str_replace(["<",">","="],"",$number[0])]);
 				}									
 			}
 		}	

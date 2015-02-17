@@ -37,7 +37,33 @@ class OrderController extends Controller
     {
         $searchModel = new OrderSearch();        
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams+($term?['OrderSearch'=>['search'=>$term]]:[]));
-
+		
+		if (Yii::$app->request->post('hasEditable')) {			
+			$Id = Yii::$app->request->post('editableKey');
+			$model = Order::findOne($Id);
+	 
+			$out = json_encode(['id'=>$Id,'output'=>'', 'message'=>'','data'=>'null']);	 			
+			$post = [];
+			$posted = current($_POST['Order']);
+			$post['Order'] = $posted;						
+						
+			if ($model->load($post)) {
+				
+				$model->complete_time = date('r');
+				$model->save();
+	 				
+				$output = '';	 	
+				if (isset($posted['status'])) {				   
+				   $output =  $model->itemAlias('status',$model->status); // new value for edited td
+				   $data = json_encode([7=>$model->complete_reference]); // affected td index with new html at the same row
+				} 
+					 
+				$out = json_encode(['id'=>$model->id,'output'=>$output, "data"=>$data,'message'=>'']);
+			} 			
+			echo $out;
+			return;
+		}
+		
         if ($format == 'json')
         {
 			$model = [];
