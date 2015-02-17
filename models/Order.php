@@ -161,4 +161,47 @@ class Order extends \yii\db\ActiveRecord
 		}
 		return $hex;
 	}
+	
+	public function createSales()
+	{
+		$data = json_decode($this->data);		
+		$cart = isset($data->cart)?json_decode($data->cart):null;				
+		$res = true;
+		
+		foreach ($cart as $p)
+		{																				
+			$remarks = "";
+			foreach ($p as $k=>$v)
+			{
+				if (substr($k,0,5) == "data_")
+				{
+					$remarks .= ($remarks == ""?"":", ").substr($k,5).": ".$v;
+				}
+			}
+			
+			$sale = Sale::findOne(['product_id'=>$p->id,'order_id'=>$this->id,'data'=>$remarks]);
+			if (!$sale)
+			{
+				$sale = new Sale();	
+			}						
+			
+			$sale->order_id = $this->id;
+			$sale->product_id = $p->id;
+			$sale->quantity = $p->quantity;
+			$sale->amount = $p->quantity*$p->price;
+			$sale->data = $remarks;
+			if (!$sale->save())
+			{
+				$res = false;
+			}
+		}
+		
+		return $res;
+	}
+	
+	public function deleteSales()
+	{
+		
+		return $sale = Sale::deleteAll(['order_id'=>$this->id]);				
+	}
 }

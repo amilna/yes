@@ -50,7 +50,17 @@ class OrderController extends Controller
 			if ($model->load($post)) {
 				
 				$model->complete_time = date('r');
-				$model->save();
+				if ($model->save())
+				{
+					if ($model->status == 1)
+					{
+						$model->createSales();
+					}
+					elseif ($model->status == 0)
+					{
+						$model->deleteSales();
+					}
+				}
 	 				
 				$output = '';	 	
 				if (isset($posted['status'])) {				   
