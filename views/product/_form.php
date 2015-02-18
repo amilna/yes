@@ -17,7 +17,7 @@ $module = Yii::$app->getModule('yes');
 // http://kcfinder.sunhater.com/install#dynamic
 $kcfOptions = array_merge([], [
     'uploadURL' => Yii::getAlias('@web').'/'.$module->uploadDir,    
-    'uploadDir' => Yii::getAlias('@webroot').'/'.$module->uploadDir,
+    'uploadDir' => Yii::getAlias('@webroot').'/'.$module->uploadDir,    
     'access' => [
         'files' => [
             'upload' => true,
@@ -31,7 +31,11 @@ $kcfOptions = array_merge([], [
             'delete' => false,
             'rename' => false,
         ],
-    ],    
+    ],  
+    'types'=>[
+		'files'    =>  "",        
+        'images'   =>  "*img",
+    ]      
 ]);
 
 // Set kcfinder session options
@@ -174,7 +178,10 @@ foreach ($model->catPro as $c)
 
 				echo $form->field($model, 'images')->widget(KCFinderInputWidget::className(), [
 					'multiple' => true,
-					'kcfOptions'=>$kcfOptions,					
+					'kcfOptions'=>$kcfOptions,
+					'kcfBrowseOptions'=>[
+						'type'=>'images'				
+					]	
 				]);
 				
 				?>	

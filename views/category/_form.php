@@ -31,7 +31,11 @@ $kcfOptions = array_merge([], [
             'delete' => false,
             'rename' => false,
         ],
-    ],    
+    ],  
+    'types'=>[
+		'files'    =>  "",        
+        'images'   =>  "*img",
+    ]      
 ]);
 
 
@@ -85,7 +89,7 @@ $listParent = []+ArrayHelper::map(($model->isNewRecord?$model->parents():$model-
 					'multiple' => false,
 					'kcfOptions'=>$kcfOptions,	
 					'kcfBrowseOptions'=>[
-						'type'=>'image'				
+						'type'=>'images'				
 					]	
 				]);	
 			?>							

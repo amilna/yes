@@ -51,7 +51,7 @@ $module = Yii::$app->getModule("yes");
 							
 							echo ElevateZoom::widget([
 								'images'=>$images,
-								'baseUrl'=>Yii::$app->urlManager->baseUrl.'/upload',
+								'baseUrl'=>Yii::$app->urlManager->baseUrl.'/'.$module->uploadDir,
 								'smallPrefix'=>'/.thumbs',
 								'mediumPrefix'=>'',
 								'options'=>[		
