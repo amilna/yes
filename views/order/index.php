@@ -90,8 +90,14 @@ $this->params['breadcrumbs'][] = $this->title;
 								}',
 					],			
 				],
-			],                        
-			'reference',
+			],                        			
+			[
+				'attribute'=>'reference',
+				'format'=>'html',
+				'value'=>function($model){																				
+					return (count($model->confirmations) > 0?Html::a($model->reference.'<i class="badge pull-left">'.count($model->confirmations).'</i>',['//yes/confirmation','ConfirmationSearch[orderReference]'=>$model->reference]):$model->reference);					
+				},				
+            ],                        
             [
 				'attribute'=>'customerName',
 				'format'=>'html',
