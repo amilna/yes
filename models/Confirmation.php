@@ -38,10 +38,10 @@ class Confirmation extends \yii\db\ActiveRecord
     {
         return [
             [['order_id', 'payment_id', 'isdel'], 'integer'],
-            [['payment_id', 'terminal', 'account', 'name', 'remarks'], 'required'],
+            [['payment_id', 'terminal', 'account', 'name'], 'required'],
             [['amount'], 'number'],
             [['remarks'], 'string'],
-            [['time'], 'safe'],
+            [['time','remarks'], 'safe'],
             [['terminal', 'account', 'name'], 'string', 'max' => 255]
         ];
     }
@@ -53,11 +53,11 @@ class Confirmation extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'order_id' => Yii::t('app', 'Order ID'),
-            'payment_id' => Yii::t('app', 'Payment ID'),
-            'terminal' => Yii::t('app', 'Terminal'),
-            'account' => Yii::t('app', 'Account'),
-            'name' => Yii::t('app', 'Name'),
+            'order_id' => Yii::t('app', 'Order Reference'),
+            'payment_id' => Yii::t('app', 'Payment to'),
+            'terminal' => Yii::t('app', 'from Terminal'),
+            'account' => Yii::t('app', 'from Account'),
+            'name' => Yii::t('app', 'from Name'),
             'amount' => Yii::t('app', 'Amount'),
             'remarks' => Yii::t('app', 'Remarks'),
             'time' => Yii::t('app', 'Time'),
@@ -130,4 +130,10 @@ class Confirmation extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Payment::className(), ['id' => 'payment_id']);
     }
+    
+    public function toMoney($val,$dec = 2,$sym = true)
+    {
+		$module = Yii::$app->getModule("yes");
+		return ($sym?$module->currency["symbol"]:"").number_format($val,$dec,$module->currency["decimal_separator"],$module->currency["thousand_separator"]);	
+	}
 }

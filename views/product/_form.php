@@ -104,7 +104,8 @@ foreach ($model->catPro as $c)
 		<div class="col-md-3">
 			<div class="well">
 				<?= $form->field($model, 'time')->widget(DateTimePicker::classname(), [				
-						'options' => ['placeholder' => 'Select posting time ...'],
+						'options' => ['placeholder' => 'Select posting time ...','readonly'=>true],
+						'removeButton'=>false,
 						'convertFormat' => true,
 						'pluginOptions' => [
 							'format' => 'yyyy-MM-dd HH:i:s',
@@ -211,5 +212,5 @@ foreach ($model->catPro as $c)
 
 <?php
 
-$this->render('_script',['model'=>$model]);
+$this->render('@amilna/yes/views/product/_script',['model'=>$model]);
 

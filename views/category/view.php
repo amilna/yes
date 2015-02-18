@@ -32,9 +32,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'title',
             'parent_id',
             'description:ntext',
-            'image',
+            [
+				'attribute'=>'image',
+				'format'=>'html',
+				'value'=>(!empty($model->image)?(Html::img($model->image)):''),
+            ],            
             'status:boolean',
-            'isdel',
+            //'isdel',
         ],
     ]) ?>
 

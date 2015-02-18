@@ -35,19 +35,28 @@ $module = Yii::$app->getModule("yes");
 							for (a in addrs)
 							{
 								html += "<a title=\""+addrs[a]+"\" class=\"btn btn-sm btn-default address-add\" style=\"max-width:100px;text-overflow: ellipsis;\">"+addrs[a].substr(0,10)+"...</a>";								
-							}							
-							var code = addrs[0].substr(addrs[0].lastIndexOf(", code:")+7);
-							var addr = addrs[0].substr(0,addrs[0].lastIndexOf(", code:"));
-							$("#order-customer_id-address").val(addr);
-							findShip(code);
+							}				
+							
+							var addr = addrs[0];
+							if (addrs[0].indexOf(", code:") >= 0)
+							{
+								var code = addrs[0].substr(addrs[0].lastIndexOf(", code:")+7);
+								addr = addrs[0].substr(0,addrs[0].lastIndexOf(", code:"));
+								findShip(code);
+							}										
+							$("#order-customer_id-address").val(addr);							
 							
 							$(".list-address").html(html);
 							$(".address-add").click(function(){
-								var ad = $(this).attr("title");
-								var code = ad.substr(ad.lastIndexOf(", code:")+7);
-								var addr = ad.substr(0,ad.lastIndexOf(", code:"));
-								$("#order-customer_id-address").val(addr);
-								findShip(code);
+								var ad = $(this).attr("title");								
+								var addr = ad;
+								if (ad.indexOf(", code:") >= 0)
+								{
+									var code = ad.substr(ad.lastIndexOf(", code:")+7);
+									addr = ad.substr(0,ad.lastIndexOf(", code:"));
+									findShip(code);
+								}
+								$("#order-customer_id-address").val(addr);								
 							});
 							
 						}						

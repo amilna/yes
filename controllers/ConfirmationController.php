@@ -3,16 +3,16 @@
 namespace amilna\yes\controllers;
 
 use Yii;
-use amilna\yes\models\Sale;
-use amilna\yes\models\SaleSearch;
+use amilna\yes\models\Confirmation;
+use amilna\yes\models\ConfirmationSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * SaleController implements the CRUD actions for Sale model.
+ * ConfirmationController implements the CRUD actions for Confirmation model.
  */
-class SaleController extends Controller
+class ConfirmationController extends Controller
 {
     public function behaviors()
     {
@@ -27,15 +27,16 @@ class SaleController extends Controller
     }
 
     /**
-     * Lists all Sale models.
+     * Lists all Confirmation models.
      * @params string $format, array $arraymap, string $term
      * @return mixed
      */
     public function actionIndex($format= false,$arraymap= false,$term = false)
     {
-        $searchModel = new SaleSearch();        
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams+($term?['SaleSearch'=>['search'=>$term]]:[]));
-
+        $searchModel = new ConfirmationSearch();        
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams+($term?['ConfirmationSearch'=>['search'=>$term]]:[]));
+		
+		
         if ($format == 'json')
         {
 			$model = [];
@@ -85,7 +86,7 @@ class SaleController extends Controller
     }
 
     /**
-     * Displays a single Sale model.
+     * Displays a single Confirmation model.
      * @param integer $id
      * @additionalParam string $format
      * @return mixed
@@ -107,15 +108,13 @@ class SaleController extends Controller
     }
 
     /**
-     * Creates a new Sale model.
+     * Creates a new Confirmation model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        return $this->redirect(['index']);
-        
-        $model = new Sale();
+        $model = new Confirmation();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -127,15 +126,13 @@ class SaleController extends Controller
     }
 
     /**
-     * Updates an existing Sale model.
+     * Updates an existing Confirmation model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
      */
     public function actionUpdate($id)
     {
-        return $this->redirect(['index']);
-        
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -148,15 +145,13 @@ class SaleController extends Controller
     }
 
     /**
-     * Deletes an existing Sale model.
+     * Deletes an existing Confirmation model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
      */
     public function actionDelete($id)
     {        
-		return $this->redirect(['index']);
-		
 		$model = $this->findModel($id);        
         $model->isdel = 1;
         $model->save();
@@ -166,15 +161,15 @@ class SaleController extends Controller
     }
 
     /**
-     * Finds the Sale model based on its primary key value.
+     * Finds the Confirmation model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Sale the loaded model
+     * @return Confirmation the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Sale::findOne($id)) !== null) {
+        if (($model = Confirmation::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

@@ -4,13 +4,13 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model amilna\yes\models\Payment */
+/* @var $model amilna\yes\models\Confirmation */
 
 $this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Payments'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Confirmations'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="payment-view">
+<div class="confirmation-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -29,13 +29,23 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
+            [
+				'attribute'=>'order_id',
+				'value'=>$model->order->reference
+            ],
+            [
+				'attribute'=>'payment_id',
+				'value'=>$model->payment->terminal." ".$model->payment->account." ".$model->payment->name
+            ],
             'terminal',
             'account',
             'name',
             [
-				'attribute'=>'status',
-				'value'=>$model->itemAlias('status',$model->status)
-            ],            
+				'attribute'=>'amount',
+				'value'=>$model->toMoney($model->amount)
+            ],
+            'remarks:ntext',
+            'time',
             //'isdel',
         ],
     ]) ?>

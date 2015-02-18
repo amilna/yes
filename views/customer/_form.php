@@ -30,7 +30,15 @@ use kartik\datetime\DateTimePicker;
 					'tags' => $model->getPhones(),
 				],
 			]) ?>		
-			<?= $form->field($model, 'addresses')->textarea(['rows' => 3]) ?>
+			<?/*= $form->field($model, 'addresses')->textarea(['rows' => 3]) */?>
+			<div class="row">		
+				<div class="col-sm-12">
+					<div class="well addresses">		
+						<h4><?= Yii::t('app','Addresses') ?> <small class="pull-right"><?= Yii::t('app','list of your addresses') ?>  <a id="address-add" class="btn btn-sm btn-default">Add Address</a></small></h4>				
+						<br>
+					</div>
+				</div>				
+			</div>
 		</div>
 		<div class='col-sm-4 well'>
 			<?= $form->field($model, 'email')->textInput(['maxlength' => 255]) ?>
@@ -45,7 +53,8 @@ use kartik\datetime\DateTimePicker;
 				]);
 			?>
 			<?= $form->field($model, 'last_time')->widget(DateTimePicker::classname(), [				
-					'options' => ['placeholder' => 'Select posting time ...'],
+					'options' => ['placeholder' => 'Select last action time ...','readonly'=>true],
+					'removeButton'=>false,
 					'convertFormat' => true,
 					'pluginOptions' => [
 						'format' => 'yyyy-MM-dd HH:i:s',
@@ -68,3 +77,19 @@ use kartik\datetime\DateTimePicker;
     <?php ActiveForm::end(); ?>
 
 </div>
+
+<div id="template_form_details" class="hidden">
+	<div id="detail_:N" class="detail">	
+		<div class="row">									
+			<div class="col-xs-12" >																										
+				<div class="input-group">				  
+				  <textarea name="Customer[addresses][]" id="Customer_addresses_:N" rows=2 class="form-control" placeholder="<?= Yii::t("app","Address available to use for shipping")?>"></textarea>
+				  <div id="address-del:N" title="<?= Yii::t('app','Remove Address')?>" class="input-group-addon" style="cursor:pointer;"><i class="glyphicon glyphicon-trash"></i></div>
+				</div>
+			</div>			
+		</div>				
+	</div>	
+</div>
+
+<?php
+$this->render('@amilna/yes/views/customer/_script',['model'=>$model]);

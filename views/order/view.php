@@ -98,7 +98,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				<br>
 				<strong><?= Yii::t("app","for")?></strong><br>
 				<?= Yii::t("app","Products buying in this website, payment via")?>				
-				<?= $payment->terminal."<br>".Yii::t("app","account ").$payment->account." ".Yii::t("app","in the name of ").$payment->name?>
+				<?= "<b>".$payment->terminal."</b><br>".Yii::t("app","account ")."<b>".$payment->account."</b> ".Yii::t("app","in the name of ")."<b>".$payment->name."</b>"?>
 			</td>
 			<td colspan=3>
 				<h4><?= Yii::t("app","Published by")?></h4>
@@ -122,6 +122,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		<?php
 						
 			$n = 0;		
+			
 			foreach ($cart as $p)
 			{				
 				$n += 1;
@@ -140,20 +141,25 @@ $this->params['breadcrumbs'][] = $this->title;
 			
 			if ($shipping != null)
 			{				
-				echo '<tr><td>'.($n+1).'</td><td>'.Yii::t("app","Shipping Cost").'</td><td><i>'.$shipping->provider.' '.$shipping->code.'</i> '.Yii::t("app","destination ").$shipping->city.' ('.$shipping->area.')</td><td style="text-align:right"></td><td style="text-align:right">'.$model->toMoney($shipping->cost,0).'</td><td style="text-align:right">'.$model->toMoney($data->shippingcost,0).'</td></tr>';
+				echo '<tr><td>'.($n+1).'</td><td>'.Yii::t("app","Shipping Cost").'</td><td><i>'.$shipping->provider.' '.$shipping->code.'</i> '.Yii::t("app","destination ").$shipping->city.' ('.$shipping->area.')</td><td style="text-align:right">'.$model->toMoney($data->shippingcost/$shipping->cost,2,false).' Kg</td><td style="text-align:right">'.$model->toMoney($shipping->cost,0).'</td><td style="text-align:right">'.$model->toMoney($data->shippingcost,0).'</td></tr>';
 			}
 			
 			if ($data->vat > 0)
 			{				
-				echo '<tr><td>'.($n+1).'</td><td>'.Yii::t("app","VAT").'</td><td>'.Yii::t("app","Value Added Tax").'</td><td style="text-align:right"></td><td style="text-align:right">'.($module->defaults["vat"]*100).'%</td><td style="text-align:right">'.$model->toMoney($data->vat,0).'</td></tr>';
+				echo '<tr><td colspan=5 style="text-align:right"><h5>'.Yii::t("app","VAT").' <small>'.Yii::t("app","Value Added Tax").'</small> '.($module->defaults["vat"]*100).'%</h5></td><td style="text-align:right;vertical-align:middle;">'.$model->toMoney($data->vat,0).'</td></tr>';
 			}
 			
 			echo '<tr><th colspan=5 >Total</th><th style="text-align:right">'.$model->toMoney($model->total,0).'</th></tr>';
 		
 		?>
-		<tr>
-			<th colspan=2><?= Yii::t("app","Order Remarks")?></th>
-			<td colspan=4><?= $data->note?></td>
+		<tr >
+			<!--<th colspan=2 style="padding-top:40px;"><?= Yii::t("app","Order Remarks")?></th>-->
+			<td colspan=6 style="padding-top:20px;">
+				<dl class="dl-horizontal">
+				  <dt><?= Yii::t("app","Order Remarks")?></dt>
+				  <dd><?= $data->note?></dd>
+				</dl>
+			</td>
 		</tr>
 	</table>
 

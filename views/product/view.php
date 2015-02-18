@@ -199,7 +199,7 @@ $module = Yii::$app->getModule("yes");
 			</form>
 			<hr>
 			<h4><?= Yii::t("app","Recent Products")?></h4>
-			<ul>
+			<ul class="list-unstyled">
 				<?php
 					foreach ($model->getRecent() as $m)
 					{
@@ -209,7 +209,7 @@ $module = Yii::$app->getModule("yes");
 			</ul>
 			<hr>
 			<h4><?= Yii::t("app","Categories")?></h4>
-			<ul>
+			<ul class="nav nav-pills nav-stacked">
 				<?php
 					foreach ($cat->parents() as $c)
 					{
@@ -219,7 +219,7 @@ $module = Yii::$app->getModule("yes");
 			</ul>
 			<hr>
 			<h4><?= Yii::t("app","Archive")?></h4>
-			<ul>
+			<ul class="nav nav-pills">
 				<?php
 					foreach ($model->getArchived() as $m)
 					{
@@ -254,5 +254,5 @@ $module = Yii::$app->getModule("yes");
 
 <?php
 
-$this->render('_script_add',['model'=>$model]);
+$this->render('@amilna/yes/views/product/_script_add',['model'=>$model]);
 

@@ -24,17 +24,32 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ]) ?>
     </p>
-
+	
+	<?php
+		$data = json_decode($model->data);
+		$html = Yii::t("app","Providers");
+		foreach ($data as $m)
+		{
+			$html .= "<h5>".$m->provider." <small>".$model->toMoney($m->cost).", ".$m->remarks."</small></h5>";
+		}											
+	?>
+	
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
             'id',
             'code',
             'city',
-            'area',
-            'data:ntext',
-            'status',
-            'isdel',
+            'area',            
+            [
+				'attribute'=>'data',
+				'format'=>'html',
+				'value'=>$html,					
+            ],
+            [
+				'attribute'=>'status',
+				'value'=>$model->itemAlias('status',$model->status)
+            ],            
         ],
     ]) ?>
 

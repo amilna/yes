@@ -133,4 +133,4 @@ use kartik\datetime\DateTimePicker;
 
 <?php
 
-$this->render('_script',['model'=>$model]);
+$this->render('@amilna/yes/views/shipping/_script',['model'=>$model]);

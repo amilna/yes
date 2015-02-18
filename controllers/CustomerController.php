@@ -35,6 +35,36 @@ class CustomerController extends Controller
     {
         $searchModel = new CustomerSearch();        
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams+($term?['CustomerSearch'=>['search'=>$term]]:[]));
+
+		if (Yii::$app->request->post('hasEditable')) {			
+			$Id = Yii::$app->request->post('editableKey');
+			$model = Customer::findOne($Id);
+	 
+			$out = json_encode(['id'=>$Id,'output'=>'', 'message'=>'','data'=>'null']);	 			
+			$post = [];
+			$posted = current($_POST['Customer']);
+			$post['Customer'] = $posted;						
+						
+			if ($model->load($post)) {
+				
+				$model->last_time = date('Y-m-d H:i:s');
+				if ($model->save())
+				{
+										
+				}
+	 				
+				$output = '';	 	
+				if (isset($posted['last_action'])) {				   
+				   $output =  $model->itemAlias('last_action',$model->last_action); // new value for edited td
+				   $data = json_encode([5=>$model->last_time]); // affected td index with new html at the same row
+				} 
+					 
+				$out = json_encode(['id'=>$model->id,'output'=>$output, "data"=>$data,'message'=>'']);
+			} 			
+			echo $out;
+			return;
+		}
+
 		
 		$post = Yii::$app->request->post();
 		$format = (isset($post["format"])?$post["format"]:$format);
@@ -117,14 +147,33 @@ class CustomerController extends Controller
     public function actionCreate()
     {
         $model = new Customer();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
+		$model->last_time = date("Y-m-d H:i:s");	
+		$model->last_action = 0;	
+		
+		if (Yii::$app->request->post())        
+        {
+			$post = Yii::$app->request->post();						
+			
+			$addresses = [];
+						
+			if (isset($post['Customer']['addresses']))
+			{
+				$addresses = $post['Customer']['addresses'];
+				$post['Customer']['addresses'] = json_encode($addresses);
+			}	
+			
+			$model->load($post);			
+			
+			if ($model->save()) {															
+				return $this->redirect(['view', 'id' => $model->id]);            
+			} else {				
+				$model->addresses = json_encode($addresses);
+			}
+		}	
+        
+        return $this->render('create', [
+			'model' => $model,
+		]);
     }
 
     /**
@@ -137,13 +186,28 @@ class CustomerController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }
+		if (Yii::$app->request->post())        
+        {
+			$post = Yii::$app->request->post();						
+			
+			$addresses = [];
+						
+			if (isset($post['Customer']['addresses']))
+			{
+				$addresses = $post['Customer']['addresses'];
+				$post['Customer']['addresses'] = json_encode($addresses);
+			}	
+			
+			$model->load($post);			
+			
+			if ($model->save()) {															
+				return $this->redirect(['view', 'id' => $model->id]);            
+			}
+		}				
+        
+        return $this->render('update', [
+			'model' => $model,
+		]);
     }
 
     /**

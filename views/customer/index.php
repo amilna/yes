@@ -94,12 +94,10 @@ $this->params['breadcrumbs'][] = $this->title;
 								}',
 					],			
 				],
-			],  
-			[				
-				'attribute'=>'last_action',				
-				'value'=>function($data){										
-					return $data->itemAlias('last_action',$data->last_action);
-				},
+			],
+			[	
+				'class' => 'kartik\grid\EditableColumn',
+				'attribute'=>'last_action',
 				'filterType'=>GridView::FILTER_SELECT2,				
 				'filterWidgetOptions'=>[
 					'data'=>$searchModel->itemAlias('last_action'),
@@ -109,7 +107,42 @@ $this->params['breadcrumbs'][] = $this->title;
 					],
 					
 				],
-            ],
+				'value'=>function($data){										
+					return $data->itemAlias('last_action',$data->last_action);
+				},
+				'editableOptions'=> function ($model, $key, $index) {
+					return [
+						'header'=>Yii::t('app','Last action'), 
+						'size'=>'sm',
+						'inputType' => \kartik\editable\Editable::INPUT_SELECT2,
+						'options' => [
+							'data'=>$model->itemAlias('last_action'),
+							'options' => ['placeholder' => Yii::t('app','Last action...')],
+							'pluginOptions' => [
+								'allowClear' => false
+							],							
+						],
+						'placement'=>'left',	
+						'showButtons'=>false,	
+						'resetButton'=>false,						
+						'pluginEvents'=>[
+							'editableSuccess'=>"function(event, val, form, data) { 
+													var model = JSON.parse(data.data);													
+													for (m in model)
+													{
+														$('tr[data-key='+data.id+'] td').each(function(n,d){															
+															if (n == m) {
+																$(d).html(model[m]);
+															}
+														});																												
+													}													
+												}",
+						],
+					];
+				},
+				'hAlign'=>'right',
+            
+            ],  			
             //'last_action',
             // 'isdel',
 

@@ -163,7 +163,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				},
 				'editableOptions'=> function ($model, $key, $index) {
 					return [
-						'header'=>'Name', 
+						'header'=>Yii::t('app','Status'), 
 						'size'=>'sm',
 						'inputType' => \kartik\editable\Editable::INPUT_SELECT2,
 						'options' => [

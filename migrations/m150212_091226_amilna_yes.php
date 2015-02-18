@@ -102,7 +102,7 @@ class m150212_091226_amilna_yes extends Migration
             'account' => Schema::TYPE_STRING . ' NOT NULL',
             'name' => Schema::TYPE_STRING . ' NOT NULL',
             'amount' => Schema::TYPE_FLOAT . ' NOT NULL DEFAULT 0',
-            'remarks' => Schema::TYPE_TEXT . ' NOT NULL',
+            'remarks' => Schema::TYPE_TEXT . '',
             'time' => Schema::TYPE_TIMESTAMP. ' NOT NULL DEFAULT NOW()',
             'isdel' => Schema::TYPE_SMALLINT.' NOT NULL DEFAULT 0',
         ]);

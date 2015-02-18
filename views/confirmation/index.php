@@ -5,31 +5,30 @@ use yii\helpers\ArrayHelper;
 use amilna\yap\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel amilna\yes\models\SaleSearch */
+/* @var $searchModel amilna\yes\models\ConfirmationSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Sales');
+$this->title = Yii::t('app', 'Confirmations');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'YES'), 'url' => ['/yes/default']];
 $this->params['breadcrumbs'][] = $this->title;
 
 $module = Yii::$app->getModule('yes');
 ?>
-<div class="sale-index">
+<div class="confirmation-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-       
     <p>
-        <?/*= Html::a(Yii::t('app', 'Create {modelClass}', [
-    'modelClass' => 'Sale',
-]), ['create'], ['class' => 'btn btn-success'])*/ ?>
+        <?= Html::a(Yii::t('app', 'Create {modelClass}', [
+    'modelClass' => 'Confirmation',
+]), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         
         'containerOptions' => ['style'=>'overflow: auto'], // only set when $responsive = false		
-		'caption'=>Yii::t('app', 'Sale'),
+		'caption'=>Yii::t('app', 'Confirmation'),
 		'headerRowOptions'=>['class'=>'kartik-sheet-style','style'=>'background-color: #fdfdfd'],
 		'filterRowOptions'=>['class'=>'kartik-sheet-style skip-export','style'=>'background-color: #fdfdfd'],
 		'pjax' => false,
@@ -65,10 +64,10 @@ $module = Yii::$app->getModule('yes');
 		],
 		'floatHeader' => true,		
 		
-		/* uncomment to use megeer some columns */
-        'mergeColumns' => ['time','orderReference'],
+		/* uncomment to use megeer some columns
+        'mergeColumns' => ['Column 1','Column 2','Column 3'],
         'type'=>'firstrow', // or use 'simple'
-        
+        */
         
         'filterModel' => $searchModel,
         'columns' => [
@@ -92,8 +91,8 @@ $module = Yii::$app->getModule('yes');
 								}',
 					],			
 				],
-			],
-			[
+			],                        
+            [
 				'attribute'=>'orderReference',
 				'format'=>'html',
 				'value'=>function($data) {					
@@ -101,29 +100,15 @@ $module = Yii::$app->getModule('yes');
 				}
 			],
             [
-				'attribute'=>'productTitle',
-				'value'=>function($data) {
-					return $data->product->title;	
+				'attribute'=>'paymentTerminal',
+				'format'=>'html',
+				'value'=>function($data) {					
+					return $data->payment->terminal." ".$data->payment->account;	
 				}
 			],
-            'data:ntext',
-            [				
-				'attribute' => 'quantity',				
-				'value'=>function($data) use ($module){															
-					return number_format($data->quantity,2,$module->currency["decimal_separator"],$module->currency["thousand_separator"]);
-				},				
-				'hAlign'=>'right',
-				'pageSummary'=>function ($summary, $data, $widget) use ($module) { 										
-					$r = 0;
-					foreach($data as $d)
-					{
-						$r += floatval(str_replace($module->currency["thousand_separator"],"",$d));
-					}
-					return number_format($r,2,$module->currency["decimal_separator"],$module->currency["thousand_separator"]);
-				},
-				'pageSummaryFunc'=>'sum'
-				
-			],
+            'terminal',
+            'account',
+            'name',
             [				
 				'attribute' => 'amount',				
 				'value'=>function($data) use ($module){															
@@ -141,10 +126,10 @@ $module = Yii::$app->getModule('yes');
 				'pageSummaryFunc'=>'sum'
 				
 			],            
-            //'time',
+            'remarks:ntext',            
             // 'isdel',
 
-            //['class' => 'kartik\grid\ActionColumn'],
+            ['class' => 'kartik\grid\ActionColumn'],
         ],
     ]); ?>
 

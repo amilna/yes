@@ -48,8 +48,8 @@ class OrderController extends Controller
 			$post['Order'] = $posted;						
 						
 			if ($model->load($post)) {
-				
-				$model->complete_time = date('r');
+								
+				$model->complete_time = date('Y-m-d H:i:s');
 				if ($model->save())
 				{
 					if ($model->status == 1)

@@ -5,16 +5,16 @@ namespace amilna\yes\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use amilna\yes\models\Sale;
+use amilna\yes\models\Confirmation;
 
 /**
- * SaleSearch represents the model behind the search form about `amilna\yes\models\Sale`.
+ * ConfirmationSearch represents the model behind the search form about `amilna\yes\models\Confirmation`.
  */
-class SaleSearch extends Sale
+class ConfirmationSearch extends Confirmation
 {
 
 	
-	public $productTitle;
+	public $paymentTerminal;
 	public $orderReference;
 
     /**
@@ -23,8 +23,8 @@ class SaleSearch extends Sale
     public function rules()
     {
         return [
-            [['id', 'product_id', 'order_id', 'isdel'], 'integer'],
-            [['data', 'amount', 'orderReference','productTitle','quantity', 'time'/*, 'productId', 'orderId'*/], 'safe'],
+            [['id', 'order_id', 'payment_id', 'isdel'], 'integer'],
+            [['terminal', 'orderReference','paymentTerminal', 'account', 'name', 'amount', 'remarks', 'time'/*, 'orderId', 'paymentId'*/], 'safe'],
         ];
     }
 
@@ -120,19 +120,19 @@ class SaleSearch extends Sale
      */
     public function search($params)
     {
-        $query = Sale::find();
+        $query = Confirmation::find();
         
                 
-        $query->joinWith(['product', 'order']);
+        $query->joinWith(['order', 'payment']);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
         
         /* uncomment to sort by relations table on respective column */
-		$dataProvider->sort->attributes['productTitle'] = [			
-			'asc' => ['{{%yes_product}}.title' => SORT_ASC],
-			'desc' => ['{{%yes_product}}.title' => SORT_DESC],
+		$dataProvider->sort->attributes['paymentTerminal'] = [			
+			'asc' => ['{{%yes_payment}}.terminal' => SORT_ASC],
+			'desc' => ['{{%yes_payment}}.terminal' => SORT_DESC],
 		];
 		$dataProvider->sort->attributes['orderReference'] = [			
 			'asc' => ['{{%yes_order}}.reference' => SORT_ASC],
@@ -143,35 +143,32 @@ class SaleSearch extends Sale
             return $dataProvider;
         }				
 		
-        $params = self::queryNumber([['id'],['product_id'],['order_id'],['amount'],['quantity'],['isdel']/*['id','{{%product}}'],['id','{{%order}}']*/]);
+        $params = self::queryNumber([['id'],['order_id'],['payment_id'],['amount'],['isdel']/*['id','{{%order}}'],['id','{{%payment}}']*/]);
 		foreach ($params as $p)
 		{
 			$query->andFilterWhere($p);
 		}
-        $params = self::queryString([['data']/*['id','{{%product}}'],['id','{{%order}}']*/]);
+        $params = self::queryString([['terminal','{{%yes_confirmation}}'],['account','{{%yes_confirmation}}'],['name','{{%yes_confirmation}}'],['remarks']/*['id','{{%order}}'],['id','{{%payment}}']*/]);
 		foreach ($params as $p)
 		{
 			$query->andFilterWhere($p);
 		}
-        $params = self::queryTime([['time']/*['id','{{%product}}'],['id','{{%order}}']*/]);
+        $params = self::queryTime([['time']/*['id','{{%order}}'],['id','{{%payment}}']*/]);
 		foreach ($params as $p)
 		{
 			$query->andFilterWhere($p);
 		}		
-		/* example to use search all in field1,field2,field3 or field4
-		if ($this->search)
+		/* example to use search all in field1,field2,field3 or field4 */
+		if ($this->paymentTerminal)
 		{
-			$query->andFilterWhere(["OR","lower(field1) like '%".strtolower($this->search)."%'",
-				["OR","lower(field2) like '%".strtolower($this->search)."%'",
-					["OR","lower(field3) like '%".strtolower($this->search)."%'",
-						"lower(field4) like '%".strtolower($this->search)."%'"						
-					]
+			$query->andFilterWhere(["OR","lower({{%yes_payment}}.terminal) like '%".strtolower($this->paymentTerminal)."%'",
+				["OR","lower({{%yes_payment}}.account) like '%".strtolower($this->paymentTerminal)."%'",
+					"lower({{%yes_payment}}.name) like '%".strtolower($this->paymentTerminal)."%'"						
 				]
 			]);	
 		}	
-		*/
-		
-		$query->andFilterWhere(["like", "lower({{%yes_product}}.title)", strtolower($this->productTitle)]);
+		 
+						
 		$query->andFilterWhere(["like", "lower({{%yes_order}}.reference)", strtolower($this->orderReference)]);
 
         return $dataProvider;

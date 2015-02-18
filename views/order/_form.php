@@ -225,6 +225,6 @@ $payment = ($model->isNewRecord?$model->id['payment']:false);
 <?php
 
 $this->render('@amilna/yes/views/product/_script_add',['model'=>$model]);
-$this->render('_script_ship',['model'=>$model]);
-$this->render('_script_customer',['model'=>$model]);
-$this->render('_script_load',['model'=>$model]);
+$this->render('@amilna/yes/views/order/_script_ship',['model'=>$model]);
+$this->render('@amilna/yes/views/order/_script_customer',['model'=>$model]);
+$this->render('@amilna/yes/views/order/_script_load',['model'=>$model]);

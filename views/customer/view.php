@@ -34,8 +34,11 @@ $this->params['breadcrumbs'][] = $this->title;
             'addresses:ntext',
             'email:email',
             'last_time',
-            'last_action',
-            'isdel',
+            [
+				'attribute'=>'last_action',
+				'value'=>$model->itemAlias('last_action',$model->last_action)
+            ],
+           //'isdel',
         ],
     ]) ?>
 
