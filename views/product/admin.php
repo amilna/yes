@@ -11,6 +11,8 @@ use amilna\yap\GridView;
 $this->title = Yii::t('app', 'Products');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'YES'), 'url' => ['/yes/default']];
 $this->params['breadcrumbs'][] = $this->title;
+
+$module = Yii::$app->getModule('yes');
 ?>
 <div class="product-index">
 
@@ -75,9 +77,9 @@ $this->params['breadcrumbs'][] = $this->title;
              [
 				'attribute' => 'search',
 				'format'=>'html',
-				'value' => function($data){
+				'value' => function($data) use ($module) {
 					$images = json_decode($data->images);					
-					return (isset($images[0])?Html::img(str_replace("/upload/","/upload/.thumbs/",$images[0]),['class'=>'pull-left','style'=>'margin:0 10px 10px 0']):"")." ".$data->title;
+					return (isset($images[0])?Html::img(str_replace("/".$module->uploadDir."/","/".$module->uploadDir."/.thumbs/",$images[0]),['class'=>'pull-left','style'=>'margin:0 10px 10px 0']):"")." ".$data->title;
 				},
             ],            
             'description',

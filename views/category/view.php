@@ -9,6 +9,8 @@ use yii\widgets\DetailView;
 $this->title = $model->title;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Categories'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+
+$module = Yii::$app->getModule('yes');
 ?>
 <div class="category-view">
 
@@ -35,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
 				'attribute'=>'image',
 				'format'=>'html',
-				'value'=>(!empty($model->image)?(Html::img($model->image)):''),
+				'value'=>(!empty($model->image)?(Html::img(str_replace("/".$module->uploadDir."/","/".$module->uploadDir."/.thumbs/",$model->image))):''),
             ],            
             'status:boolean',
             //'isdel',
