@@ -13,7 +13,7 @@ use amilna\yes\models\Customer;
 class CustomerSearch extends Customer
 {
 
-	public $search;
+	public $term;
 	/*public $yesordersId;*/
 
     /**
