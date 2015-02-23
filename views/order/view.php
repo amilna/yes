@@ -131,7 +131,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				$remarks = "";
 				foreach ($p as $k=>$v)
 				{
-					if (substr($k,0,5) == "data_")
+					if (substr($k,0,5) == "data_" && !in_array(substr($k,5),["weight","vat"]))
 					{
 						$remarks .= ($remarks == ""?"":", ").substr(Html::encode($k),5).": ".Html::encode($v);
 					}
@@ -140,7 +140,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				echo '<tr><td>'.$n.'</td><td>'.$title.'</td><td>'.$remarks.'</td><td style="text-align:right">'.$p->quantity.'</td><td style="text-align:right">'.$model->toMoney($p->price,0).'</td><td style="text-align:right">'.$model->toMoney($p->quantity*$p->price,0).'</td></tr>';
 			}
 			
-			if ($shipping != null)
+			if ($shipping != null && $data->shippingcost > 0)
 			{				
 				echo '<tr><td>'.($n+1).'</td><td>'.Yii::t("app","Shipping Cost").'</td><td><i>'.$shipping->provider.' '.$shipping->code.'</i> '.Yii::t("app","destination ").$shipping->city.' ('.$shipping->area.')</td><td style="text-align:right">'.$model->toMoney($data->shippingcost/$shipping->cost,2,false).' Kg</td><td style="text-align:right">'.$model->toMoney($shipping->cost,0).'</td><td style="text-align:right">'.$model->toMoney($data->shippingcost,0).'</td></tr>';
 			}

@@ -51,7 +51,7 @@ $payment = ($model->isNewRecord?$model->id['payment']:false);
 								],
 								'clientEvents' => [				
 									'select' => 'function(event, ui) {												
-													console.log(event,ui,"tes");							
+													//console.log(event,ui,"tes");							
 												}',
 								],
 								'options'=>[
