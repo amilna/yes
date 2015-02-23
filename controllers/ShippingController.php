@@ -34,7 +34,7 @@ class ShippingController extends Controller
     public function actionIndex($format= false,$arraymap= false,$term = false)
     {
         $searchModel = new ShippingSearch();        
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams+($term?['ShippingSearch'=>["search"=>$term]]:[]));				
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams+($term?['ShippingSearch'=>["term"=>$term]]:[]));				
 		
 		$post = Yii::$app->request->post();
 		$format = (isset($post["format"])?$post["format"]:$format);
@@ -60,8 +60,8 @@ class ShippingController extends Controller
 						{
 							$k = explode(":",$a);						
 							$v = (count($k) > 1?$k[1]:$k[0]);							
-							$obj[$k[0]] = ($v == "Obj"?json_encode($d->attributes):(isset($d[$v])?$d[$v]:null));
-						}
+							$obj[$k[0]] = ($v == "Obj"?json_encode($d->attributes):(isset($d->$v)?$d->$v:null));							
+						}						
 					}
 				}
 				

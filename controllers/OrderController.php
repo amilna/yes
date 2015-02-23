@@ -46,30 +46,37 @@ class OrderController extends Controller
 			$post = [];
 			$posted = current($_POST['Order']);
 			$post['Order'] = $posted;						
-						
-			if ($model->load($post)) {
+			
+			$transaction = Yii::$app->db->beginTransaction();
+			try {				
+				if ($model->load($post)) {
 								
-				$model->complete_time = date('Y-m-d H:i:s');
-				if ($model->save())
-				{
-					if ($model->status == 1)
+					$model->complete_time = date('Y-m-d H:i:s');
+					if ($model->save())
 					{
-						$model->createSales();
+						if ($model->status == 1)
+						{
+							$model->createSales();
+						}
+						elseif ($model->status == 0)
+						{
+							$model->deleteSales();
+						}
 					}
-					elseif ($model->status == 0)
-					{
-						$model->deleteSales();
-					}
-				}
-	 				
-				$output = '';	 	
-				if (isset($posted['status'])) {				   
-				   $output =  $model->itemAlias('status',$model->status); // new value for edited td
-				   $data = json_encode([7=>$model->complete_reference]); // affected td index with new html at the same row
-				} 
-					 
-				$out = json_encode(['id'=>$model->id,'output'=>$output, "data"=>$data,'message'=>'']);
-			} 			
+						
+					$output = '';	 	
+					if (isset($posted['status'])) {				   
+					   $output =  $model->itemAlias('status',$model->status); // new value for edited td
+					   $data = json_encode([7=>$model->complete_reference]); // affected td index with new html at the same row
+					} 
+						 
+					$out = json_encode(['id'=>$model->id,'output'=>$output, "data"=>$data,'message'=>'']);
+				} 			
+				$transaction->commit();				
+			} catch (Exception $e) {
+				$transaction->rollBack();
+			}
+									
 			echo $out;
 			return;
 		}
@@ -94,7 +101,7 @@ class OrderController extends Controller
 						{
 							$k = explode(":",$a);						
 							$v = (count($k) > 1?$k[1]:$k[0]);
-							$obj[$k[0]] = ($v == "Obj"?json_encode($d->attributes):(isset($d[$v])?$d[$v]:null));
+							$obj[$k[0]] = ($v == "Obj"?json_encode($d->attributes):(isset($d->$v)?$d->$v:null));
 						}				
 					}
 				}
@@ -158,47 +165,56 @@ class OrderController extends Controller
 		
         if (Yii::$app->request->post())        
         {
-			$post = Yii::$app->request->post();
-			$data = [];			
-			if (isset($post['Order']['data']))
-			{
-				$data = $post['Order']['data'];
-				if (isset($post['Order']['customer_id']))
-				{	
-					$data["customer"] = $post['Order']['customer_id'];
-					$customer = Customer::find()->where(["name"=>$data["customer"]["name"],"email"=>$data["customer"]["email"]])->one();
-					if (!$customer)
-					{
-						$customer = new Customer();	
-					}									
-					$shipping = json_decode($data["shipping"]);					
-					$phones = (empty($customer->phones)?[]:explode(",",$customer->phones));
-					$phones = array_unique(array_merge($phones,explode(",",$post['Order']['customer_id']['phones'])));
-					$addresses = array_unique(array_merge(json_decode($customer->addresses == null?"[]":$customer->addresses),array($post['Order']['customer_id']['address'].", code:".$shipping->code)));
-					$customer->phones = implode(",",$phones);
-					$customer->addresses = json_encode($addresses);
-					$customer->name = $data["customer"]["name"];
-					$customer->email = $data["customer"]["email"];
-					if ($customer->save())
-					{
-						$post['Order']['customer_id'] = $customer->id;	
-					}
-					else
-					{						
-						$post['Order']['customer_id'] = null;
-					}
-				}
-				$data["cart"] = json_encode(Yii::$app->session->get('YES_SHOPCART'));
-				$post['Order']['data'] = json_encode($data);
-			}				
-			$model->load($post);			
-			$model->log = json_encode($_SERVER);
+			$transaction = Yii::$app->db->beginTransaction();
+			try {								
 			
-			if ($model->save()) {
-				Yii::$app->session->set('YES_SHOPCART',null);
-				return $this->redirect(['view', 'id' => $model->id]);            
-			} else {										
-				$model->data = json_encode($data);				
+				$post = Yii::$app->request->post();
+				$data = [];			
+				if (isset($post['Order']['data']))
+				{
+					$data = $post['Order']['data'];
+					if (isset($post['Order']['customer_id']))
+					{	
+						$data["customer"] = $post['Order']['customer_id'];
+						$customer = Customer::find()->where(["name"=>$data["customer"]["name"],"email"=>$data["customer"]["email"]])->one();
+						if (!$customer)
+						{
+							$customer = new Customer();	
+						}									
+						$shipping = json_decode($data["shipping"]);					
+						$phones = (empty($customer->phones)?[]:explode(",",$customer->phones));
+						$phones = array_unique(array_merge($phones,explode(",",$post['Order']['customer_id']['phones'])));
+						$addresses = array_unique(array_merge(json_decode($customer->addresses == null?"[]":$customer->addresses),array($post['Order']['customer_id']['address'].", code:".$shipping->code)));
+						$customer->phones = implode(",",$phones);
+						$customer->addresses = json_encode($addresses);
+						$customer->name = $data["customer"]["name"];
+						$customer->email = $data["customer"]["email"];
+						if ($customer->save())
+						{
+							$post['Order']['customer_id'] = $customer->id;	
+						}
+						else
+						{						
+							$post['Order']['customer_id'] = null;
+						}
+					}
+					$data["cart"] = json_encode(Yii::$app->session->get('YES_SHOPCART'));
+					$post['Order']['data'] = json_encode($data);
+				}				
+				$model->load($post);			
+				$model->log = json_encode($_SERVER);
+				
+				if ($model->save()) {
+					Yii::$app->session->set('YES_SHOPCART',null);
+					$transaction->commit();
+					return $this->redirect(['view', 'id' => $model->id]);            
+				} else {										
+					$model->data = json_encode($data);
+					$transaction->rollBack();
+				}
+			
+			} catch (Exception $e) {
+				$transaction->rollBack();
 			}
 		}	
         
@@ -219,45 +235,57 @@ class OrderController extends Controller
 		
         if (Yii::$app->request->post())        
         {
-			$post = Yii::$app->request->post();
-			$data = [];			
-			if (isset($post['Order']['data']))
-			{
-				$data = $post['Order']['data'];
-				if (isset($post['Order']['customer_id']))
-				{	
-					$data["customer"] = $post['Order']['customer_id'];
-					$customer = Customer::find()->where(["name"=>$data["customer"]["name"],"email"=>$data["customer"]["email"]])->one();
-					if (!$customer)
-					{
-						$customer = new Customer();	
-					}									
-					$shipping = json_decode($data["shipping"]);					
-					$phones = (empty($customer->phones)?[]:explode(",",$customer->phones));
-					$phones = array_unique(array_merge($phones,explode(",",$post['Order']['customer_id']['phones'])));
-					$addresses = array_unique(array_merge(json_decode($customer->addresses == null?"[]":$customer->addresses),array($post['Order']['customer_id']['address'].", code:".$shipping->code)));
-					$customer->phones = implode(",",$phones);
-					$customer->addresses = json_encode($addresses);
-					$customer->name = $data["customer"]["name"];
-					$customer->email = $data["customer"]["email"];
-					if ($customer->save())
-					{
-						$post['Order']['customer_id'] = $customer->id;	
+			$transaction = Yii::$app->db->beginTransaction();
+			try {												
+						
+				$post = Yii::$app->request->post();
+				$data = [];			
+				if (isset($post['Order']['data']))
+				{
+					$data = $post['Order']['data'];
+					if (isset($post['Order']['customer_id']))
+					{	
+						$data["customer"] = $post['Order']['customer_id'];
+						$customer = Customer::find()->where(["name"=>$data["customer"]["name"],"email"=>$data["customer"]["email"]])->one();
+						if (!$customer)
+						{
+							$customer = new Customer();	
+						}									
+						$shipping = json_decode($data["shipping"]);					
+						$phones = (empty($customer->phones)?[]:explode(",",$customer->phones));
+						$phones = array_unique(array_merge($phones,explode(",",$post['Order']['customer_id']['phones'])));
+						$addresses = array_unique(array_merge(json_decode($customer->addresses == null?"[]":$customer->addresses),array($post['Order']['customer_id']['address'].", code:".$shipping->code)));
+						$customer->phones = implode(",",$phones);
+						$customer->addresses = json_encode($addresses);
+						$customer->name = $data["customer"]["name"];
+						$customer->email = $data["customer"]["email"];
+						if ($customer->save())
+						{
+							$post['Order']['customer_id'] = $customer->id;	
+						}
+						else
+						{						
+							$post['Order']['customer_id'] = null;
+						}
 					}
-					else
-					{						
-						$post['Order']['customer_id'] = null;
-					}
+					$data["cart"] = json_encode(Yii::$app->session->get('YES_SHOPCART'));	
+					$post['Order']['data'] = json_encode($data);
+				}				
+				$model->load($post);			
+				$model->log = json_encode($_SERVER);
+				
+				if ($model->save()) {				
+					Yii::$app->session->set('YES_SHOPCART',null);
+					$transaction->commit();			
+					return $this->redirect(['view', 'id' => $model->id]);            
 				}
-				$data["cart"] = json_encode(Yii::$app->session->get('YES_SHOPCART'));	
-				$post['Order']['data'] = json_encode($data);
-			}				
-			$model->load($post);			
-			$model->log = json_encode($_SERVER);
+				else
+				{
+					$transaction->rollBack();
+				}
 			
-			if ($model->save()) {				
-				Yii::$app->session->set('YES_SHOPCART',null);
-				return $this->redirect(['view', 'id' => $model->id]);            
+			} catch (Exception $e) {
+				$transaction->rollBack();
 			}
 		}
 		else

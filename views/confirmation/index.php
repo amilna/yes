@@ -103,7 +103,7 @@ $module = Yii::$app->getModule('yes');
 				'attribute'=>'paymentTerminal',
 				'format'=>'html',
 				'value'=>function($data) {					
-					return $data->payment->terminal." ".$data->payment->account;	
+					return Html::encode($data->payment->terminal." ".$data->payment->account);	
 				}
 			],
             'terminal',

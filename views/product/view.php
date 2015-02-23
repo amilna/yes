@@ -30,7 +30,7 @@ $module = Yii::$app->getModule("yes");
 		<div class="col-sm-8">
 			<div>
 				<div>
-					<h3><?= $model->author->username ?> <small><i class="glyphicon glyphicon-time"></i>  <?= date('D d M, Y',strtotime($model->time)) ?> </small></h3>
+					<h3><?= Html::encode($model->author->username) ?> <small><i class="glyphicon glyphicon-time"></i>  <?= date('D d M, Y',strtotime($model->time)) ?> </small></h3>
 				</div>				
 				<div>
 					<div class="row">	
@@ -70,7 +70,7 @@ $module = Yii::$app->getModule("yes");
 						<br>	
 						</div>
 						
-						<?= $model->description ?>
+						<?= Html::encode($model->description) ?>
 						<div class="well col-sm-6 pull-right" style="margin-top:20px">
 														
 							<h3><?php 
@@ -111,7 +111,7 @@ $module = Yii::$app->getModule("yes");
 										$deval = $deval == ""?trim($v):$deval;
 									}
 									
-									echo '<div class="form-group"><label class="control-label">'.$d->label.'</label>';
+									echo '<div class="form-group"><label class="control-label">'.Html::encode($d->label).'</label>';
 									echo Select2::widget([
 										'name' => 'Orders[data]['.$d->label.']', 
 										'data' => $options,
@@ -126,13 +126,13 @@ $module = Yii::$app->getModule("yes");
 								}
 								else if ($type == 1)
 								{
-									echo '<div class="form-group"><label class="control-label">'.$d->label.'</label>';
+									echo '<div class="form-group"><label class="control-label">'.Html::encode($d->label).'</label>';
 									echo Html::textInput('Orders[data]['.$d->label.']',$d->value,["id"=>"data_".$d->label,"class"=>"form-control item-shopcart","placeholder"=>Yii::t("app",$d->label),"style"=>"width:100%"]);
 									echo '</div>';	
 								}
 								else if ($type == 2)
 								{
-									echo '<div class="form-group"><label class="control-label">'.$d->label.'</label>';
+									echo '<div class="form-group"><label class="control-label">'.Html::encode($d->label).'</label>';
 									echo TouchSpin::widget([
 											'name' => 'Orders[data]['.$d->label.']', 										
 											'value' => ($d->value == null?0:$d->value),
@@ -148,7 +148,7 @@ $module = Yii::$app->getModule("yes");
 								}
 								else if ($type == 3)
 								{
-									echo '<div class="form-group"><label class="control-label">'.$d->label.'</label>';
+									echo '<div class="form-group"><label class="control-label">'.Html::encode($d->label).'</label>';
 									echo Html::textArea('Orders[data]['.$d->label.']',$d->value,["id"=>"data_".$d->label,"class"=>"form-control item-shopcart","placeholder"=>Yii::t("app",$d->label),"style"=>"width:100%"]);
 									echo '</div>';
 								}
@@ -191,7 +191,7 @@ $module = Yii::$app->getModule("yes");
 			
 			<form action="<?=Yii::$app->urlManager->createUrl("//yes/product")?>" method="get">
 				<div class="input-group">
-					<input class="form-control input-md" name="ProductSearch[search]" id="appendedInputButtons" type="text">
+					<input class="form-control input-md" name="ProductSearch[term]" id="appendedInputButtons" type="text">
 					<span class="input-group-btn">
 						<button class="btn btn-md" type="submit"><?= Yii::t("app","Search")?></button>
 					</span>

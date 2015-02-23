@@ -48,13 +48,11 @@ $this->params['breadcrumbs'][] = $this->title;
     $data = json_decode($model->data);
     $customer = $data->customer;
     $shipping = isset($data->shipping)?json_decode($data->shipping):null;
-    $cart = isset($data->cart)?json_decode($data->cart):null;
+    $cart = isset($data->cart)?json_decode($data->cart):[];
     $payment = Payment::findOne($data->payment);
     
     $module = Yii::$app->getModule("yes");
-    
-    //print_r($module->company);
-    //die();
+        
     ?>
 
 	<style>
@@ -70,35 +68,38 @@ $this->params['breadcrumbs'][] = $this->title;
 	<div id="invoice" style="overflow:auto;">	
 	<table class="table table-bordered">
 		<tr>		
-			<td colspan=3>			
-				<h3><?= 'Invoice '.$model->reference?> <!--<small class="pull-right"><?= $model->itemAlias("status",$model->status)?></small>--></h3>
-				<?= Yii::t("app","date ").date('r',strtotime($model->time))?>				
-			</td>
-			<td colspan=3>
-				<!--<img id="logod" src="" style="display:block;margin:auto;height:60%;margin-top:5%;">-->
-				<small class="btn btn-warning"><?= $model->itemAlias("status",$model->status)?></small>
-			</td>
+			<td colspan=6>			
+				<div class="media">
+					<div class="media-left">
+						<img id="logo-invoice" src="" style="height:60px;">
+					</div>
+					<div class="media-body">
+						<h3 class="media-heading"><?= Html::encode('Invoice '.$model->reference) ?> <small class="pull-right btn btn-warning"><?= $model->itemAlias("status",$model->status)?></small></h3>
+						<?= Html::encode(date('r',strtotime($model->time))) ?>										
+					</div>
+				</div>
+			</td>			
 		</tr>
 		<tr>
 			<td colspan=3>
 				<h4><?= Yii::t("app","Invoice to")?></h4>
 				<address>
-					<strong><?= $customer->name?></strong><br>
-					<?= $customer->address?><br>
+					<strong><?= Html::encode($customer->name) ?></strong><br>
+					<?= Html::encode($customer->address) ?><br>
 					<?php 
 					if ($shipping != null)
 					{						
-						echo $shipping->city.', '.$shipping->area.'<br>';					
+						echo Html::encode($shipping->city.', '.$shipping->area).'<br>';					
 					}				
 					?>
 					<abbr title="Phone">P: </abbr>
-					<?= $customer->phones?><br>
-					<a href="mailto:<?= $model->toHex($customer->email)?>"><?= str_replace("@"," [AT] ",$customer->email)?></a>
+					<?= Html::encode($customer->phones) ?><br>
+					<a href="mailto:<?= $model->toHex($customer->email)?>"><?= Html::encode(str_replace("@"," [AT] ",$customer->email)) ?></a>
 				</address>
 				<br>
 				<strong><?= Yii::t("app","for")?></strong><br>
 				<?= Yii::t("app","Products buying in this website, payment via")?>				
-				<?= "<b>".$payment->terminal."</b><br>".Yii::t("app","account ")."<b>".$payment->account."</b> ".Yii::t("app","in the name of ")."<b>".$payment->name."</b>"?>
+				<?= "<b>".Html::encode($payment->terminal)."</b><br>".Yii::t("app","account ")."<b>".Html::encode($payment->account)."</b> ".Yii::t("app","in the name of ")."<b>".Html::encode($payment->name)."</b>" ?>
 			</td>
 			<td colspan=3>
 				<h4><?= Yii::t("app","Published by")?></h4>
@@ -126,15 +127,15 @@ $this->params['breadcrumbs'][] = $this->title;
 			foreach ($cart as $p)
 			{				
 				$n += 1;
-				$title = $p->title;
+				$title = Html::encode($p->title);
 				$remarks = "";
 				foreach ($p as $k=>$v)
 				{
 					if (substr($k,0,5) == "data_")
 					{
-						$remarks .= ($remarks == ""?"":", ").substr($k,5).": ".$v;
+						$remarks .= ($remarks == ""?"":", ").substr(Html::encode($k),5).": ".Html::encode($v);
 					}
-				}																
+				}																			
 				
 				echo '<tr><td>'.$n.'</td><td>'.$title.'</td><td>'.$remarks.'</td><td style="text-align:right">'.$p->quantity.'</td><td style="text-align:right">'.$model->toMoney($p->price,0).'</td><td style="text-align:right">'.$model->toMoney($p->quantity*$p->price,0).'</td></tr>';
 			}
@@ -157,7 +158,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			<td colspan=6 style="padding-top:20px;">
 				<dl class="dl-horizontal">
 				  <dt><?= Yii::t("app","Order Remarks")?></dt>
-				  <dd><?= $data->note?></dd>
+				  <dd><?= Html::encode($data->note) ?></dd>
 				</dl>
 			</td>
 		</tr>

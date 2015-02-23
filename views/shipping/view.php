@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model amilna\yes\models\Shipping */
 
-$this->title = $model->id;
+$this->title = $model->code;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Shippings'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -30,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		$html = Yii::t("app","Providers");
 		foreach ($data as $m)
 		{
-			$html .= "<h5>".$m->provider." <small>".$model->toMoney($m->cost).", ".$m->remarks."</small></h5>";
+			$html .= "<h5>".Html::encode($m->provider)." <small>".$model->toMoney(empty($m->cost)?0:Html::encode($m->cost)).", ".Html::encode($m->remarks)."</small></h5>";			
 		}											
 	?>
 	

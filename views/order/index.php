@@ -95,16 +95,16 @@ $this->params['breadcrumbs'][] = $this->title;
 				'attribute'=>'reference',
 				'format'=>'html',
 				'value'=>function($model){																				
-					return (count($model->confirmations) > 0?Html::a($model->reference.'<i class="badge pull-left">'.count($model->confirmations).'</i>',['//yes/confirmation','ConfirmationSearch[orderReference]'=>$model->reference]):$model->reference);					
+					return (count($model->confirmations) > 0?Html::a($model->reference.'<i class="badge pull-left">'.count($model->confirmations).'</i>',['//yes/confirmation','ConfirmationSearch[orderReference]'=>$model->reference]):Html::encode($model->reference));					
 				},				
             ],                        
             [
 				'attribute'=>'customerName',
 				'format'=>'html',
 				'value'=>function($model){																				
-					$html = $model->customer->name;
-					$html .= "<h5>".Yii::t("app","Email")." <small>".$model->customer->email."</small></h5>";
-					$html .= "<h5>".Yii::t("app","Phones")." <small>".$model->customer->phones."</small></h5>";
+					$html = Html::encode($model->customer->name);
+					$html .= "<h5>".Yii::t("app","Email")." <small>".Html::encode($model->customer->email)."</small></h5>";
+					$html .= "<h5>".Yii::t("app","Phones")." <small>".Html::encode($model->customer->phones)."</small></h5>";
 					
 					return $html;
 				},				
@@ -115,7 +115,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				'value'=>function($model){										
 					$module = Yii::$app->getModule('yes');
 					$data = json_decode($model->data);
-					$customer = $data->customer;
+					//$customer = $data->customer;
 					$shipping = isset($data->shipping)?json_decode($data->shipping):null;
 					$cart = isset($data->cart)?json_decode($data->cart):null;
 					$payment = Payment::findOne($data->payment);
@@ -123,12 +123,12 @@ $this->params['breadcrumbs'][] = $this->title;
 					$cm = "";
 					foreach ($cart as $c)
 					{
-						$cm .= ($cm==""?"":", ").$c->title." (".$c->quantity.")";
+						$cm .= ($cm==""?"":", ").Html::encode($c->title)." (".$c->quantity.")";
 					}
 					
 					$html = Yii::t("app","Order Details:");
 					$html .= "<h5>".Yii::t("app","Cart")." <small>".$cm."</small></h5>";
-					$html .= "<h5>".Yii::t("app","Shipping Cost")." <small><i>".$shipping->provider.' '.$shipping->code.'</i> '.Yii::t("app","destination ").$shipping->city.' ('.$shipping->area.")</small></h5>";
+					$html .= "<h5>".Yii::t("app","Shipping Cost")." <small><i>".Html::encode($shipping->provider.' '.$shipping->code).'</i> '.Yii::t("app","destination ").Html::encode($shipping->city.' ('.$shipping->area.")")."</small></h5>";
 					
 					return $html;
 				},				

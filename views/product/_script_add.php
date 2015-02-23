@@ -120,12 +120,16 @@ function enAsci(a,s) {
 	
 	function updateTotal()
 	{
+		var defvat = <?=$module->defaults["vat"]?$module->defaults["vat"]:0?>;
 		var weight = 0;
+		var vat = 0;
 		var total = 0;
 		var n = 0;
 		$(".quantity_itemcart").each(function(n,d){			
 			total += $(d).val()*parseFloat($(d).attr("data-price"));	
-			weight += $(d).val()*parseFloat($(d).attr("data-weight"));	
+			weight += $(d).val()*parseFloat($(d).attr("data-weight"));			
+			var aktvat = (typeof $(d).attr("data-vat") == "undefined"?defvat:parseFloat($(d).attr("data-vat")));
+			vat += $(d).val()*aktvat*parseFloat($(d).attr("data-price"));
 			n = n;
 		});		
 		
@@ -135,6 +139,7 @@ function enAsci(a,s) {
 		$("#shopcart-badge").html(n > 0?n:"");
 		$("#shopcart-box h4").attr("data-weight",weight);
 		$("#shopcart-box h4").attr("data-total",total);
+		$("#shopcart-box h4").attr("data-vat",vat);
 		
 		/* update ship cost */
 		var unitcost = parseFloat($("#order-shippingcost-label h4").attr("data-unitcost"));
@@ -147,16 +152,21 @@ function enAsci(a,s) {
 	}	
 
 	function updateVat()
-	{	
+	{			
 		var total = parseFloat($("#shopcart-box h4").attr("data-total"));
 		var shipcost = parseFloat($("#order-data-shippingcost").val());
 		shipcost = (isNaN(shipcost)?0:shipcost);
+		
+		/*		
 		//console.log(total,shipcost);
-		var defvat = <?=$module->defaults["vat"]?$module->defaults["vat"]:0?>;	
+		var defvat = <?=$module->defaults["vat"]?$module->defaults["vat"]:0?>;
 		var vat = (defvat?(total+shipcost)*defvat:0);	
+		*/
+		
+		var vat = parseFloat($("#shopcart-box h4").attr("data-vat"));
 		
 		var html = "";	
-		if (defvat)
+		if (vat > 0)
 		{
 			html = "<h4><?=Yii::t("app","VAT")." <small>(".Yii::t("app","Value Added Tax").")</small> <small class='pull-right'>Total ".$module->currency["symbol"]?>"+toMoney(vat)+"</small></h4>";
 			$("#order-data-vat").val(vat);
@@ -198,6 +208,7 @@ function enAsci(a,s) {
 		var image = d["image"];									
 		var price = d["price"];
 		var weight = <?= $module->defaults["weight"] ?>;
+		var vat = <?= $module->defaults["vat"] ?>;
 		var quantity = d["quantity"];									
 		var datas = {};
 		var remarks = "";		
@@ -209,6 +220,11 @@ function enAsci(a,s) {
 				{
 					weight = parseFloat(d[key]);
 					weight = (isNaN(weight)?<?= $module->defaults["weight"] ?>:weight);
+				}
+				else if (key.replace("data_","") == "vat")
+				{
+					vat = parseFloat(d[key]);
+					vat = (isNaN(vat)?<?= $module->defaults["vat"] ?>:vat);
 				}
 				else
 				{
@@ -224,7 +240,7 @@ function enAsci(a,s) {
 		html += "	<div class=\"media-body\"><h6>"+title+" <small>"+remarks+"</small></h6>";											
 		html += "	<div class='input-group'>";		
 		html += "		<div class=\"input-group-addon\" style=\"background:#fff\"><?= $module->currency["symbol"]?>"+toMoney(price)+" x </div>";
-		html += "		<input type=\"number\" class=\"form-control quantity_itemcart\" data-price="+price+" data-weight="+weight+" id=\"quantity_itemcart_"+idata+"\" min=\"1\" max=\"999\" value=\""+quantity+"\"/>";
+		html += "		<input type=\"number\" class=\"form-control quantity_itemcart\" data-price="+price+" data-weight="+weight+" data-vat="+vat+" id=\"quantity_itemcart_"+idata+"\" min=\"1\" max=\"999\" value=\""+quantity+"\"/>";
 		html += "		<div id=\"remove_itemcart_"+idata+"\" class=\"remove_itemcart input-group-addon danger\" title=\"<?= Yii::t('app','Remove Item')?>\" style=\"cursor:pointer;\"><i class=\"glyphicon glyphicon-trash\"></i></div>";
 		html += "	</div></div></div>";								
 		html += "</td></tr>";													

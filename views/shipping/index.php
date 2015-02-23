@@ -84,12 +84,26 @@ $this->params['breadcrumbs'][] = $this->title;
 					$html = Yii::t("app","Providers");
 					foreach ($model as $m)
 					{
-						$html .= "<h5>".$m->provider." <small>".$data->toMoney($m->cost).", ".$m->remarks."</small></h5>";
+						$html .= "<h5>".Html::encode($m->provider)." <small>".$data->toMoney(empty($m->cost)?0:Html::encode($m->cost)).", ".Html::encode($m->remarks)."</small></h5>";
 					}										
 					return $html;
 				},				
             ], 
-            // 'status',
+            [				
+				'attribute'=>'status',				
+				'value'=>function($data){										
+					return $data->itemAlias('status',$data->status);
+				},
+				'filterType'=>GridView::FILTER_SELECT2,				
+				'filterWidgetOptions'=>[
+					'data'=>$searchModel->itemAlias('status'),
+					'options' => ['placeholder' => Yii::t('app','Filter by status...')],
+					'pluginOptions' => [
+						'allowClear' => true
+					],
+					
+				],
+            ],
             // 'isdel',
 
             ['class' => 'kartik\grid\ActionColumn'],

@@ -118,7 +118,7 @@ use kartik\datetime\DateTimePicker;
 				<?= Html::textInput("Shipping[data][:N][provider]",false,["id"=>"Shipping_data_:N_provider","class"=>"form-control","placeholder"=>Yii::t("app","Carrier/Provider"),"style"=>"width:100%"]) ?>
 			</div>	
 			<div class="col-xs-3" style="padding-left:0px;">																						
-				<?= Html::textInput("Shipping[data][:N][cost]",false,["id"=>"Shippingt_data_:N_cost","class"=>"form-control","placeholder"=>Yii::t("app","Cost per Kg"),"style"=>"width:100%"]) ?>
+				<?= Html::textInput("Shipping[data][:N][cost]",false,["id"=>"Shipping_data_:N_cost","class"=>"form-control","placeholder"=>Yii::t("app","Cost per Kg"),"style"=>"width:100%"]) ?>
 			</div>
 			<div class="col-xs-6" style="padding-left:0px;">																										
 				<div class="input-group">				  

@@ -29,9 +29,9 @@ $this->params['cboxTarget']['.colorbox-'.$model->id] =  [
 		?>													
 		<div class="caption">
 			<h4><?= Html::a($model->title,["//yes/product/view?id=".$model->id]) ?></h4>
-			<h5><?= $model->author->username ?> <small><?= date('D d M, Y',strtotime($model->time)) ?></small></h5>								
+			<h5><?= Html::encode($model->author->username) ?> <small><?= date('D d M, Y',strtotime($model->time)) ?></small></h5>								
 		
-			<p><?= $model->description ?></p>
+			<p><?= Html::encode($model->description) ?></p>
 			<p>
 			<?= Html::a(Yii::t('app','Read More'),["//yes/product/view?id=".$model->id],['class'=>'btn btn-small btn-default']) ?>			
 			</p>		

@@ -61,10 +61,10 @@ foreach ($model->catPro as $c)
 	<div class="row">
 		<div class="col-md-9">
 			<div class="row">				
-				<div class="col-xs-10">
+				<div class="col-xs-7 col-sm-9">
 			<?= $form->field($model, 'title')->textInput(['maxlength' => 65,'placeholder'=>Yii::t('app','Title contain a seo keyword if possible')]) ?>
 				</div>
-				<div class="col-xs-2">
+				<div class="col-xs-5 col-sm-3">
 			<?= $form->field($model, 'isfeatured')->widget(SwitchInput::classname(), [			
 					'type' => SwitchInput::CHECKBOX,				
 				]);
@@ -77,8 +77,19 @@ foreach ($model->catPro as $c)
 			<div class="row">		
 				<div class="col-sm-12">
 					<div class="well data">		
-						<h4><?= Yii::t('app','Product Data') ?> <small class="pull-right"><?= Yii::t('app','list of details/data that needed for transaction') ?>  <a id="data-add" class="btn btn-sm btn-default">Add Data</a></small></h4>				
-						<br>
+						<h4><?= Yii::t('app','Product Data') ?> <small class="pull-right" style="text-align:right!important;"><?= Yii::t('app','list of details/data that needed for transaction') ?></small></h4>
+						<div class="row">							
+							<div class="col-xs-12">
+								<h5 >		
+									<a id="data-add" class="btn btn-sm btn-default pull-right" style="margin:0 0 0 4px">Add Data</a>																
+									<small style="text-align:right!important;"><?= 
+										Yii::t("app",'Data "weight" is needed for shipping cost, set to 0 (zero) for non-shippable product or remove to used global/default weight value.')." ". 
+										Yii::t("app",'Set "vat" to 0 (zero) for non-taxed product, or remove to used global/default tax value')
+									?>
+									</small>									
+								</h5>
+							</div>							
+						</div>						
 					</div>
 				</div>				
 			</div>

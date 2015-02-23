@@ -104,6 +104,14 @@ function updateShip(l)
 	
 	updateVat();
 }
+
+$("#order-data-city").focusout(function() {
+	var berat = parseFloat($("#shopcart-box h4").attr("data-weight"));	
+	if ($(".radio-shipping-cost").html() == "" && berat > 0)
+	{		
+		resetShip();
+	}	
+});
 	
 <?php $this->endBlock(); ?>
 

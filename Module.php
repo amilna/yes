@@ -6,9 +6,9 @@ class Module extends \yii\base\Module
 {
     public $controllerNamespace = 'amilna\yes\controllers';
     public $userClass = 'common\models\User';//'dektrium\user\models\User';
-    public $uploadDir = 'static'; // relative path from @web
+    public $uploadDir = 'upload'; // relative path from @web
     public $currency = ["symbol"=>"Rp","decimal_separator"=>",","thousand_separator"=>"."];
-    public $defaults = ["weight"=>0.3,"vat"=>0.1]; // default weight (in Kg), vat (ratio or set false to disabling vat) for non configurated data of product
+    public $defaults = ["weight"=>0.1,"vat"=>0.1]; // default weight (in Kg), vat (ratio or set false to disabling vat) for non configurated data of product
 	public $company = ["name"=>"Your Company Name","address"=>"Your company address","phone"=>"+62-21-123456","email"=>"iyo@amilna.com"];
 	
     public function init()

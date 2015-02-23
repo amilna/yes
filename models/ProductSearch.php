@@ -14,8 +14,8 @@ class ProductSearch extends Product
 {
 
 	
-	public $author;
-	public $search;
+	public $authorName;
+	public $term;
 	public $category;
 	/*public $salesId;*/	
 
@@ -27,10 +27,23 @@ class ProductSearch extends Product
         return [
             [['id', 'author_id', 'status', 'isdel'], 'integer'],
             [['price','discount'], 'number'],
-            [['title', 'description', 'content', 'data', 'tags', 'images', 'time', 'author', 'search', 'category'/*, 'salesId'*/], 'safe'],
+            [['title', 'description', 'content', 'data', 'tags', 'images', 'time', 'authorName', 'term', 'category'/*, 'salesId'*/], 'safe'],
             [['isfeatured'], 'boolean'],
         ];
     }
+
+	public function attributeLabels()
+    {
+        return [
+            'term' => Yii::t('app', 'Search'),            
+            'authorName' => Yii::t('app', 'Author'),            
+        ];
+    }
+
+	public static function find()
+	{
+		return parent::find()->where([Product::tableName().'.isdel' => 0]);
+	}
 
     /**
      * @inheritdoc
@@ -65,20 +78,29 @@ class ProductSearch extends Product
 			$tab = isset($afield[1])?$afield[1]:false;			
 			if (!empty($this->$field))
 			{				
-				$number = explode(" ",$this->$field);			
+				$number = explode(" ",trim($this->$field));							
 				if (count($number) == 2)
 				{									
-					array_push($params,[$number[0], ($tab?$tab.".":"").$field, $number[1]]);	
+					if (in_array($number[0],['>','>=','<','<=']) && is_numeric($number[1]))
+					{
+						array_push($params,[$number[0], ($tab?$tab.".":"").$field, $number[1]]);	
+					}
 				}
-				elseif (count($number) > 2)
+				elseif (count($number) == 3)
 				{															
-					array_push($params,[">=", ($tab?$tab.".":"").$field, $number[0]]);
-					array_push($params,["<=", ($tab?$tab.".":"").$field, $number[0]]);
+					if (is_numeric($number[0]) && is_numeric($number[2]))
+					{
+						array_push($params,['>=', ($tab?$tab.".":"").$field, $number[0]]);		
+						array_push($params,['<=', ($tab?$tab.".":"").$field, $number[2]]);		
+					}
 				}
-				else
+				elseif (count($number) == 1)
 				{					
-					array_push($params,["=", ($tab?$tab.".":"").$field, str_replace(["<",">","="],"",$number[0])]);
-				}									
+					if (is_numeric($number[0]))
+					{
+						array_push($params,['=', ($tab?$tab.".":"").$field, str_replace(["<",">","="],"",$number[0])]);		
+					}	
+				}	
 			}
 		}	
 		return $params;
@@ -124,7 +146,7 @@ class ProductSearch extends Product
      */
     public function search($params)
     {
-        $query = Product::find();
+        $query = $this->find();
         
                 
         $query->joinWith(['author'/*'sales', 'catpros'*/]);
@@ -143,12 +165,12 @@ class ProductSearch extends Product
 			'desc' => ['{{%catpros}}.id' => SORT_DESC],
 		];*/
 		
-		$dataProvider->sort->attributes['author'] = [			
+		$dataProvider->sort->attributes['authorName'] = [			
 			'asc' => ['{{%user}}.username' => SORT_ASC],
 			'desc' => ['{{%user}}.username' => SORT_DESC],
 		];
 		
-		$dataProvider->sort->attributes['search'] = [			
+		$dataProvider->sort->attributes['term'] = [			
 			'asc' => ['title' => SORT_ASC],
 			'desc' => ['title' => SORT_DESC],
 		];
@@ -181,24 +203,23 @@ class ProductSearch extends Product
 		}
 		
 		$userClass = Yii::$app->getModule('yes')->userClass;
-		$query->andFilterWhere(['like','lower('.$userClass::tableName().'.username)',strtolower($this->author)]);
+		$query->andFilterWhere(['like','lower('.$userClass::tableName().'.username)',strtolower($this->authorName)]);
 		
-		if ($this->category || $this->search)
+		if ($this->category || $this->term)
 		{
-			$term = ($this->search?$this->search:$this->category);
-			$cquery =  new \yii\db\Query;
-			$cquery->select(["array_agg(p.id)"])
-					->from("{{%yes_product}} as p")
-					->leftJoin("{{%yes_cat_pro}} as cp","p.id = cp.product_id")
+			$term = ($this->term?$this->term:$this->category);
+			$cquery =  $this->find()
+					->select(["array_agg({{%yes_product}}.id)"])					
+					->leftJoin("{{%yes_cat_pro}} as cp","{{%yes_product}}.id = cp.product_id")
 					->leftJoin("{{%yes_category}} as c","cp.category_id = c.id");
 					
 			if ($this->category)
 			{				
-				$cquery->where("lower(c.title) = '".strtolower($term)."'");
+				$cquery->andWhere("lower(c.title) = '".strtolower($term)."'");
 			}
 			else
 			{
-				$cquery->where("lower(c.title) like '%".strtolower($term)."%' or lower(c.description) like '%".strtolower($term)."%'");
+				$cquery->andWhere("lower(c.title) like '%".strtolower($term)."%' or lower(c.description) like '%".strtolower($term)."%'");
 			}		
 									
 			$res = $cquery->scalar();
@@ -210,10 +231,10 @@ class ProductSearch extends Product
 			}
 			else
 			{		
-				$query->andFilterWhere(["OR","lower(title) like '%".strtolower($this->search)."%'",
-					["OR","lower(description) like '%".strtolower($this->search)."%'",
-						["OR","lower(tags) like '%".strtolower($this->search)."%'",
-							["OR","lower(content) like '%".strtolower($this->search)."%'",
+				$query->andFilterWhere(["OR","lower(title) like '%".strtolower($this->term)."%'",
+					["OR","lower(description) like '%".strtolower($this->term)."%'",
+						["OR","lower(tags) like '%".strtolower($this->term)."%'",
+							["OR","lower(content) like '%".strtolower($this->term)."%'",
 								"{{%yes_product}}.id = ANY ('".$res."')"
 							]
 						]

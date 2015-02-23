@@ -90,7 +90,7 @@ $listOrder = []+ArrayHelper::map(Order::find()->where("status = 0 AND isdel = 0"
 			</div>
 		</div>
     </div>
-	<hr>
+	<br>
     <?php ActiveForm::end(); ?>
 
 </div>

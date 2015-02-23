@@ -54,13 +54,6 @@ class Shipping extends \yii\db\ActiveRecord
             'isdel' => Yii::t('app', 'Isdel'),
         ];
     }
-	
-	/* uncomment to undisplay deleted records (assumed the table has column isdel) */
-	public static function find()
-	{
-		return parent::find()->where(['{{%yes_shipping}}.isdel' => 0]);
-	}
-	
     
 	public function itemAlias($list,$item = false,$bykey = false)
 	{
@@ -105,7 +98,7 @@ class Shipping extends \yii\db\ActiveRecord
 		}
 	}    
 	
-	public function getSearch()
+	public function getCityArea()
     {
 		return $this->city." (".$this->area.")";
 	}	

@@ -108,6 +108,17 @@ class m150212_091226_amilna_yes extends Migration
         ]);
         $this->addForeignKey( $this->db->tablePrefix.'yes_confirmation_order_id', $this->db->tablePrefix.'yes_confirmation', 'order_id', $this->db->tablePrefix.'yes_order', 'id', 'SET NULL', null );
         $this->addForeignKey( $this->db->tablePrefix.'yes_confirmation_payment_id', $this->db->tablePrefix.'yes_confirmation', 'payment_id', $this->db->tablePrefix.'yes_payment', 'id', 'RESTRICT', null );
+        
+        $this->createTable($this->db->tablePrefix.'yes_shipping', [
+            'id' => 'pk',            
+            'code' => Schema::TYPE_STRING . ' NOT NULL',
+            'city' => Schema::TYPE_STRING . ' NOT NULL',
+            'area' => Schema::TYPE_STRING . ' NOT NULL',
+            'data' => Schema::TYPE_TEXT . ' NOT NULL',
+            'status' => Schema::TYPE_SMALLINT. ' NOT NULL DEFAULT 1',
+            'isdel' => Schema::TYPE_SMALLINT.' NOT NULL DEFAULT 0',
+        ]);
+        $this->createIndex($this->db->tablePrefix.'yes_shipping_code'.'_key', $this->db->tablePrefix.'yes_shipping', 'code', true);
     }
 
     public function down()

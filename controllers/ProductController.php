@@ -57,7 +57,7 @@ class ProductController extends Controller
 						{
 							$k = explode(":",$a);						
 							$v = (count($k) > 1?$k[1]:$k[0]);
-							$obj[$k[0]] = ($v == "Obj"?json_encode($d->attributes):(isset($d[$v])?$d[$v]:null));
+							$obj[$k[0]] = ($v == "Obj"?json_encode($d->attributes):(isset($d->$v)?$d->$v:null));
 						}
 					}
 				}
@@ -110,7 +110,7 @@ class ProductController extends Controller
 						{
 							$k = explode(":",$a);						
 							$v = (count($k) > 1?$k[1]:$k[0]);
-							$obj[$k[0]] = ($v == "Obj"?json_encode($d->attributes):(isset($d[$v])?$d[$v]:null));
+							$obj[$k[0]] = ($v == "Obj"?json_encode($d->attributes):(isset($d->$v)?$d->$v:null));
 						}
 					}
 				}
@@ -166,58 +166,72 @@ class ProductController extends Controller
      * @return mixed
      */
     public function actionCreate()
-    {
+    {        
         $model = new Product();
 		$model->time = date("Y-m-d H:i:s");	
-        $model->author_id = Yii::$app->user->id;        
+        $model->author_id = Yii::$app->user->id;
+        
+        $module = Yii::$app->getModule("yes");
+        $model->data = '{"1":{"type":"5","label":"weight","value":'.$module->defaults["weight"].'},
+						"2":{"type":"5","label":"vat","value":'.$module->defaults["vat"].'}}';
 
         if (Yii::$app->request->post())        
         {
-			$post = Yii::$app->request->post();						
-			$category = [];
-			$data = [];
-			$images = [];
-			if (isset($post['Product']['category']))
-			{
-				$category = $post['Product']['category'];
-			}
-			if (isset($post['Product']['data']))
-			{
-				$data = $post['Product']['data'];
-				$post['Product']['data'] = json_encode($data);
-			}	
-			if (isset($post['Product']['images']))
-			{
-				$images = $post['Product']['images'];
-				$post['Product']['images'] = json_encode($images);			
-			}	
-			$model->load($post);			
-			
-			if ($model->save()) {
-				
-				$cs = CatPro::deleteAll("product_id = :id",["id"=>$model->id]);
-				
-				foreach ($category as $d)
-				{
-					$c = CatPro::find()->where("product_id = :id AND category_id = :aid",["id"=>$model->id,"aid"=>intval($d)])->one();
-					if (!$c)
-					{
-						$c = new CatPro();	
-					}					
-					$c->product_id = $model->id;
-					$c->category_id = $d;
-					$c->isdel = 0;					
-					$c->save();								
-				}
-								
-				return $this->redirect(['view', 'id' => $model->id]);            
-			} else {
-				$model->id = array(
-							'category'=>array_merge($category,[]),							
-						);	
+			$transaction = Yii::$app->db->beginTransaction();
+			try {								
 						
-				$model->images = $images;
-				$model->data = json_encode($data);
+				$post = Yii::$app->request->post();						
+				$category = [];
+				$data = [];
+				$images = [];
+				if (isset($post['Product']['category']))
+				{
+					$category = $post['Product']['category'];
+				}
+				if (isset($post['Product']['data']))
+				{
+					$data = $post['Product']['data'];
+					$post['Product']['data'] = json_encode($data);
+				}	
+				if (isset($post['Product']['images']))
+				{
+					$images = $post['Product']['images'];
+					$post['Product']['images'] = json_encode($images);			
+				}	
+				$model->load($post);			
+				
+				if ($model->save()) {
+					
+					$cs = CatPro::deleteAll("product_id = :id",["id"=>$model->id]);
+					
+					foreach ($category as $d)
+					{
+						$c = CatPro::find()->where("product_id = :id AND category_id = :aid",["id"=>$model->id,"aid"=>intval($d)])->one();
+						if (!$c)
+						{
+							$c = new CatPro();	
+						}					
+						$c->product_id = $model->id;
+						$c->category_id = $d;
+						$c->isdel = 0;					
+						$c->save();								
+					}
+					
+					$transaction->commit();									
+					return $this->redirect(['view', 'id' => $model->id]);            
+				} else {
+					$model->id = array(
+								'category'=>array_merge($category,[]),							
+							);	
+							
+					$model->images = $images;
+					$model->data = json_encode($data);
+					
+					$transaction->rollBack();
+				}			
+				
+			} catch (Exception $e) {
+				$transaction->rollBack();
 			}
 		}	
         
@@ -238,50 +252,62 @@ class ProductController extends Controller
         
 		if (Yii::$app->request->post())        
         {
-			$post = Yii::$app->request->post();
-			$category = [];
-			$data = [];
-			$images = [];
-			if (isset($post['Product']['category']))
-			{
-				$category = $post['Product']['category'];
-			}
-			if (isset($post['Product']['data']))
-			{
-				$data = $post['Product']['data'];
-				$post['Product']['data'] = json_encode($data);
-			}	
-			if (isset($post['Product']['images']))
-			{
-				$images = $post['Product']['images'];
-				$post['Product']['images'] = json_encode($images);			
-			}	
-			$model->load($post);
-			
-			if ($model->save()) {
-				
-				$cs = CatPro::deleteAll("product_id = :id",["id"=>$model->id]);
-				
-				foreach ($category as $d)
+			$transaction = Yii::$app->db->beginTransaction();
+			try {				
+
+				$post = Yii::$app->request->post();
+				$category = [];
+				$data = [];
+				$images = [];
+				if (isset($post['Product']['category']))
 				{
-					$c = CatPro::find()->where("product_id = :id AND category_id = :aid",["id"=>$model->id,"aid"=>intval($d)])->one();
-					if (!$c)
-					{
-						$c = new CatPro();	
-					}					
-					$c->product_id = $model->id;
-					$c->category_id = $d;
-					$c->isdel = 0;					
-					$c->save();								
+					$category = $post['Product']['category'];
 				}
-								
-				return $this->redirect(['view', 'id' => $model->id]);            
-			} 
+				if (isset($post['Product']['data']))
+				{
+					$data = $post['Product']['data'];
+					$post['Product']['data'] = json_encode($data);
+				}	
+				if (isset($post['Product']['images']))
+				{
+					$images = $post['Product']['images'];
+					$post['Product']['images'] = json_encode($images);			
+				}	
+				$model->load($post);
+				
+				if ($model->save()) {
+					
+					$cs = CatPro::deleteAll("product_id = :id",["id"=>$model->id]);
+					
+					foreach ($category as $d)
+					{
+						$c = CatPro::find()->where("product_id = :id AND category_id = :aid",["id"=>$model->id,"aid"=>intval($d)])->one();
+						if (!$c)
+						{
+							$c = new CatPro();	
+						}					
+						$c->product_id = $model->id;
+						$c->category_id = $d;
+						$c->isdel = 0;					
+						$c->save();								
+					}
+					
+					$transaction->commit();							
+					return $this->redirect(['view', 'id' => $model->id]);            
+				}
+				else
+				{
+					$transaction->rollBack();
+				} 								
+							
+			} catch (Exception $e) {
+				$transaction->rollBack();
+			}
 		}	                
                 
         $model->images = json_decode($model->images);
         
-        return $this->render('create', [
+        return $this->render('update', [
 			'model' => $model,
 		]);
     }

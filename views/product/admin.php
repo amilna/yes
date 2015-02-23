@@ -75,11 +75,11 @@ $module = Yii::$app->getModule('yes');
 
             //'id',
              [
-				'attribute' => 'search',
+				'attribute' => 'term',
 				'format'=>'html',
 				'value' => function($data) use ($module) {
 					$images = json_decode($data->images);					
-					return (isset($images[0])?Html::img(str_replace("/".$module->uploadDir."/","/".$module->uploadDir."/.thumbs/",$images[0]),['class'=>'pull-left','style'=>'margin:0 10px 10px 0']):"")." ".$data->title;
+					return (isset($images[0])?Html::img(str_replace("/".$module->uploadDir."/","/".$module->uploadDir."/.thumbs/",$images[0]),['class'=>'pull-left','style'=>'margin:0 10px 10px 0']):"")." ".Html::encode($data->title);
 				},
             ],            
             'description',
@@ -116,7 +116,7 @@ $module = Yii::$app->getModule('yes');
 			],            
             'tags',
             [
-				'attribute' => 'author',
+				'attribute' => 'authorName',
 				'value' => 'author.username',
             ],            
             [				

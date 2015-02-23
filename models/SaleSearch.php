@@ -28,6 +28,12 @@ class SaleSearch extends Sale
         ];
     }
 
+	public static function find()
+	{
+		return parent::find()->where([Sale::tableName().'.isdel' => 0])						
+							->andWhere(Order::tableName().".isdel = 0");
+	}
+
     /**
      * @inheritdoc
      */
@@ -61,20 +67,29 @@ class SaleSearch extends Sale
 			$tab = isset($afield[1])?$afield[1]:false;			
 			if (!empty($this->$field))
 			{				
-				$number = explode(" ",$this->$field);			
+				$number = explode(" ",trim($this->$field));							
 				if (count($number) == 2)
 				{									
-					array_push($params,[$number[0], ($tab?$tab.".":"").$field, $number[1]]);	
+					if (in_array($number[0],['>','>=','<','<=']) && is_numeric($number[1]))
+					{
+						array_push($params,[$number[0], ($tab?$tab.".":"").$field, $number[1]]);	
+					}
 				}
-				elseif (count($number) > 2)
+				elseif (count($number) == 3)
 				{															
-					array_push($params,[">=", ($tab?$tab.".":"").$field, $number[0]]);
-					array_push($params,["<=", ($tab?$tab.".":"").$field, $number[0]]);
+					if (is_numeric($number[0]) && is_numeric($number[2]))
+					{
+						array_push($params,['>=', ($tab?$tab.".":"").$field, $number[0]]);		
+						array_push($params,['<=', ($tab?$tab.".":"").$field, $number[2]]);		
+					}
 				}
-				else
+				elseif (count($number) == 1)
 				{					
-					array_push($params,["=", ($tab?$tab.".":"").$field, str_replace(["<",">","="],"",$number[0])]);
-				}									
+					if (is_numeric($number[0]))
+					{
+						array_push($params,['=', ($tab?$tab.".":"").$field, str_replace(["<",">","="],"",$number[0])]);		
+					}	
+				}
 			}
 		}	
 		return $params;
@@ -120,7 +135,7 @@ class SaleSearch extends Sale
      */
     public function search($params)
     {
-        $query = Sale::find();
+        $query = $this->find();
         
                 
         $query->joinWith(['product', 'order']);
@@ -159,12 +174,12 @@ class SaleSearch extends Sale
 			$query->andFilterWhere($p);
 		}		
 		/* example to use search all in field1,field2,field3 or field4
-		if ($this->search)
+		if ($this->term)
 		{
-			$query->andFilterWhere(["OR","lower(field1) like '%".strtolower($this->search)."%'",
-				["OR","lower(field2) like '%".strtolower($this->search)."%'",
-					["OR","lower(field3) like '%".strtolower($this->search)."%'",
-						"lower(field4) like '%".strtolower($this->search)."%'"						
+			$query->andFilterWhere(["OR","lower(field1) like '%".strtolower($this->term)."%'",
+				["OR","lower(field2) like '%".strtolower($this->term)."%'",
+					["OR","lower(field3) like '%".strtolower($this->term)."%'",
+						"lower(field4) like '%".strtolower($this->term)."%'"						
 					]
 				]
 			]);	

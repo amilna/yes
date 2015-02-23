@@ -109,9 +109,9 @@ $payment = ($model->isNewRecord?$model->id['payment']:false);
 							$field->template = "{input}";
 							echo $field->widget(AutoComplete::classname(),[								
 								'clientOptions' => [
-									'source' => Yii::$app->urlManager->createUrl("//yes/shipping/index?format=json&arraymap=label:search,value:Obj"),
+									'source' => Yii::$app->urlManager->createUrl("//yes/shipping/index?ShippingSearch[status]=> 0&format=json&arraymap=label:cityArea,value:Obj"),
 								],
-								'clientEvents' => [				
+								'clientEvents' => [										
 									'focus' => 'function(event, ui) {													
 													//console.log(JSON.parse(ui.item.value));	
 													renderShip(ui.item.value);
@@ -130,7 +130,8 @@ $payment = ($model->isNewRecord?$model->id['payment']:false);
 												}',
 									'change'=> 'function(event, ui) {						
 													var cek = $(".radio-shipping-cost").html();
-													if (cek == "")
+													var berat = parseFloat($("#shopcart-box h4").attr("data-weight"));	
+													if (cek == "" && berat > 0)													
 													{																										
 														$("#order-data-city").val("");
 													}																										
@@ -143,8 +144,7 @@ $payment = ($model->isNewRecord?$model->id['payment']:false);
 							]); 
 						?>
 						</div>
-						<div class="radio-shipping-cost">
-						</div>
+						<div class="radio-shipping-cost"></div>
 						<hr>
 						<a onclick="$('#ordertab a[href=\'#customer\']').tab('show')" class="btn btn-warning btn-tab pull-left" ><?= Yii::t("app","Previous") ?></a>
 						<a onclick="$('#ordertab a[href=\'#summary\']').tab('show')" class="btn btn-success btn-tab pull-right" ><?= Yii::t("app","Next") ?></a>

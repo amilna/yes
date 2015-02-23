@@ -46,13 +46,6 @@ class CatPro extends \yii\db\ActiveRecord
             'isdel' => Yii::t('app', 'Isdel'),
         ];
     }
-	
-	/* uncomment to undisplay deleted records (assumed the table has column isdel) */
-	public static function find()
-	{
-		return parent::find()->where(['{{%yes_cat_pro}}.isdel' => 0]);
-	}
-	
     
 	public function itemAlias($list,$item = false,$bykey = false)
 	{
