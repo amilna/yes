@@ -40,7 +40,7 @@ class Product extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'description', 'content', 'data'], 'required'],
+            [['title', 'description', 'content', 'data','status'], 'required'],
             [['content', 'data', 'images'], 'string'],
             [['author_id', 'status', 'isdel'], 'integer'],
             [['isfeatured'], 'boolean'],
