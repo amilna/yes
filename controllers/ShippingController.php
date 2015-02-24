@@ -33,8 +33,10 @@ class ShippingController extends Controller
      */
     public function actionIndex($format= false,$arraymap= false,$term = false)
     {
-        $searchModel = new ShippingSearch();        
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams+($term?['ShippingSearch'=>["term"=>$term]]:[]));				
+        $searchModel = new ShippingSearch();                
+        $req = Yii::$app->request->queryParams;
+        if ($term) { $req[basename(str_replace("\\","/",get_class($searchModel)))]["term"] = $term;}        
+        $dataProvider = $searchModel->search($req);				
 		
 		$post = Yii::$app->request->post();
 		$format = (isset($post["format"])?$post["format"]:$format);

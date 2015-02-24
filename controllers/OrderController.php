@@ -36,7 +36,9 @@ class OrderController extends Controller
     public function actionIndex($format= false,$arraymap= false,$term = false)
     {
         $searchModel = new OrderSearch();        
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams+($term?['OrderSearch'=>['search'=>$term]]:[]));
+        $req = Yii::$app->request->queryParams;
+        if ($term) { $req[basename(str_replace("\\","/",get_class($searchModel)))]["term"] = $term;}        
+        $dataProvider = $searchModel->search($req);				
 		
 		if (Yii::$app->request->post('hasEditable')) {			
 			$Id = Yii::$app->request->post('editableKey');

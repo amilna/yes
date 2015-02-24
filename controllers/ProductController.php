@@ -35,7 +35,9 @@ class ProductController extends Controller
     public function actionIndex($format= false,$arraymap= false,$term = false)
     {
         $searchModel = new ProductSearch();        
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams+($term?['ProductSearch'=>['search'=>$term]]:[]));
+        $req = Yii::$app->request->queryParams;
+        if ($term) { $req[basename(str_replace("\\","/",get_class($searchModel)))]["term"] = $term;}        
+        $dataProvider = $searchModel->search($req);				
 
         if ($format == 'json')
         {
@@ -88,7 +90,9 @@ class ProductController extends Controller
     public function actionAdmin($format= false,$arraymap= false,$term = false)
     {
         $searchModel = new ProductSearch();        
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams+($term?['ProductSearch'=>['search'=>$term]]:[]));
+        $req = Yii::$app->request->queryParams;
+        if ($term) { $req[basename(str_replace("\\","/",get_class($searchModel)))]["term"] = $term;}        
+        $dataProvider = $searchModel->search($req);				
 
         if ($format == 'json')
         {

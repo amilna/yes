@@ -34,7 +34,9 @@ class ConfirmationController extends Controller
     public function actionIndex($format= false,$arraymap= false,$term = false)
     {
         $searchModel = new ConfirmationSearch();        
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams+($term?['ConfirmationSearch'=>['search'=>$term]]:[]));
+        $req = Yii::$app->request->queryParams;
+        if ($term) { $req[basename(str_replace("\\","/",get_class($searchModel)))]["term"] = $term;}        
+        $dataProvider = $searchModel->search($req);				
 		
 		
         if ($format == 'json')
