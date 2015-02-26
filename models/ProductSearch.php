@@ -155,6 +155,8 @@ class ProductSearch extends Product
             'query' => $query,
         ]);
         
+        $userClass = Yii::$app->getModule('yes')->userClass;
+        
         /* uncomment to sort by relations table on respective column		
 		$dataProvider->sort->attributes['salesId'] = [			
 			'asc' => ['{{%sales}}.id' => SORT_ASC],
@@ -166,8 +168,8 @@ class ProductSearch extends Product
 		];*/
 		
 		$dataProvider->sort->attributes['authorName'] = [			
-			'asc' => ['{{%user}}.username' => SORT_ASC],
-			'desc' => ['{{%user}}.username' => SORT_DESC],
+			'asc' => [$userClass::tableName().'.username' => SORT_ASC],
+			'desc' => [$userClass::tableName().'.username' => SORT_DESC],
 		];
 		
 		$dataProvider->sort->attributes['term'] = [			
@@ -201,8 +203,7 @@ class ProductSearch extends Product
 		{
 			$query->andFilterWhere($p);
 		}
-		
-		$userClass = Yii::$app->getModule('yes')->userClass;
+				
 		$query->andFilterWhere(['like','lower('.$userClass::tableName().'.username)',strtolower($this->authorName)]);
 		
 		if ($this->category || $this->term)

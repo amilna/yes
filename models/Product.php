@@ -68,7 +68,7 @@ class Product extends \yii\db\ActiveRecord
             'tags' => Yii::t('app', 'Tags'),
             'images' => Yii::t('app', 'Images'),
             'author_id' => Yii::t('app', 'Author ID'),
-            'isfeatured' => Yii::t('app', 'Is Promoted?'),
+            'isfeatured' => Yii::t('app', 'Promoted'),
             'status' => Yii::t('app', 'Status'),
             'time' => Yii::t('app', 'Time'),
             'isdel' => Yii::t('app', 'Isdel'),
