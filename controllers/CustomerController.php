@@ -44,7 +44,7 @@ class CustomerController extends Controller
 	 
 			$out = json_encode(['id'=>$Id,'output'=>'', 'message'=>'','data'=>'null']);	 			
 			$post = [];
-			$posted = current($_POST['Customer']);
+			$posted = current($_POST['CustomerSearch']);
 			$post['Customer'] = $posted;						
 						
 			if ($model->load($post)) {

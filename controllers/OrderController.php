@@ -45,8 +45,9 @@ class OrderController extends Controller
 			$model = Order::findOne($Id);
 	 
 			$out = json_encode(['id'=>$Id,'output'=>'', 'message'=>'','data'=>'null']);	 			
-			$post = [];
-			$posted = current($_POST['Order']);
+			$post = [];						
+			
+			$posted = current($_POST['OrderSearch']);			
 			$post['Order'] = $posted;						
 			
 			$transaction = Yii::$app->db->beginTransaction();
