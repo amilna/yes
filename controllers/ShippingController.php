@@ -120,7 +120,8 @@ class ShippingController extends Controller
     public function actionCreate()
     {
         $model = new Shipping();
-
+		$model->isdel = 0;
+		
 		if (Yii::$app->request->post())        
         {
 			$post = Yii::$app->request->post();									

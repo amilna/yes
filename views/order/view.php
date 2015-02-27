@@ -48,11 +48,11 @@ $this->params['breadcrumbs'][] = $this->title;
     $data = json_decode($model->data);
     $customer = $data->customer;
     $shipping = isset($data->shipping)?json_decode($data->shipping):null;
-    $cart = isset($data->cart)?json_decode($data->cart):[];
+    $cart = isset($data->cart) && $data->cart != "null"?json_decode($data->cart):[];
     $payment = Payment::findOne($data->payment);
     
-    $module = Yii::$app->getModule("yes");
-        
+    $module = Yii::$app->getModule("yes");        
+     
     ?>
 
 	<style>
@@ -126,18 +126,21 @@ $this->params['breadcrumbs'][] = $this->title;
 			
 			foreach ($cart as $p)
 			{				
-				$n += 1;
-				$title = Html::encode($p->title);
-				$remarks = "";
-				foreach ($p as $k=>$v)
+				if ($p != null)
 				{
-					if (substr($k,0,5) == "data_" && !in_array(substr($k,5),["weight","vat"]))
+					$n += 1;
+					$title = Html::encode($p->title);
+					$remarks = "";
+					foreach ($p as $k=>$v)
 					{
-						$remarks .= ($remarks == ""?"":", ").substr(Html::encode($k),5).": ".Html::encode($v);
-					}
-				}																			
-				
-				echo '<tr><td>'.$n.'</td><td>'.$title.'</td><td>'.$remarks.'</td><td style="text-align:right">'.$p->quantity.'</td><td style="text-align:right">'.$model->toMoney($p->price,0).'</td><td style="text-align:right">'.$model->toMoney($p->quantity*$p->price,0).'</td></tr>';
+						if (substr($k,0,5) == "data_" && !in_array(substr($k,5),["weight","vat"]))
+						{
+							$remarks .= ($remarks == ""?"":", ").substr(Html::encode($k),5).": ".Html::encode($v);
+						}
+					}																			
+					
+					echo '<tr><td>'.$n.'</td><td>'.$title.'</td><td>'.$remarks.'</td><td style="text-align:right">'.$p->quantity.'</td><td style="text-align:right">'.$model->toMoney($p->price,0).'</td><td style="text-align:right">'.$model->toMoney($p->quantity*$p->price,0).'</td></tr>';
+				}
 			}
 			
 			if ($shipping != null && $data->shippingcost > 0)

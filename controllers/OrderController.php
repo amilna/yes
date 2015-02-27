@@ -163,7 +163,8 @@ class OrderController extends Controller
         $model = new Order();
 		$model->time = date("Y-m-d H:i:s");	       
 		$model->status = 0;
-		$model->reference = "tes".time();
+		$model->reference = "O".time();
+		$model->isdel = 0;
 		
         if (Yii::$app->request->post())        
         {
@@ -182,11 +183,16 @@ class OrderController extends Controller
 						if (!$customer)
 						{
 							$customer = new Customer();	
-						}									
-						$shipping = json_decode($data["shipping"]);					
+							$customer->isdel = 0;
+						}
+						$shipping = false;
+						if (isset($data["shipping"]))
+						{									
+							$shipping = json_decode($data["shipping"]);					
+						}
 						$phones = (empty($customer->phones)?[]:explode(",",$customer->phones));
 						$phones = array_unique(array_merge($phones,explode(",",$post['Order']['customer_id']['phones'])));
-						$addresses = array_unique(array_merge(json_decode($customer->addresses == null?"[]":$customer->addresses),array($post['Order']['customer_id']['address'].", code:".$shipping->code)));
+						$addresses = array_unique(array_merge(json_decode($customer->addresses == null?"[]":$customer->addresses),array($post['Order']['customer_id']['address'].", code:".($shipping?$shipping->code:""))));
 						$customer->phones = implode(",",$phones);
 						$customer->addresses = json_encode($addresses);
 						$customer->name = $data["customer"]["name"];
@@ -252,6 +258,7 @@ class OrderController extends Controller
 						if (!$customer)
 						{
 							$customer = new Customer();	
+							$customer->isdel = 0;
 						}									
 						$shipping = json_decode($data["shipping"]);					
 						$phones = (empty($customer->phones)?[]:explode(",",$customer->phones));

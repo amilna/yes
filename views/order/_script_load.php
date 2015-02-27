@@ -22,24 +22,29 @@ if (orderdata != null)
 	$("#order-customer_id-address").val(o.customer.address);	
 	$("#order-data-note").val(o.note);	
 	//console.log(JSON.parse(o.cart));
-	createCart(JSON.parse(o.cart));
-	var shipping = JSON.parse(o.shipping);
-	var code = shipping.code;	
-	findShip(code,function(){
-		updateShip(shipping);
-		$(".shipping-cost").each(function(){
-			if ($(this).val() == o.shipping)
-			{
-				$(this).prop("checked",true);
-			}
-			else
-			{
-				$(this).prop("checked",false);
-			}
+	if (typeof o.cart != "undefined") {
+		createCart(JSON.parse(o.cart));
+	}
+	if (typeof o.shipping != "undefined") {
+		var shipping = JSON.parse(o.shipping);
+		var code = shipping.code;	
+		findShip(code,function(){
+			updateShip(shipping);
+			$(".shipping-cost").each(function(){
+				if ($(this).val() == o.shipping)
+				{
+					$(this).prop("checked",true);
+				}
+				else
+				{
+					$(this).prop("checked",false);
+				}
+			});
 		});
-	});
-	
-	$("#order-data-payment").val(o.payment);
+	}
+	if (typeof o.payment != "undefined") {
+		$("#order-data-payment").val(o.payment);
+	}
 	
 	
 }

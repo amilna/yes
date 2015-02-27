@@ -150,7 +150,8 @@ class CustomerController extends Controller
     {
         $model = new Customer();
 		$model->last_time = date("Y-m-d H:i:s");	
-		$model->last_action = 0;	
+		$model->last_action = 0;
+		$model->isdel = 0;	
 		
 		if (Yii::$app->request->post())        
         {

@@ -118,6 +118,7 @@ class SaleController extends Controller
         return $this->redirect(['index']);
         
         $model = new Sale();
+        $model->isdel = 0;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);

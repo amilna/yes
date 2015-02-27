@@ -116,7 +116,8 @@ class CategoryController extends Controller
     public function actionCreate()
     {
         $model = new Category();
-
+		$model->isdel = 0;
+		
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {

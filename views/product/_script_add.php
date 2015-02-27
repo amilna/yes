@@ -248,9 +248,8 @@ function enAsci(a,s) {
 	}
 	
 	function createCart(data)
-	{				
-		//console.log(data);
-		if (data != null)
+	{						
+		if (!(JSON.stringify(data) == "[null]" || data == null))
 		{			
 			var html = "";				
 			$.each(data, function(id,d)
@@ -306,8 +305,8 @@ function enAsci(a,s) {
 	});
 	
 	var shopcart = <?= json_encode(Yii::$app->session->get('YES_SHOPCART'))?>;
-	//if (shopcart != null && <?= $model->isNewRecord?"true":"false"?>)
-	if (shopcart != null)
+	//if (shopcart != null && <?= $model->isNewRecord?"true":"false"?>)	
+	if (!(JSON.stringify(shopcart) == "[null]" || shopcart == null))
 	{
 		createCart(shopcart);		
 	}

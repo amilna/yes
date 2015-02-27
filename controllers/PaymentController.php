@@ -116,7 +116,8 @@ class PaymentController extends Controller
     public function actionCreate()
     {
         $model = new Payment();
-
+		$model->isdel = 0;
+		
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {

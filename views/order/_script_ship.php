@@ -88,7 +88,7 @@ function resetShip()
 
 function updateShip(l)
 {
-	var berat = parseFloat($("#shopcart-box h4").attr("data-weight"));
+	var berat = Math.ceil(parseFloat($("#shopcart-box h4").attr("data-weight")));
 	var cost = l.cost*(isNaN(berat)?0:berat);
 	if (cost > 0)
 	{

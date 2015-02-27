@@ -116,8 +116,8 @@ $this->params['breadcrumbs'][] = $this->title;
 					$module = Yii::$app->getModule('yes');
 					$data = json_decode($model->data);
 					//$customer = $data->customer;
-					$shipping = isset($data->shipping)?json_decode($data->shipping):null;
-					$cart = isset($data->cart)?json_decode($data->cart):null;
+					$shipping = isset($data->shipping)?json_decode($data->shipping):false;
+					$cart = isset($data->cart) && $data->cart != "null"?json_decode($data->cart):[];
 					$payment = Payment::findOne($data->payment);
 					
 					$cm = "";
@@ -128,7 +128,10 @@ $this->params['breadcrumbs'][] = $this->title;
 					
 					$html = Yii::t("app","Order Details:");
 					$html .= "<h5>".Yii::t("app","Cart")." <small>".$cm."</small></h5>";
-					$html .= "<h5>".Yii::t("app","Shipping Cost")." <small><i>".Html::encode($shipping->provider.' '.$shipping->code).'</i> '.Yii::t("app","destination ").Html::encode($shipping->city.' ('.$shipping->area.")")."</small></h5>";
+					if ($shipping)
+					{
+						$html .= "<h5>".Yii::t("app","Shipping Cost")." <small><i>".Html::encode($shipping->provider.' '.$shipping->code).'</i> '.Yii::t("app","destination ").Html::encode($shipping->city.' ('.$shipping->area.")")."</small></h5>";
+					}
 					
 					return $html;
 				},				

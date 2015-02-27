@@ -174,6 +174,7 @@ class ProductController extends Controller
         $model = new Product();
 		$model->time = date("Y-m-d H:i:s");	
         $model->author_id = Yii::$app->user->id;
+        $model->isdel = 0;
         
         $module = Yii::$app->getModule("yes");
         $model->data = '{"1":{"type":"5","label":"weight","value":'.$module->defaults["weight"].'},
