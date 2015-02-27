@@ -175,11 +175,10 @@ class Order extends \yii\db\ActiveRecord
 			$sale = Sale::findOne(['product_id'=>$p->id,'order_id'=>$this->id,'data'=>$remarks]);
 			if (!$sale)
 			{
-				$sale = new Sale();	
-				$sale->isdel = 0;
-				$sale->time = date("Y-m-d H:i:s");
+				$sale = new Sale();									
 			}						
-			
+			$sale->time = date("Y-m-d H:i:s");
+			$sale->isdel = 0;
 			$sale->order_id = $this->id;
 			$sale->product_id = $p->id;
 			$sale->quantity = $p->quantity;
