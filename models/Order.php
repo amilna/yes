@@ -176,6 +176,8 @@ class Order extends \yii\db\ActiveRecord
 			if (!$sale)
 			{
 				$sale = new Sale();	
+				$sale->isdel = 0;
+				$sale->time = date("Y-m-d H:i:s");
 			}						
 			
 			$sale->order_id = $this->id;
@@ -193,8 +195,18 @@ class Order extends \yii\db\ActiveRecord
 	}
 	
 	public function deleteSales()
-	{
-		
-		return $sale = Sale::deleteAll(['order_id'=>$this->id]);				
+	{		
+		$res = true;
+		$sales = Sale::findAll(['order_id'=>$this->id]);
+		foreach ($sales as $sale)
+		{
+			$sale->isdel = 1;
+			if (!$sale->save())
+			{
+				$res = false;
+			}
+		}
+		return $res;
+		//return $sale = Sale::deleteAll(['order_id'=>$this->id]);				
 	}
 }
