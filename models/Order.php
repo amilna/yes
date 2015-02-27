@@ -119,7 +119,7 @@ class Order extends \yii\db\ActiveRecord
      */
     public function getConfirmations()
     {
-        return $this->hasMany(Confirmation::className(), ['order_id' => 'id']);
+        return $this->hasMany(Confirmation::className(), ['order_id' => 'id'])->where("isdel=0");
     }
 
     /**
@@ -135,7 +135,7 @@ class Order extends \yii\db\ActiveRecord
      */
     public function getSales()
     {
-        return $this->hasMany(Sale::className(), ['order_id' => 'id']);
+        return $this->hasMany(Sale::className(), ['order_id' => 'id'])->where("isdel=0");
     }
     
     public function toMoney($val,$dec = 2,$sym = true)

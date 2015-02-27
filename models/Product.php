@@ -140,7 +140,7 @@ class Product extends \yii\db\ActiveRecord
      */
     public function getSales()
     {
-        return $this->hasMany(Sale::className(), ['product_id' => 'id']);
+        return $this->hasMany(Sale::className(), ['product_id' => 'id'])->where("isdel=0");
     }
 
     /**
@@ -148,7 +148,7 @@ class Product extends \yii\db\ActiveRecord
      */
     public function getCatPro()
     {
-        return $this->hasMany(CatPro::className(), ['product_id' => 'id']);
+        return $this->hasMany(CatPro::className(), ['product_id' => 'id'])->where("isdel=0");
     }
     
     public function getTags()
