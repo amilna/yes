@@ -211,11 +211,7 @@ class ProductController extends Controller
 					
 					foreach ($category as $d)
 					{
-						$c = CatPro::find()->where("product_id = :id AND category_id = :aid",["id"=>$model->id,"aid"=>intval($d)])->one();
-						if (!$c)
-						{
-							$c = new CatPro();	
-						}					
+						$c = new CatPro();							
 						$c->product_id = $model->id;
 						$c->category_id = $d;
 						$c->isdel = 0;					
@@ -286,11 +282,11 @@ class ProductController extends Controller
 					
 					foreach ($category as $d)
 					{
-						$c = CatPro::find()->where("product_id = :id AND category_id = :aid",["id"=>$model->id,"aid"=>intval($d)])->one();
-						if (!$c)
-						{
+						//$c = CatPro::find()->where("product_id = :id AND category_id = :aid",["id"=>$model->id,"aid"=>intval($d)])->one();
+						//if (!$c)
+						//{
 							$c = new CatPro();	
-						}					
+						//}					
 						$c->product_id = $model->id;
 						$c->category_id = $d;
 						$c->isdel = 0;					
