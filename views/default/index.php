@@ -21,7 +21,7 @@ use yii\helpers\Url;
     <div class="body-content">
 
         <div class="row">
-            <div class="col-lg-4">
+            <div class="col-md-4">
                 <h2>Products</h2>
 
                 <p>Anything that can be offered to a market that might satisfy a want or need. In retailing, products are called merchandise.</p>
@@ -29,7 +29,7 @@ use yii\helpers\Url;
                 <p><?= Html::a(Yii::t('app','Go to Products'),['//yes/product'],["class"=>"btn btn-primary"])?>
                 <?= Html::a(Yii::t('app','Manage Products'),['//yes/product/admin'],["class"=>"btn btn-danger"])?></p>
             </div>
-            <div class="col-lg-4">
+            <div class="col-md-4">
                 <h2>Orders and Sales</h2>
 
                 <p>Requests sent to obtain purchased goods and services, and closed by exchange of a commodity for money or service in return for money.</p>
@@ -37,7 +37,7 @@ use yii\helpers\Url;
                 <p><?= Html::a(Yii::t('app','Manage Orders'),['//yes/order'],["class"=>"btn btn-primary"])?>
                 <?= Html::a(Yii::t('app','Manage Sales'),['//yes/sale'],["class"=>"btn btn-danger"])?></p>
             </div>
-            <div class="col-lg-4">
+            <div class="col-md-4">
                 <h2>Customers and Payment Confirmation</h2>
 
                 <p>The recipient of a good, service, product, or idea, obtained from a seller, vendor, or supplier for a monetary or other valuable consideration.</p>
