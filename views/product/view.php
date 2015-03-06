@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\helpers\HtmlPurifier;
 use yii\widgets\ActiveForm;
 use yii\widgets\DetailView;
 use amilna\yes\models\Category;
@@ -167,7 +168,7 @@ $module = Yii::$app->getModule("yes");
 							<a id="order_itemcart_<?=$model->id?>" class="btn btn-primary order_itemcart"><?= Yii::t("app","Add to Chart")?></a>
 						</div>
 													
-						<?= $model->content ?>
+						<?= HtmlPurifier::process($model->content) ?>
 					</div>	
 				</div>		
 			</div>
