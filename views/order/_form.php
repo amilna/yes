@@ -76,7 +76,7 @@ $payment = ($model->isNewRecord?$model->id['payment']:false);
 							$field->template = "{input}";
 							echo $field->widget(Select2::classname(), [
 								'options' => [
-									'placeholder' => Yii::t('app','Put available phone numbers ...'),
+									'placeholder' => Yii::t('app','Please include country code and area code, ex: 62-21-740xxxx...'),
 								],
 								'pluginOptions' => [
 									'tags' => [],

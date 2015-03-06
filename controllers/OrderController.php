@@ -180,7 +180,8 @@ class OrderController extends Controller
 					if (isset($post['Order']['customer_id']))
 					{	
 						$data["customer"] = $post['Order']['customer_id'];
-						$customer = Customer::find()->where(["name"=>$data["customer"]["name"],"email"=>$data["customer"]["email"]])->one();
+						//$customer = Customer::find()->where(["name"=>$data["customer"]["name"],"email"=>$data["customer"]["email"]])->one();
+						$customer = Customer::find()->where("email = :email OR concat(',',phones,',') like :phone",[":email"=>$data["customer"]["email"],":phone"=>"%,".$data["customer"]["phones"].",%"])->one();
 						if (!$customer)
 						{
 							$customer = new Customer();	
@@ -192,8 +193,8 @@ class OrderController extends Controller
 							$shipping = json_decode($data["shipping"]);					
 						}
 						$phones = (empty($customer->phones)?[]:explode(",",$customer->phones));
-						$phones = array_unique(array_merge($phones,explode(",",$post['Order']['customer_id']['phones'])));
-						$addresses = array_unique(array_merge(json_decode($customer->addresses == null?"[]":$customer->addresses),array($post['Order']['customer_id']['address'].", code:".($shipping?$shipping->code:""))));
+						$phones = array_unique(array_merge($phones,explode(",",$data["customer"]['phones'])));
+						$addresses = array_unique(array_merge(json_decode($customer->addresses == null?"[]":$customer->addresses),array($data["customer"]['address'].", code:".($shipping?$shipping->code:""))));
 						$customer->phones = implode(",",$phones);
 						$customer->addresses = json_encode($addresses);
 						$customer->name = $data["customer"]["name"];
