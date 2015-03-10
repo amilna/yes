@@ -34,7 +34,7 @@ use kartik\datetime\DateTimePicker;
 			<div class="row">		
 				<div class="col-sm-12">
 					<div class="well addresses">		
-						<h4><?= Yii::t('app','Addresses') ?> <small class="pull-right"><?= Yii::t('app','list of your addresses') ?>  <a id="address-add" class="btn btn-sm btn-default">Add Address</a></small></h4>				
+						<h4><?= Yii::t('app','Addresses') ?> <small class="pull-right"><?= Yii::t('app','list of addresses') ?>  <a id="address-add" class="btn btn-sm btn-default"><?= Yii::t("app","Add Address") ?></a></small></h4>				
 						<br>
 					</div>
 				</div>				
