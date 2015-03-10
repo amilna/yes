@@ -27,7 +27,15 @@ class SaleSearch extends Sale
             [['data', 'amount', 'orderReference','productTitle','quantity', 'time'/*, 'productId', 'orderId'*/], 'safe'],
         ];
     }
-
+	
+	public function attributeLabels()
+    {
+        return array_merge(parent::attributeLabels(),[
+            'orderReference' => Yii::t('app', 'Reference'),            
+            'productTitle' => Yii::t('app', 'Title'),                        
+        ]);
+    }
+	
 	public static function find()
 	{
 		return parent::find()->where([Sale::tableName().'.isdel' => 0])						

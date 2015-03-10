@@ -27,7 +27,15 @@ class ConfirmationSearch extends Confirmation
             [['terminal', 'orderReference','paymentTerminal', 'account', 'name', 'amount', 'remarks', 'time'/*, 'orderId', 'paymentId'*/], 'safe'],
         ];
     }
-
+	
+	public function attributeLabels()
+    {
+        return array_merge(parent::attributeLabels(),[
+            'orderReference' => Yii::t('app', 'Reference'),                        
+            'paymentTerminal' => Yii::t('app', 'Terminal'),                        
+        ]);
+    }
+	
 	public static function find()
 	{
 		return parent::find()->where([Confirmation::tableName().'.isdel' => 0]);

@@ -28,6 +28,13 @@ class OrderSearch extends Order
             [['reference', 'customerName','total', 'data', 'time', 'complete_reference', 'complete_time', 'log'/*, 'confirmationsId', 'customerId', 'salesId'*/], 'safe'],
         ];
     }
+    
+    public function attributeLabels()
+    {
+        return array_merge(parent::attributeLabels(),[
+            'customerName' => Yii::t('app', 'Customer'),                                    
+        ]);
+    }
 
 	public static function find()
 	{

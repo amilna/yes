@@ -34,10 +34,10 @@ class ProductSearch extends Product
 
 	public function attributeLabels()
     {
-        return [
+        return array_merge(parent::attributeLabels(),[
             'term' => Yii::t('app', 'Search'),            
-            'authorName' => Yii::t('app', 'Author'),            
-        ];
+            'authorName' => Yii::t('app', 'Author'),                        
+        ]);
     }
 
 	public static function find()

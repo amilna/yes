@@ -26,7 +26,14 @@ class CustomerSearch extends Customer
             [['name', 'phones', 'addresses', 'email', 'term', 'last_time'/*, 'yesordersId'*/], 'safe'],
         ];
     }
-
+	
+	public function attributeLabels()
+    {
+        return array_merge(parent::attributeLabels(),[
+            'term' => Yii::t('app', 'Term'),                        
+        ]);
+    }
+	
 	public static function find()
 	{
 		return parent::find()->where([Customer::tableName().'.isdel' => 0]);

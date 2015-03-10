@@ -30,6 +30,13 @@ class ShippingSearch extends Shipping
 	{
 		return parent::find()->where([Shipping::tableName().'.isdel' => 0]);
 	}
+	
+	public function attributeLabels()
+    {
+        return array_merge(parent::attributeLabels(),[
+            'term' => Yii::t('app', 'Term'),                        
+        ]);
+    }
 
     /**
      * @inheritdoc
