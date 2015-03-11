@@ -176,6 +176,12 @@ function enAsci(a,s) {
 		$("#order-vat-label").html(html);	
 		$("#order-grandtotal-label").html(gtml);
 		$("#order-total").val(grand);
+		
+		var berat = Math.ceil(parseFloat($("#shopcart-box h4").attr("data-weight")));
+		if (berat <= 0)
+		{
+			$(".radio-shipping-cost").addClass("hidden");
+		}
 	}
 	
 	function addCart(d)

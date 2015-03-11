@@ -74,7 +74,9 @@ function renderShip(jsonstring)
 	$(".shipping-cost").click(function(){
 		var l = JSON.parse($(this).val());
 		updateShip(l);
-	});	
+	});			
+	
+	updateVat();
 }
 
 function resetShip()
