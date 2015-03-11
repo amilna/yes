@@ -112,6 +112,9 @@ foreach ($model->catPro as $c)
 						'table',
 						'clips',				
 						'fullscreen'
+					],
+					'buttons'=> ['formatting', 'bold', 'italic','underline','deleted', 'unorderedlist', 'orderedlist',
+					  'outdent', 'indent', 'image', 'file', 'link', 'alignment', 'horizontalrule'
 					]
 				],
 				'options'=>["style"=>"width:100%"]
