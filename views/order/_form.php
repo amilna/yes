@@ -11,6 +11,8 @@ use kartik\widgets\SwitchInput;
 use kartik\datetime\DateTimePicker;
 use amilna\yes\models\Payment;
 
+use yii\captcha\Captcha;
+
 /* @var $this yii\web\View */
 /* @var $model amilna\yes\models\Order */
 /* @var $form yii\widgets\ActiveForm */
@@ -206,6 +208,20 @@ $payment = ($model->isNewRecord?$model->id['payment']:false);
 						
 						?>	
 						</div>
+						
+						<div class="well">							
+							<div class="row">									
+						<?php						
+						echo $form->field($model,"captcha")->widget(Captcha::classname(),[
+							'captchaAction' => ['/yes/order/captcha'],							
+							'imageOptions'=>['class'=>'col-sm-4 col-xs-6','style'=>'margin:20px -5px 20px -5px;max-height:80px;cursor:pointer;'],
+							'options'=>['class'=>'col-sm-8 col-xs-6'],							
+						]);
+						?>							
+							</div>
+						</div>
+						
+												
 						<hr>
 						<a onclick="$('#ordertab a[href=\'#summary\']').tab('show')" class="btn btn-warning btn-tab pull-left" ><?= Yii::t("app","Previous") ?></a>
 						<div class="form-group">

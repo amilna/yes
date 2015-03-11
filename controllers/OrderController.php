@@ -27,6 +27,16 @@ class OrderController extends Controller
             ],
         ];
     }
+    
+     public function actions()
+        {
+            return [
+                'captcha' => [					
+                    'class' => 'yii\captcha\CaptchaAction',                    
+                    'testLimit'=>1,
+                ],
+            ];
+        }
 
     /**
      * Lists all Order models.
