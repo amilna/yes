@@ -93,6 +93,9 @@ $module = Yii::$app->getModule("yes");
 										'pluginOptions'=>[
 											'min'=>1,												
 											'step'=>1,
+											'max'=>100000000,
+											'boostat'=> 10,
+											'maxboostedstep'=> 100000,
 											'handle'=>'triangle',
 											'tooltip'=>'always'
 										]
