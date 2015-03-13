@@ -38,6 +38,9 @@ class ProductController extends Controller
         $req = Yii::$app->request->queryParams;
         if ($term) { $req[basename(str_replace("\\","/",get_class($searchModel)))]["term"] = $term;}        
         $dataProvider = $searchModel->search($req);				
+        
+        $query = $dataProvider->query;
+        $query->andWhere(['status'=>[1,2,4,5]]);
 
         if ($format == 'json')
         {

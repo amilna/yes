@@ -24,7 +24,7 @@ $data = json_decode($model->data);
 $customer = $data->customer;
 $shipping = isset($data->shipping)?json_decode($data->shipping):null;
 $cart = isset($data->cart) && $data->cart != "null"?json_decode($data->cart):[];
-$payment = Payment::findOne($data->payment);
+$payment = isset($data->payment)?Payment::findOne($data->payment):false;
 
 $module = Yii::$app->getModule('yes');
 
@@ -131,12 +131,14 @@ $subject = '<strong>'.Html::encode($customer->name).'</strong><br>
 	<!-- accepted payments column -->
 	<div class="col-xs-6">
 	  <p class="lead"><?= Yii::t("app","Remarks")?></p>	  
-	  <p class="text-muted well well-sm no-shadow" style="margin-top: 10px;">		
+	  <p class="text-muted well well-sm no-shadow" style="margin-top: 10px;">
+		<?php if ($payment) { ?> 		
 		<?= Yii::t("app","for")?>
 		<?= Yii::t("app","Products buying in this website, payment via")?>				
 		<?= "<b>".Html::encode($payment->terminal)."</b> ".Yii::t("app","account ")."<b>".Html::encode($payment->account)."</b> ".Yii::t("app","in the name of ")."<b>".Html::encode($payment->name)."</b>" ?>
 		<br />
 		<br />
+		<?php } ?>
 		<strong><?= Yii::t("app","Order Remarks")?></strong>	  
 		<br />
 		<?= Html::encode($data->note) ?>

@@ -118,7 +118,7 @@ $this->params['breadcrumbs'][] = $this->title;
 					//$customer = $data->customer;
 					$shipping = isset($data->shipping)?json_decode($data->shipping):false;
 					$cart = isset($data->cart) && $data->cart != "null"?json_decode($data->cart):[];
-					$payment = Payment::findOne($data->payment);
+					//$payment = isset($data->payment)?Payment::findOne($data->payment):false;					
 					
 					$cm = "";
 					foreach ($cart as $c)
