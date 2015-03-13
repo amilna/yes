@@ -209,6 +209,11 @@ $payment = ($model->isNewRecord?$model->id['payment']:false);
 						?>	
 						</div>
 						
+						<?php
+							if ($model->captchaRequired)
+							{
+						?>
+						
 						<div class="well">							
 							<div class="row">									
 						<?php						
@@ -221,6 +226,9 @@ $payment = ($model->isNewRecord?$model->id['payment']:false);
 							</div>
 						</div>
 						
+						<?php
+							}
+						?>
 												
 						<hr>
 						<a onclick="$('#ordertab a[href=\'#summary\']').tab('show')" class="btn btn-warning btn-tab pull-left" ><?= Yii::t("app","Previous") ?></a>

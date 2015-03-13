@@ -26,6 +26,7 @@ use Yii;
 class Order extends \yii\db\ActiveRecord
 {
     public $captcha;
+    public $captchaRequired = true;
     
     /**
      * @inheritdoc
@@ -41,13 +42,13 @@ class Order extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['customer_id', 'reference', 'data', 'log','captcha'], 'required'],
+            [array_merge(['customer_id', 'reference', 'data', 'log'],($this->captchaRequired?['captcha']:[])), 'required'],
             [['status', 'isdel'], 'integer'],
             [['total'], 'number'],
             [['data', 'log'], 'string'],
             [['time', 'complete_time'], 'safe'],
             [['reference', 'complete_reference'], 'string', 'max' => 255],
-            [['captcha'], 'captcha','captchaAction'=>'yes/order/captcha']
+            [['captcha'], 'captcha','captchaAction'=>'yes/order/captcha','skipOnEmpty'=>!$this->captchaRequired]
         ];
     }
 

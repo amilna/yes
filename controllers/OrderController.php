@@ -53,6 +53,7 @@ class OrderController extends Controller
 		if (Yii::$app->request->post('hasEditable')) {			
 			$Id = Yii::$app->request->post('editableKey');
 			$model = Order::findOne($Id);
+			$model->captchaRequired = false;
 	 
 			$out = json_encode(['id'=>$Id,'output'=>'', 'message'=>'','data'=>'null']);	 			
 			$post = [];						
@@ -76,6 +77,10 @@ class OrderController extends Controller
 							$model->deleteSales();
 						}
 					}
+					else
+					{
+						$model->attributes = $model->oldAttributes;
+					}	
 						
 					$output = '';	 	
 					if (isset($posted['status'])) {				   
@@ -177,6 +182,11 @@ class OrderController extends Controller
 		$model->reference = "O".time();
 		$model->isdel = 0;
 		
+		if (!Yii::$app->user->isGuest)
+		{
+			$model->captchaRequired = false;	
+		}
+		
         if (Yii::$app->request->post())        
         {
 			$transaction = Yii::$app->db->beginTransaction();
@@ -252,6 +262,11 @@ class OrderController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);        
+		
+		if (!Yii::$app->user->isGuest)
+		{
+			$model->captchaRequired = false;	
+		}
 		
         if (Yii::$app->request->post())        
         {
