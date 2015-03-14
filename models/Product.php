@@ -186,4 +186,10 @@ class Product extends \yii\db\ActiveRecord
         
         return ($res == null?[]:$res);        
 	}
+	
+	public function toMoney($val,$dec = 2,$sym = true)
+    {
+		$module = Yii::$app->getModule("yes");
+		return ($sym?$module->currency["symbol"]:"").number_format($val,$dec,$module->currency["decimal_separator"],$module->currency["thousand_separator"]);	
+	}
 }

@@ -76,7 +76,7 @@ $module = Yii::$app->getModule("yes");
 														
 							<h3><?php 
 								$price = ($model->discount > 0?$model->price*$model->discount/100:$model->price);
-								echo $module->currency["symbol"].number_format($price,2,$module->currency["decimal_separator"],$module->currency["thousand_separator"]); 
+								echo $model->toMoney($price);
 							?></h3>
 							<hr>
 							<?php
