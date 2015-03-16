@@ -19,6 +19,9 @@ $this->title = $model->title;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Products'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
+$this->registerMetaTag(['name' => 'title', 'content' => Html::encode($model->title)]);
+$this->registerMetaTag(['name' => 'description', 'content' => Html::encode($model->description)]);
+
 $cat = new Category();
 $module = Yii::$app->getModule("yes");
 ?>
