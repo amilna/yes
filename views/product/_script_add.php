@@ -64,7 +64,7 @@ function enAsci(a,s) {
 	}
 <?php $this->endBlock(); ?>	
 	
-<?php $this->beginBlock('JS_END') ?>			
+<?php $this->beginBlock('SHOPCART') ?>			
 	function toMoney(val)
 	{
 		return parseFloat(val).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,").replace(/\.00/g,"").replace(/\,/g,"<?= $module->currency["thousand_separator"]?>");
@@ -83,6 +83,7 @@ function enAsci(a,s) {
 			val["shopcart"]["data"]["idata"] = idata;
 			type = "update";
 		}
+		val[yii.getCsrfParam()] = yii.getCsrfToken();
 		
 		var url = "<?= Yii::$app->urlManager->createUrl('//yes/order/shopcart')?>";
 		var data = val;		
@@ -96,17 +97,22 @@ function enAsci(a,s) {
 						{																
 							if (json.status == 1)
 							{																																																					
-								addCart(val["shopcart"]["data"]);
-								updateTotal();
+								if ($.isArray(shopcart))
+								{
+									shopcart = {};	
+								}
+								shopcart[idata] = val["shopcart"]["data"];								
+								createCart(shopcart);								
 							}
 							else if (json.status == 2)
-							{
-								updateTotal();								
+							{																								
+								shopcart[idata]["quantity"] = parseInt(shopcart[idata]["quantity"])+parseInt(val["shopcart"]["data"]["quantity"]);
+								createCart(shopcart);														
 							}
 							else if (json.status == 3)
-							{
-								removeCart(val["shopcart"]["data"]);
-								updateTotal();
+							{								
+								delete shopcart[idata];
+								createCart(shopcart);							
 							}
 						}						
 					};
@@ -120,32 +126,33 @@ function enAsci(a,s) {
 	
 	function updateTotal()
 	{
+		var data = shopcart;
 		var defvat = <?=$module->defaults["vat"]?$module->defaults["vat"]:0?>;
 		var weight = 0;
 		var vat = 0;
 		var total = 0;
 		var n = 0;
-		$(".quantity_itemcart").each(function(n,d){			
-			total += $(d).val()*parseFloat($(d).attr("data-price"));	
-			weight += $(d).val()*parseFloat($(d).attr("data-weight"));			
-			var aktvat = (typeof $(d).attr("data-vat") == "undefined"?defvat:parseFloat($(d).attr("data-vat")));
-			vat += $(d).val()*aktvat*parseFloat($(d).attr("data-price"));
-			n = n;
-		});		
 		
-		//console.log(total);
+		$.each(data,function(i,d){			
+			n += 1;
+			total += parseFloat(d["price"])*parseFloat(d["quantity"]);	
+			weight += parseFloat(d["quantity"])*parseFloat(d["data_weight"]);			
+			var aktvat = (typeof d["data_vat"] == "undefined"?defvat:parseFloat(d["data_vat"]));
+			vat += parseFloat(d["quantity"])*aktvat*parseFloat(d["price"]);
+			
+		});						
 		
-		$("#shopcart-box h4 small").html("Total <?= $module->currency["symbol"]?>"+toMoney(total));
-		$("#shopcart-badge").html(n > 0?n:"");
-		$("#shopcart-box h4").attr("data-weight",weight);
-		$("#shopcart-box h4").attr("data-total",total);
-		$("#shopcart-box h4").attr("data-vat",vat);
+		$(".shopcart-box h4 small").html("Total <?= $module->currency["symbol"]?>"+toMoney(total));		
+		$(".shopcart-badge").html(n > 0?n:"");
+		$(".shopcart-box h4").attr("data-weight",weight);
+		$(".shopcart-box h4").attr("data-total",total);
+		$(".shopcart-box h4").attr("data-vat",vat);
 		
 		/* update ship cost */
 		var unitcost = parseFloat($("#order-shippingcost-label h4").attr("data-unitcost"));
 		var cost = unitcost*weight;
-		$("#order-shippingcost-label h4 small").html("Total <?=$module->currency["symbol"]?>"+toMoney(cost));				
-		$("#order-data-shippingcost").val(cost);
+		$(".order-shippingcost-label h4 small").html("Total <?=$module->currency["symbol"]?>"+toMoney(cost));				
+		$(".order-data-shippingcost").val(cost);
 		
 		/* update vat */
 		updateVat();
@@ -153,8 +160,8 @@ function enAsci(a,s) {
 
 	function updateVat()
 	{			
-		var total = parseFloat($("#shopcart-box h4").attr("data-total"));
-		var shipcost = parseFloat($("#order-data-shippingcost").val());
+		var total = parseFloat($(".shopcart-box h4").attr("data-total"));
+		var shipcost = parseFloat($(".order-data-shippingcost").val());
 		shipcost = (isNaN(shipcost)?0:shipcost);
 		
 		/*		
@@ -163,47 +170,30 @@ function enAsci(a,s) {
 		var vat = (defvat?(total+shipcost)*defvat:0);	
 		*/
 		
-		var vat = parseFloat($("#shopcart-box h4").attr("data-vat"));
+		var vat = parseFloat($(".shopcart-box h4").attr("data-vat"));
 		
 		var html = "";	
 		if (vat > 0)
 		{
 			html = "<h4><?=Yii::t("app","VAT")." <small>(".Yii::t("app","Value Added Tax").")</small> <small class='pull-right'>Total ".$module->currency["symbol"]?>"+toMoney(vat)+"</small></h4>";
-			$("#order-data-vat").val(vat);
+			$(".order-data-vat").val(vat);
 		}	
 		var grand = total+shipcost+vat;
 		var gtml = "<h3><?=Yii::t("app","Total Payment")." <small class='pull-right'>Grand Total ".$module->currency["symbol"]?>"+toMoney(grand)+"</small></h3>";	
-		$("#order-vat-label").html(html);	
-		$("#order-grandtotal-label").html(gtml);
-		$("#order-total").val(grand);
+		$(".order-vat-label").html(html);	
+		$(".order-grandtotal-label").html(gtml);
+		$(".order-total").val(grand);
 		
-		var berat = Math.ceil(parseFloat($("#shopcart-box h4").attr("data-weight")));
+		var berat = Math.ceil(parseFloat($(".shopcart-box h4").attr("data-weight")));
 		if (berat <= 0)
 		{
 			$(".radio-shipping-cost").addClass("hidden");
 		}
-	}
-	
-	function addCart(d)
-	{
-		var html = renderCart(d);
-		$("#shopcart-box .table").append(html);
-		
-		$("#quantity_itemcart_"+d["idata"]).change(function(){
-			var id = $(this).attr("id").replace("quantity_itemcart_","");
-			var qty = $(this).val();			
-			updateItem(undefined,id,qty);
-		});
-		
-		$("#remove_itemcart_"+d["idata"]).click(function(){
-			var id = $(this).attr("id").replace("remove_itemcart_","");									
-			updateItem(undefined,id);										
-		});		
-	}
+	}	
 	
 	function removeCart(d)
 	{		
-		$("#remove_itemcart_"+d["idata"]).parent().parent().parent().parent().remove();
+		$("#remove_itemcart_"+d["idata"]).parent().parent().parent().parent().remove();		
 	}
 	
 	function renderCart(d)
@@ -258,24 +248,30 @@ function enAsci(a,s) {
 		if (!(JSON.stringify(data) == "[null]" || data == null))
 		{			
 			var html = "";				
+			$(".shopcart-box .table").html(html);
 			$.each(data, function(id,d)
 			{											
 				html += renderCart(d);																	
-			});																
-																									
-			$("#shopcart-box .table").html(html);
+			});																																							
+			$(".shopcart-box .table").html(html);
+			
 			updateTotal();										
 			
-			$("#shopcart-box .table .quantity_itemcart").change(function(){
-				var id = $(this).attr("id").replace("quantity_itemcart_","");
-				var qty = $(this).val();			
+			$(".shopcart-box .table .quantity_itemcart").change(function(){
+				var id = $(this).attr("id").replace("quantity_itemcart_","");				
+				var qty = $(this).val()-shopcart[id]["quantity"];				
 				updateItem(undefined,id,qty);
 			});
 			
-			$("#shopcart-box .table .remove_itemcart").click(function(){
+			$(".shopcart-box .table .remove_itemcart").click(function(){
 				var id = $(this).attr("id").replace("remove_itemcart_","");									
 				updateItem(undefined,id);										
-			});				
+			});	
+			
+			$(".shopcart-box .table .remove_itemcart,.shopcart-box .table .quantity_itemcart").click(function(e){        				
+				e.stopPropagation();
+			});			
+			
 		}
 	}
 	
@@ -306,20 +302,12 @@ function enAsci(a,s) {
 		}
 		else
 		{			
-			updateItem(val);		
+			updateItem(val,idata);		
 		}
 	});
 	
-	var shopcart = <?= json_encode(Yii::$app->session->get('YES_SHOPCART'))?>;
-	//if (shopcart != null && <?= $model->isNewRecord?"true":"false"?>)	
-	if (!(JSON.stringify(shopcart) == "[null]" || shopcart == null))
-	{
-		createCart(shopcart);		
-	}
-	else
-	{
-		updateTotal();		
-	}	
+	var shopcart = <?= json_encode(Yii::$app->session->get('YES_SHOPCART'))?>;	
+	createCart(shopcart);			
 	
 <?php $this->endBlock(); ?>
 
@@ -333,5 +321,5 @@ function enAsci(a,s) {
 yii\web\YiiAsset::register($this);
 $this->registerJs($this->blocks['ASCI'], yii\web\View::POS_END);
 $this->registerJs($this->blocks['AJAX_POST'], yii\web\View::POS_END);
-$this->registerJs($this->blocks['JS_END'], yii\web\View::POS_END);
+$this->registerJs($this->blocks['SHOPCART'], yii\web\View::POS_END);
 $this->registerJs($this->blocks['JS_READY'], yii\web\View::POS_READY);

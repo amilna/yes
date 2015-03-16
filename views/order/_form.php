@@ -157,19 +157,19 @@ $payment = ($model->isNewRecord?$model->id['payment']:false);
 				<div class="row">		
 					<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
 						<h3 class="text-center"><?= Yii::t("app","Summary & Total")?></h3>
-						<div id="shopcart-box" class="well">
-							<h4><?= Yii::t("app","Shopping Cart")?> <span id="shopcart-badge" class="badge"></span> <small class="pull-right"></small></h4>
+						<div class="well shopcart-box">
+							<h4><?= Yii::t("app","Shopping Cart")?> <span class="shopcart-badge badge"></span> <small class="pull-right"></small></h4>
 							<table class="table table-striped table-bordered">
 							</table>								
 						</div>
 						<div class="well">
-						<div id="order-shippingcost-label"></div>
-						<?= Html::hiddenInput('Order[data][shippingcost]',0,["id"=>"order-data-shippingcost","class"=>"form-control"]); ?>
+						<div class="order-shippingcost-label"></div>
+						<?= Html::hiddenInput('Order[data][shippingcost]',0,["class"=>"form-control order-data-shippingcost"]); ?>
 						<br>
-						<div id="order-vat-label"></div>						
-						<?= Html::hiddenInput('Order[data][vat]',0,["id"=>"order-data-vat","class"=>"form-control"]); ?>
-						<div id="order-grandtotal-label"></div>
-						<?= Html::hiddenInput('Order[total]',0,["id"=>"order-total","class"=>"form-control"]); ?>
+						<div class="order-vat-label"></div>						
+						<?= Html::hiddenInput('Order[data][vat]',0,["class"=>"form-control order-data-vat"]); ?>
+						<div class="order-grandtotal-label"></div>
+						<?= Html::hiddenInput('Order[total]',0,["class"=>"form-control order-total"]); ?>
 						</div>
 						<hr>
 						<a onclick="$('#ordertab a[href=\'#address\']').tab('show')" class="btn btn-warning btn-tab pull-left" ><?= Yii::t("app","Previous") ?></a>

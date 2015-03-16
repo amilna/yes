@@ -82,15 +82,15 @@ function renderShip(jsonstring)
 function resetShip()
 {
 	$(".radio-shipping-cost").html("");
-	$("#order-shippingcost-label").html("");
-	$("#order-data-shippingcost").val(0);
+	$(".order-shippingcost-label").html("");
+	$(".order-data-shippingcost").val(0);
 	$("#order-data-city").val("");
 	updateVat();	
 }
 
 function updateShip(l)
 {
-	var berat = Math.ceil(parseFloat($("#shopcart-box h4").attr("data-weight")));
+	var berat = Math.ceil(parseFloat($(".shopcart-box h4").attr("data-weight")));
 	var cost = l.cost*(isNaN(berat)?0:berat);
 	if (cost > 0)
 	{
@@ -101,8 +101,8 @@ function updateShip(l)
 	{
 		ohtml = "";	
 	}
-	$("#order-shippingcost-label").html(ohtml);
-	$("#order-data-shippingcost").val(cost);
+	$(".order-shippingcost-label").html(ohtml);
+	$(".order-data-shippingcost").val(cost);
 	
 	updateVat();
 }

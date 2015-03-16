@@ -232,7 +232,7 @@ class OrderController extends Controller
 					$post['Order']['data'] = json_encode($data);
 				}				
 				$model->load($post);			
-				$model->log = json_encode($_SERVER);
+				$model->log = json_encode($_SERVER["REMOTE_ADDR"]);
 				
 				if ($model->save()) {
 					Yii::$app->session->set('YES_SHOPCART',null);
@@ -389,7 +389,7 @@ class OrderController extends Controller
 			{
 				if (isset($item['data']['quantity']))
 				{
-					$data[$item['data']['idata']]['quantity'] = $item['data']['quantity'];
+					$data[$item['data']['idata']]['quantity'] += $item['data']['quantity'];
 					$result = array('status'=>2);
 				}
 				else
