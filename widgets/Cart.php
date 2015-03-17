@@ -10,6 +10,7 @@ use yii\helpers\Json;
 class Cart extends Widget
 {    	
 	public $viewPath = '@amilna/yes/widgets/views/cart';
+	public $icon = 'fa fa-shopping-cart';
 	
 	private $bundle;
 
@@ -29,7 +30,7 @@ class Cart extends Widget
 	
 		$view->registerJs($script);		
 		
-		echo $this->render($this->viewPath);
+		echo $this->render($this->viewPath,["icon"=>$this->icon]);
 		echo $this->render('@amilna/yes/views/product/_script_add');        
     }
         

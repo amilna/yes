@@ -8,7 +8,7 @@ $n = count(Yii::$app->session->get('YES_SHOPCART'));
 <!-- Notifications: style can be found in dropdown.less -->
 <li class="dropdown notifications-menu">	
 	<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-		<i class="fa fa-shopping-cart"></i>
+		<i class="<?= $icon?>" ></i>
 		<span class="label label-warning shopcart-badge"><?= ($n > 0?$n:''); ?></span>
 	</a>	
 	<ul class="dropdown-menu">
