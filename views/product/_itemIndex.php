@@ -5,6 +5,7 @@ use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
 /* @var $model amilna\cap\models\AccountCode */
+$module = Yii::$app->getModule('yes');
 
 $this->params['cboxTarget']['.colorbox-'.$model->id] =  [
 													'maxWidth' => 800,
@@ -22,7 +23,7 @@ $this->params['cboxTarget']['.colorbox-'.$model->id] =  [
 				$images = json_decode($model->images);
 				$n = 0;
 				foreach ($images as $i) {					
-					echo Html::a(Html::tag("div","",["style"=>'height:100px;background-position: 0% 30%;background-size:cover;background-image:url("'.str_replace("/upload/","/upload/.thumbs/",$i).'")']),$i,["titles"=>$model->title,"class"=>"colorbox-".$model->id,"style"=>"width:100%;".($n > 0?"display:none;":"")]);
+					echo Html::a(Html::tag("div","",["style"=>'height:100px;background-position: 0% 30%;background-size:cover;background-image:url("'.str_replace($module->uploadURL."/",$module->uploadURL."/.thumbs/",$i).'")']),$i,["titles"=>$model->title,"class"=>"colorbox-".$model->id,"style"=>"width:100%;".($n > 0?"display:none;":"")]);
 					$n += 1;
 				}
 			}
