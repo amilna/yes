@@ -29,6 +29,10 @@
 		{
 			"type": "vcs",
 			"url": "https://github.com/aaiyo/yii2-kcfinder"
+		},
+		{
+			"type": "vcs",
+			"url": "https://github.com/aaiyo/yii2-imperavi-widget"
 		}
     ],	    
     "autoload": {
