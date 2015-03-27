@@ -114,6 +114,12 @@ function enAsci(a,s) {
 								delete shopcart[idata];
 								createCart(shopcart);							
 							}
+							
+							if (!$('.shopcart-widget').hasClass('open'))
+							{
+								$('.shopcart-widget .dropdown-toggle').dropdown('toggle');
+							}
+							
 						}						
 					};
 		
@@ -266,11 +272,11 @@ function enAsci(a,s) {
 			$(".shopcart-box .table .remove_itemcart").click(function(){
 				var id = $(this).attr("id").replace("remove_itemcart_","");									
 				updateItem(undefined,id);										
-			});	
+			});						
 			
-			$(".shopcart-box .table .remove_itemcart,.shopcart-box .table .quantity_itemcart").click(function(e){        				
+			$(".shopcart-widget .dropdown-menu,.shopcart-box .table .remove_itemcart,.shopcart-box .table .quantity_itemcart").click(function(e){        								
 				e.stopPropagation();
-			});			
+			});		
 			
 		}
 	}
@@ -303,7 +309,7 @@ function enAsci(a,s) {
 		else
 		{			
 			updateItem(val,idata);		
-		}
+		}								
 	});
 	
 	var shopcart = <?= json_encode(Yii::$app->session->get('YES_SHOPCART'))?>;	

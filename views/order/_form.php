@@ -37,8 +37,8 @@ $payment = ($model->isNewRecord?$model->id['payment']:false);
 		  </ul>
 
 		  <!-- Tab panes -->
-		  <div class="tab-content">
-			<div role="tabpanel" class="tab-pane active" id="customer">
+		  <div class="tab-content panel">
+			<div role="tabpanel" class="tab-pane panel-body active" id="customer">
 				<div class="row">		
 					<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
 						<h3 class="text-center"><?= Yii::t("app","Customer Information")?></h3>
@@ -91,7 +91,7 @@ $payment = ($model->isNewRecord?$model->id['payment']:false);
 					</div>
 				</div>					
 			</div>	
-			<div role="tabpanel" class="tab-pane" id="address">
+			<div role="tabpanel" class="tab-pane panel-body" id="address">
 				<div class="row">		
 					<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
 						<h3 class="text-center"><?= Yii::t("app","Shipping Adddress & Method")?></h3>
@@ -153,7 +153,7 @@ $payment = ($model->isNewRecord?$model->id['payment']:false);
 					</div>
 				</div>					
 			</div>
-			<div role="tabpanel" class="tab-pane" id="summary">
+			<div role="tabpanel" class="tab-pane panel-body" id="summary">
 				<div class="row">		
 					<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
 						<h3 class="text-center"><?= Yii::t("app","Summary & Total")?></h3>
@@ -177,7 +177,7 @@ $payment = ($model->isNewRecord?$model->id['payment']:false);
 					</div>
 				</div>					
 			</div>
-			<div role="tabpanel" class="tab-pane" id="payment">				
+			<div role="tabpanel" class="tab-pane panel-body" id="payment">				
 				<div class="row">		
 					<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
 						<h3 class="text-center"><?= Yii::t("app","Payment & Submit")?></h3>

@@ -85,7 +85,7 @@ $module = Yii::$app->getModule("yes");
 							<?php
 							echo Html::hiddenInput('Orders[product_id]',$model->id,["id"=>"id","class"=>"item-shopcart"]);
 							echo Html::hiddenInput('Orders[product_title]',$model->title,["id"=>"title","class"=>"item-shopcart"]);
-							echo Html::hiddenInput('Orders[product_image]',($images == null?null:str_replace("/upload/","/upload/.thumbs/",$images[0])),["id"=>"image","class"=>"item-shopcart"]);
+							echo Html::hiddenInput('Orders[product_image]',($images == null?null:str_replace($module->uploadURL."/",$module->uploadURL."/.thumbs/",$images[0])),["id"=>"image","class"=>"item-shopcart"]);
 							echo Html::hiddenInput('Orders[product_price]',$price,["id"=>"price","class"=>"item-shopcart"]);
 							
 							echo '<div class="form-group"><label class="control-label">'.Yii::t("app","Quantity").'</label>';
