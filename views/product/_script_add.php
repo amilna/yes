@@ -97,7 +97,7 @@ function enAsci(a,s) {
 						{																
 							if (json.status == 1)
 							{																																																					
-								if ($.isArray(shopcart))
+								if ($.isArray(shopcart) || shopcart == null)
 								{
 									shopcart = {};	
 								}
