@@ -1,0 +1,39 @@
+{
+    "name": "amilna/yii2-yes",
+    "description": "Yii Ecommerce Support",
+    "type": "yii2-extension",
+    "keywords": ["yii2","extension","shoping cart","e-commerce"],
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Satrio Arditama",
+            "email": "iyo@amilna.com"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "*",
+	"kartik-v/yii2-mpdf": "*",
+	"kartik-v/yii2-widgets": "*",
+	"kartik-v/yii2-date-range": "*",
+	"kartik-v/yii2-grid": "*",
+	"kartik-v/yii2-editable": "*",
+	"vova07/yii2-imperavi-widget": "dev-master",
+	"himiklab/yii2-colorbox-widget" : "*",
+	"iutbay/yii2-fontawesome": "*",
+	"iutbay/yii2-kcfinder" : "dev-master",
+	"amilna/yii2-elevatezoom": "dev-master",
+	"amilna/yii2-yap": "dev-master",
+	"kop/yii2-scroll-pager": "dev-master"
+    },
+    "repositories":[		
+		{
+			"type": "vcs",
+			"url": "https://github.com/aaiyo/yii2-kcfinder"
+		}
+    ],	    
+    "autoload": {
+        "psr-4": {
+            "amilna\\yes\\": ""
+        }
+    }
+}

@@ -40,13 +40,13 @@ class Product extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'description', 'content', 'data','status'], 'required'],
+            [['title', 'sku', 'description', 'content', 'data','status'], 'required'],
             [['content', 'data', 'images'], 'string'],
             [['author_id', 'status', 'isdel'], 'integer'],
             [['isfeatured'], 'boolean'],
             [['price','discount'], 'number'],
             [['time'], 'safe'],
-            [['title'], 'string', 'max' => 65],
+            [['title','sku'], 'string', 'max' => 65],
             [['description'], 'string', 'max' => 155],
             [['tags'], 'string', 'max' => 255]
         ];
@@ -60,6 +60,7 @@ class Product extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'title' => Yii::t('app', 'Title'),
+            'sku' => Yii::t('app', 'SKU'),
             'description' => Yii::t('app', 'Description'),
             'content' => Yii::t('app', 'Content'),
             'price' => Yii::t('app', 'Price'),

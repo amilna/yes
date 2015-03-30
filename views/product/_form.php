@@ -61,15 +61,20 @@ foreach ($model->catPro as $c)
 	<div class="row">
 		<div class="col-md-9">
 			<div class="row">				
-				<div class="col-xs-7 col-sm-9">
+				<div class="col-sm-6">
 			<?= $form->field($model, 'title')->textInput(['maxlength' => 65,'placeholder'=>Yii::t('app','Title contain a seo keyword if possible')]) ?>
 				</div>
-				<div class="col-xs-5 col-sm-3">
-			<?= $form->field($model, 'isfeatured')->widget(SwitchInput::classname(), [			
-					'type' => SwitchInput::CHECKBOX,				
-				]);
-			?>		
-				</div>						
+				<div class="col-sm-6">
+					<div class="col-xs-6 col-sm-6">
+				<?= $form->field($model, 'sku')->textInput(['maxlength' => 65,'placeholder'=>Yii::t('app','Product inventory code')]) ?>
+					</div>
+					<div class="col-xs-6 col-sm-6">
+				<?= $form->field($model, 'isfeatured')->widget(SwitchInput::classname(), [			
+						'type' => SwitchInput::CHECKBOX,				
+					]);
+				?>		
+					</div>						
+				</div>
 			</div>
 			<?= $form->field($model, 'description')->textArea(['maxlength' => 155,'placeholder'=>Yii::t('app','This description also used as meta description')]) ?>
 			<?/*= $form->field($model, 'data')->textArea(['placeholder'=>Yii::t('app','Product Data')]) */?>

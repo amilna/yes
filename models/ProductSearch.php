@@ -27,7 +27,7 @@ class ProductSearch extends Product
         return [
             [['id', 'author_id', 'status', 'isdel'], 'integer'],
             [['price','discount'], 'number'],
-            [['title', 'description', 'content', 'data', 'tags', 'images', 'time', 'authorName', 'term', 'category'/*, 'salesId'*/], 'safe'],
+            [['title', 'sku', 'description', 'content', 'data', 'tags', 'images', 'time', 'authorName', 'term', 'category'/*, 'salesId'*/], 'safe'],
             [['isfeatured'], 'boolean'],
         ];
     }
@@ -200,7 +200,7 @@ class ProductSearch extends Product
 		{
 			$query->andFilterWhere($p);
 		}
-        $params = self::queryString([['title'],['description'],['content'],['data'],['tags'],['images']/*['id','{{%author}}'],['id','{{%sales}}'],['id','{{%catpros}}']*/]);
+        $params = self::queryString([['title'],['sku'],['description'],['content'],['data'],['tags'],['images']/*['id','{{%author}}'],['id','{{%sales}}'],['id','{{%catpros}}']*/]);
 		foreach ($params as $p)
 		{
 			$query->andFilterWhere($p);
@@ -242,9 +242,11 @@ class ProductSearch extends Product
 				$query->andFilterWhere(["OR","lower(title) like '%".strtolower($this->term)."%'",
 					["OR","lower(description) like '%".strtolower($this->term)."%'",
 						["OR","lower(tags) like '%".strtolower($this->term)."%'",
-							["OR","lower(content) like '%".strtolower($this->term)."%'",
-								"{{%yes_product}}.id = ANY ('".$res."')"
-							]
+							["OR","lower(sku) like '%".strtolower($this->term)."%'",
+								["OR","lower(content) like '%".strtolower($this->term)."%'",
+									"{{%yes_product}}.id = ANY ('".$res."')"
+								]
+							]	
 						]
 					]
 				]);								

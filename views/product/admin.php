@@ -79,7 +79,7 @@ $module = Yii::$app->getModule('yes');
 				'format'=>'html',
 				'value' => function($data) use ($module) {
 					$images = json_decode($data->images);					
-					return (isset($images[0])?Html::img(str_replace($module->uploadURL."/",$module->uploadURL."/.thumbs/",$images[0]),['class'=>'pull-left','style'=>'margin:0 10px 10px 0']):"")." ".Html::encode($data->title);
+					return (isset($images[0])?Html::img(str_replace($module->uploadURL."/",$module->uploadURL."/.thumbs/",$images[0]),['class'=>'pull-left','style'=>'margin:0 10px 10px 0']):"")." ".Html::encode($data->sku." ".$data->title);
 				},
             ],            
             'description',
