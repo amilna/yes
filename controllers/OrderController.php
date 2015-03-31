@@ -32,10 +32,10 @@ class OrderController extends Controller
         {
             return [
                 'captcha' => [					
-                    //'class' => 'yii\captcha\CaptchaAction',                    
-                    //'testLimit'=>1,
-                    'class' => 'mdm\captcha\CaptchaAction',
-					'level' => 1, // avaliable level are 1,2,3 :D
+                    'class' => 'yii\captcha\CaptchaAction',                    
+                    'testLimit'=>1,
+                    //'class' => 'mdm\captcha\CaptchaAction',
+					//'level' => 1, // avaliable level are 1,2,3 :D
                 ],
             ];
         }
