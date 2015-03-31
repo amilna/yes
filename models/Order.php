@@ -189,8 +189,21 @@ class Order extends \yii\db\ActiveRecord
 			$sale->amount = $p->quantity*$p->price;
 			$sale->data = $remarks;
 			if (!$sale->save())
-			{
+			{				
 				$res = false;
+			}
+			else
+			{
+				$customer = Customer::findOne($model->customer_id);
+				if ($customer)
+				{
+					$customer->last_action = 2;
+					$customer->last_time = $model->time;
+					if (!$customer->save())
+					{
+						$res = false;
+					}	
+				}		
 			}
 		}
 		

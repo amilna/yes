@@ -221,6 +221,9 @@ class OrderController extends Controller
 						$customer->addresses = json_encode($addresses);
 						$customer->name = $data["customer"]["name"];
 						$customer->email = $data["customer"]["email"];
+						$customer->last_action = 1;
+						$customer->last_time = $model->time;
+						
 						if ($customer->save())
 						{
 							$post['Order']['customer_id'] = $customer->id;	
