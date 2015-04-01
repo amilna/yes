@@ -7,7 +7,7 @@ use yii\helpers\Html;
 /* @var $model amilna\yes\models\Confirmation */
 
 $this->title = Yii::t('app', 'Create {modelClass}', [
-    'modelClass' => 'Confirmation',
+    'modelClass' => Yii::t('app', 'Confirmation'),
 ]);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Confirmations'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;

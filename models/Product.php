@@ -85,7 +85,7 @@ class Product extends \yii\db\ActiveRecord
 							1=>Yii::t('app','Available'),
 							2=>Yii::t('app','Upcoming'),
 							3=>Yii::t('app','Out of Stock'),
-							4=>Yii::t('app','Sale'),
+							4=>Yii::t('app','On Sale'),
 							5=>Yii::t('app','Free'),
 						],			
 			'isfeatured'=>[							

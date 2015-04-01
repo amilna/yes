@@ -20,7 +20,7 @@ $module = Yii::$app->getModule('yes');
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
     <p>
         <?= Html::a(Yii::t('app', 'Create {modelClass}', [
-    'modelClass' => 'Product',
+    'modelClass' => Yii::t('app', 'Product'),
 ]), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 

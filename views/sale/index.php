@@ -21,7 +21,7 @@ $module = Yii::$app->getModule('yes');
        
     <p>
         <?/*= Html::a(Yii::t('app', 'Create {modelClass}', [
-    'modelClass' => 'Sale',
+    'modelClass' => Yii::t('app', 'Sale'),
 ]), ['create'], ['class' => 'btn btn-success'])*/ ?>
     </p>
 
