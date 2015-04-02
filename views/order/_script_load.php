@@ -17,7 +17,7 @@ if (orderdata != null)
 {	
 	var o = orderdata;
 	$("#order-customer_id-name").val(o.customer.name);
-	$("#order-customer_id-email").val(o.customer.email);
+	$("#order-complete_reference-email").val(o.customer.email);
 	$("#order-customer_id-phones").val(o.customer.phones);
 	$("#order-customer_id-address").val(o.customer.address);	
 	$("#order-data-note").val(o.note);	

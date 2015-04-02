@@ -11,7 +11,7 @@ $module = Yii::$app->getModule("yes");
 	function findCustomer()
 	{
 		var name = $("#order-customer_id-name").val();
-		var email = $("#order-customer_id-email").val();
+		var email = $("#order-complete_reference-email").val();
 		var phones = $("#order-customer_id-phones").val();
 		name = (name==""?"false":name);
 		email = (email==""?"false":email);

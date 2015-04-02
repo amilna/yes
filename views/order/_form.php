@@ -66,7 +66,7 @@ $payment = ($model->isNewRecord?$model->id['payment']:false);
 						<div class="form-group">
 						<?= Html::label(Yii::t("app","Email"))?>	
 						<?php	
-							$field = $form->field($model,"customer_id[email]");
+							$field = $form->field($model,"complete_reference[email]");
 							$field->template = "{input}";
 							echo $field->textInput(["class"=>"form-control","placeholder"=>Yii::t("app","Email address")]);						
 						?>	 

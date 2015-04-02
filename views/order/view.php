@@ -37,7 +37,7 @@ $subject = '<strong>'.Html::encode($customer->name).'</strong><br>
 		'.Html::encode($customer->address).'<br>
 		'.($shipping != null?Html::encode($shipping->city.', '.$shipping->area).'<br>':'').'
 		'.Yii::t("app","Phones").': '.Html::encode($customer->phones).'<br/>
-		'.Yii::t("app","Email").': <a href="mailto:'.$model->toHex($customer->email).'">'.str_replace("@"," [AT] ",$customer->email).'</a>';
+		'.(isset($customer->email)?Yii::t("app","Email").': <a href="mailto:'.$model->toHex($customer->email).'">'.str_replace("@"," [AT] ",$customer->email):"").'</a>';
 ?>
 
 <h1><small><?= Html::encode($this->title) ?></small></h1>

@@ -194,11 +194,11 @@ class Order extends \yii\db\ActiveRecord
 			}
 			else
 			{
-				$customer = Customer::findOne($model->customer_id);
+				$customer = Customer::findOne($this->customer_id);
 				if ($customer)
 				{
 					$customer->last_action = 2;
-					$customer->last_time = $model->time;
+					$customer->last_time = date("Y-m-d H:i:s");
 					if (!$customer->save())
 					{
 						$res = false;

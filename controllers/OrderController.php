@@ -201,9 +201,19 @@ class OrderController extends Controller
 					$data = $post['Order']['data'];
 					if (isset($post['Order']['customer_id']))
 					{	
+						$email = isset($post['Order']['complete_reference'])?(isset($post['Order']['complete_reference']['email'])?$post['Order']['complete_reference']['email']:null):null;
+						$post['Order']['complete_reference'] = null;
 						$data["customer"] = $post['Order']['customer_id'];
 						//$customer = Customer::find()->where(["name"=>$data["customer"]["name"],"email"=>$data["customer"]["email"]])->one();
-						$customer = Customer::find()->where("email = :email OR concat(',',phones,',') like :phone",[":email"=>$data["customer"]["email"],":phone"=>"%,".$data["customer"]["phones"].",%"])->one();
+						if ($email != null)
+						{
+							$customer = Customer::find()->where("email = :email OR concat(',',phones,',') like :phone",[":email"=>$email,":phone"=>"%,".$data["customer"]["phones"].",%"])->one();
+						}
+						else
+						{
+							$customer = Customer::find()->where("concat(',',phones,',') like :phone",[":phone"=>"%,".$data["customer"]["phones"].",%"])->one();
+						}												
+						
 						if (!$customer)
 						{
 							$customer = new Customer();	
@@ -220,7 +230,7 @@ class OrderController extends Controller
 						$customer->phones = implode(",",$phones);
 						$customer->addresses = json_encode($addresses);
 						$customer->name = $data["customer"]["name"];
-						$customer->email = $data["customer"]["email"];
+						$customer->email = $email;
 						$customer->last_action = 1;
 						$customer->last_time = $model->time;
 						
