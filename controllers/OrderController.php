@@ -350,9 +350,15 @@ class OrderController extends Controller
     public function actionDelete($id)
     {        
 		$model = $this->findModel($id);        
+		
+		if (!Yii::$app->user->isGuest)
+		{
+			$model->captchaRequired = false;	
+		}
+		
         $model->isdel = 1;
         $model->save();
-        //$model->delete(); //this will true delete
+        //$model->delete(); //this will true delete        
         
         return $this->redirect(['index']);
     }
