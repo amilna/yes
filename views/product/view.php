@@ -126,7 +126,7 @@ $module = Yii::$app->getModule("yes");
 										'options' => [
 											'placeholder' => Yii::t('app','Select ').$d->label,
 											'class'=>'item-shopcart',
-											"id"=>"data_".$d->label,
+											"id"=>"data_".str_replace(" ","_",$d->label),
 										],
 									]);	
 									echo '</div>';
@@ -134,7 +134,7 @@ $module = Yii::$app->getModule("yes");
 								else if ($type == 1)
 								{
 									echo '<div class="form-group"><label class="control-label">'.Html::encode($d->label).'</label>';
-									echo Html::textInput('Orders[data]['.$d->label.']',$d->value,["id"=>"data_".$d->label,"class"=>"form-control item-shopcart","placeholder"=>Yii::t("app",$d->label),"style"=>"width:100%"]);
+									echo Html::textInput('Orders[data]['.$d->label.']',$d->value,["id"=>"data_".str_replace(" ","_",$d->label),"class"=>"form-control item-shopcart","placeholder"=>Yii::t("app",$d->label),"style"=>"width:100%"]);
 									echo '</div>';	
 								}
 								else if ($type == 2)
@@ -143,10 +143,13 @@ $module = Yii::$app->getModule("yes");
 									echo TouchSpin::widget([
 											'name' => 'Orders[data]['.$d->label.']', 										
 											'value' => ($d->value == null?0:$d->value),
-											'options'=>["id"=>"data_".$d->label,"class"=>"item-shopcart"],
+											'options'=>["id"=>"data_".str_replace(" ","_",$d->label),"class"=>"item-shopcart"],
 											'pluginOptions'=>[
-												'min'=>0,												
+												'min'=>1,												
 												'step'=>1,
+												'max'=>100000000,
+												'boostat'=> 10,
+												'maxboostedstep'=> 100000,
 												'handle'=>'triangle',
 												'tooltip'=>'always'
 											]
@@ -156,18 +159,18 @@ $module = Yii::$app->getModule("yes");
 								else if ($type == 3)
 								{
 									echo '<div class="form-group"><label class="control-label">'.Html::encode($d->label).'</label>';
-									echo Html::textArea('Orders[data]['.$d->label.']',$d->value,["id"=>"data_".$d->label,"class"=>"form-control item-shopcart","placeholder"=>Yii::t("app",$d->label),"style"=>"width:100%"]);
+									echo Html::textArea('Orders[data]['.$d->label.']',$d->value,["id"=>"data_".str_replace(" ","_",$d->label),"class"=>"form-control item-shopcart","placeholder"=>Yii::t("app",$d->label),"style"=>"width:100%"]);
 									echo '</div>';
 								}
 								else if ($type == 4)
 								{
 									echo '<div class="form-group"><label class="control-label">'.$d->value.'</label>';
-									echo Html::hiddenInput('Orders[data]['.$d->label.']',$d->value,["id"=>"data_".$d->label,"class"=>"form-control item-shopcart"]);
+									echo Html::hiddenInput('Orders[data]['.$d->label.']',$d->value,["id"=>"data_".str_replace(" ","_",$d->label),"class"=>"form-control item-shopcart"]);
 									echo '</div>';
 								}							
 								else if ($type == 5)
 								{
-									echo Html::hiddenInput('Orders[data]['.$d->label.']',$d->value,["id"=>"data_".$d->label,"class"=>"form-control item-shopcart"]);
+									echo Html::hiddenInput('Orders[data]['.$d->label.']',$d->value,["id"=>"data_".str_replace(" ","_",$d->label),"class"=>"form-control item-shopcart"]);
 								}
 							}							
 							?>
