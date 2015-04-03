@@ -289,11 +289,17 @@ function enAsci(a,s) {
 		$(".item-shopcart").each(
 			function(v,i)
 			{				
-				var atr = $(i).attr("id");				
-				d[atr] = $(i).val();
+				var atr = $(i).attr("id");
+				var atrn = $(i).attr("name");
+				atrn = atrn.substr(13,atrn.length-14);				
 				if (atr.substr(0,5) == "data_") {					
 					idata += $(i).val();
+					d[atrn] = $(i).val();
 				}				
+				else
+				{
+					d[atr] = $(i).val();
+				}
 			}
 		);	
 		var idata = enAsci(idata);
