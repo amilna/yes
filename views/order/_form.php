@@ -9,7 +9,7 @@ use kartik\money\MaskMoney;
 use kartik\widgets\Select2;
 use kartik\widgets\SwitchInput;
 use kartik\datetime\DateTimePicker;
-use amilna\yes\models\Payment;
+use amilna\yes\models\PaymentSearch;
 
 use yii\captcha\Captcha;
 
@@ -19,7 +19,7 @@ use yii\captcha\Captcha;
 
 $module = Yii::$app->getModule("yes");
 
-$listPayment = []+ArrayHelper::map(Payment::find()->where("status = 1")->all(), 'id', 'terminal');
+$listPayment = []+ArrayHelper::map(PaymentSearch::find()->andWhere("status = 1")->all(), 'id', 'terminal');
 $payment = ($model->isNewRecord?$model->id['payment']:false);
 ?>
 
