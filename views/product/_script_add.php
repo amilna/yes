@@ -294,7 +294,7 @@ function enAsci(a,s) {
 					idata += $(i).val();
 					var atrn = $(i).attr("name");
 					atrn = atrn.substr(13,atrn.length-14);		
-					d[atrn] = $(i).val();
+					d["data_".atrn] = $(i).val();
 				}				
 				else
 				{
