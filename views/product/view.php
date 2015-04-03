@@ -77,13 +77,17 @@ $module = Yii::$app->getModule("yes");
 						<?= Html::encode($model->description) ?>
 						<div class="well col-sm-6 pull-right" style="margin-top:20px">
 														
-							<h3><?php 
+							<?php 
 								$price = ($model->discount > 0?$model->price*$model->discount/100:$model->price);
-								echo Html::encode($price > 0?$model->toMoney($price):"");							
-							?></h3>
-							<h2 style="text-decoration: line-through;"><?php 								
-								echo Html::encode($model->discount > 0?$model->toMoney($model->price):"");							
-							?></h2>
+								if ($price > 0) {
+									echo "<h3>".Html::encode($model->toMoney($price))."</h3>";							
+								}
+							?>
+							<?php 								
+								if ($model->discount > 0) {
+									echo '<h2 style="text-decoration: line-through;">'.Html::encode($model->toMoney($model->price)).'</h2>';							
+								}
+							?>
 							<hr>
 							<?php
 							echo Html::hiddenInput('Orders[product_id]',$model->id,["id"=>"id","class"=>"item-shopcart"]);
@@ -91,11 +95,11 @@ $module = Yii::$app->getModule("yes");
 							echo Html::hiddenInput('Orders[product_image]',($images == null?null:str_replace($module->uploadURL."/",$module->uploadURL."/.thumbs/",$images[0])),["id"=>"image","class"=>"item-shopcart"]);
 							echo Html::hiddenInput('Orders[product_price]',$price,["id"=>"price","class"=>"item-shopcart"]);
 							
-							echo '<div class="form-group"><label class="control-label">'.Yii::t("app","Quantity").'</label>';
+							echo '<div class="form-group'.($price > 0?"":" hidden").'"><label class="control-label">'.Yii::t("app","Quantity").'</label>';
 							echo TouchSpin::widget([
 										'name' => 'Orders[product_qty]',
 										'value' => 1,
-										'options' => ["id"=>"quantity",'class'=>'item-shopcart'.($price > 0?"":" hidden")],
+										'options' => ["id"=>"quantity",'class'=>'item-shopcart'],
 										'pluginOptions'=>[
 											'min'=>1,												
 											'step'=>1,
