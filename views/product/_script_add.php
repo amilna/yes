@@ -289,11 +289,11 @@ function enAsci(a,s) {
 		$(".item-shopcart").each(
 			function(v,i)
 			{				
-				var atr = $(i).attr("id");
-				var atrn = $(i).attr("name");
-				atrn = atrn.substr(13,atrn.length-14);				
+				var atr = $(i).attr("id");						
 				if (atr.substr(0,5) == "data_") {					
 					idata += $(i).val();
+					var atrn = $(i).attr("name");
+					atrn = atrn.substr(13,atrn.length-14);		
 					d[atrn] = $(i).val();
 				}				
 				else
@@ -302,6 +302,7 @@ function enAsci(a,s) {
 				}
 			}
 		);	
+		console.log(d);
 		var idata = enAsci(idata);
 		d["idata"] = idata;								
 		var val = {"shopcart":{}};
