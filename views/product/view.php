@@ -79,8 +79,11 @@ $module = Yii::$app->getModule("yes");
 														
 							<h3><?php 
 								$price = ($model->discount > 0?$model->price*$model->discount/100:$model->price);
-								echo $model->toMoney($price);
+								echo Html::encode($price > 0?$model->toMoney($price):"");							
 							?></h3>
+							<h2 style="text-decoration: line-through;"><?php 								
+								echo Html::encode($model->discount > 0?$model->toMoney($model->price):"");							
+							?></h2>
 							<hr>
 							<?php
 							echo Html::hiddenInput('Orders[product_id]',$model->id,["id"=>"id","class"=>"item-shopcart"]);
@@ -92,7 +95,7 @@ $module = Yii::$app->getModule("yes");
 							echo TouchSpin::widget([
 										'name' => 'Orders[product_qty]',
 										'value' => 1,
-										'options' => ["id"=>"quantity",'class'=>'item-shopcart'],
+										'options' => ["id"=>"quantity",'class'=>'item-shopcart'.($price > 0?"":" hidden")],
 										'pluginOptions'=>[
 											'min'=>1,												
 											'step'=>1,
