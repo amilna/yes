@@ -78,14 +78,14 @@ $module = Yii::$app->getModule("yes");
 						<div class="well col-sm-6 pull-right" style="margin-top:20px">
 														
 							<?php 
-								$price = ($model->discount > 0?$model->price*$model->discount/100:$model->price);
+								$price = ($model->discount > 0?$model->price-($model->price*$model->discount/100):$model->price);
 								if ($price > 0) {
 									echo "<h3>".Html::encode($model->toMoney($price))."</h3>";							
 								}
 							?>
 							<?php 								
 								if ($model->discount > 0) {
-									echo '<h2 style="text-decoration: line-through;">'.Html::encode($model->toMoney($model->price)).'</h2>';							
+									echo '<h4 class="label label-danger" style="text-decoration: line-through;">'.Html::encode($model->toMoney($model->price)).'</h4>';							
 								}
 							?>
 							<hr>
