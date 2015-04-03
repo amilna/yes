@@ -291,10 +291,8 @@ function enAsci(a,s) {
 			{				
 				var atr = $(i).attr("id");						
 				if (atr.substr(0,5) == "data_") {					
-					idata += $(i).val();
-					var atrn = $(i).attr("name");
-					atrn = atrn.substr(13,atrn.length-14);		
-					d["data_".atrn] = $(i).val();
+					idata += $(i).val();					
+					d["data_"+atr.substr(5).replace(/_/g," ")] = $(i).val();
 				}				
 				else
 				{
