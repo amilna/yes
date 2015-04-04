@@ -155,9 +155,9 @@ class OrderController extends Controller
      * @additionalParam string $format
      * @return mixed
      */
-    public function actionView($id,$format= false)
+    public function actionView($reference,$format= false)
     {
-        $model = $this->findModel($id);
+        $model = $this->findModel(["reference"=>$reference]);
         
         if ($format == 'json')
         {
@@ -252,7 +252,7 @@ class OrderController extends Controller
 				if ($model->save()) {
 					Yii::$app->session->set('YES_SHOPCART',null);
 					$transaction->commit();
-					return $this->redirect(['view', 'id' => $model->id]);            
+					return $this->redirect(['view', 'reference' => $model->reference]);            
 				} else {										
 					$model->data = json_encode($data);
 					$transaction->rollBack();
@@ -328,7 +328,7 @@ class OrderController extends Controller
 				if ($model->save()) {				
 					Yii::$app->session->set('YES_SHOPCART',null);
 					$transaction->commit();			
-					return $this->redirect(['view', 'id' => $model->id]);            
+					return $this->redirect(['view', 'reference' => $model->reference]);            
 				}
 				else
 				{

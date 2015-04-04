@@ -218,7 +218,14 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'log:ntext',
             // 'isdel',
 
-            ['class' => 'kartik\grid\ActionColumn'],
+            [
+				'class' => 'kartik\grid\ActionColumn',				
+				'buttons'=>[
+					'view'=>function ($url, $model, $key) {
+						return Html::a('<span class="glyphicon glyphicon-eye-open"></span>',["view","reference"=>$model->reference],["title"=>Yii::t("yii","View")]);
+					},						
+				]
+			],
         ],
     ]); ?>
 

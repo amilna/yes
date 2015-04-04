@@ -43,7 +43,7 @@ $listOrder = []+ArrayHelper::map(OrderSearch::find()->andWhere("status = 0")->al
 						],
 					]);
 					*/
-					
+					$render = $model->order_id != null && $model->isNewRecord?'true':'false';
 					$url = Yii::$app->urlManager->createUrl("//yes/order/index?format=json&arraymap=text:reference,id:Obj");
 					$initScript = <<< SCRIPT
 					function (element, callback) {
@@ -54,17 +54,18 @@ $listOrder = []+ArrayHelper::map(OrderSearch::find()->andWhere("status = 0")->al
 							}).done(function(data) { 
 								var data0 = JSON.parse(data[0]["id"]);
 								var data1 = {"id":data0["id"],"text":data[0]["text"]};
-								callback(data1);
-								/*
-								console.log(data0);
-								var data2 = JSON.parse(data0["data"]);
-								\$("#confirmation-payment_id").val(data2["payment"]);
-								\$("#confirmation-amount").val(data0["total"]);
-								jQuery("#confirmation-amount-disp").maskMoney("mask", data0["total"]);
-								var \$el = \$("#confirmation-payment_id"),settings = \$el.attr('data-krajee-select2');
-								settings = window[settings];								
-								\$el.select2(settings);
-								*/
+								callback(data1);								
+								if ({$render})
+								{
+									//console.log(data0);
+									var data2 = JSON.parse(data0["data"]);
+									\$("#confirmation-payment_id").val(data2["payment"]);
+									\$("#confirmation-amount").val(data0["total"]);
+									jQuery("#confirmation-amount-disp").maskMoney("mask", data0["total"]);
+									var \$el = \$("#confirmation-payment_id"),settings = \$el.attr('data-krajee-select2');
+									settings = window[settings];								
+									\$el.select2(settings);
+								}
 							});
 						}
 					}

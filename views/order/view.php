@@ -143,6 +143,9 @@ $subject = '<strong>'.Html::encode($customer->name).'</strong><br>
 		<br />
 		<?= Html::encode($data->note) ?>
 	  </p>
+	  <?= Html::a(Yii::t('app', 'Create {modelClass}', [
+			'modelClass' => Yii::t('app', 'Confirmation'),
+		]), ['//yes/confirmation/create','reference'=>$model->reference], ['class' => 'btn btn-success']) ?>
 	</div><!-- /.col -->
 	<div class="col-xs-6">	  
 	  <p class="lead"><?= Yii::t("app","Payment Due") ?> <?= date('r',strtotime($model->time)+(60 * 60 * 24 * 1)) ?></p>

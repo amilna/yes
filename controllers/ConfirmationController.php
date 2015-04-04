@@ -5,6 +5,7 @@ namespace amilna\yes\controllers;
 use Yii;
 use amilna\yes\models\Confirmation;
 use amilna\yes\models\ConfirmationSearch;
+use amilna\yes\models\OrderSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -114,10 +115,18 @@ class ConfirmationController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($reference = false)
     {
         $model = new Confirmation();
 		$model->isdel = 0;
+		if ($reference)
+		{
+			$order = OrderSearch::find()->andWhere(["reference"=>$reference])->one();
+			if ($order)
+			{
+				$model->order_id = $order->id;
+			}
+		}
 		
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
