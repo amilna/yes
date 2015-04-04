@@ -173,7 +173,7 @@ class SaleSearch extends Sale
             return $dataProvider;
         }				
 		
-        $params = self::queryNumber([['id'],['product_id'],['order_id'],['amount'],['quantity'],['isdel']/*['id','{{%product}}'],['id','{{%order}}']*/]);
+        $params = self::queryNumber([['id',$this->tableName()],['product_id'],['order_id'],['amount'],['quantity'],['isdel']/*['id','{{%product}}'],['id','{{%order}}']*/]);
 		foreach ($params as $p)
 		{
 			$query->andFilterWhere($p);

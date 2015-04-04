@@ -172,7 +172,7 @@ class ConfirmationSearch extends Confirmation
             return $dataProvider;
         }				
 		
-        $params = self::queryNumber([['id'],['order_id'],['payment_id'],['amount'],['isdel']/*['id','{{%order}}'],['id','{{%payment}}']*/]);
+        $params = self::queryNumber([['id',$this->tableName()],['order_id'],['payment_id'],['amount'],['isdel']/*['id','{{%order}}'],['id','{{%payment}}']*/]);
 		foreach ($params as $p)
 		{
 			$query->andFilterWhere($p);

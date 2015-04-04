@@ -178,7 +178,7 @@ class OrderSearch extends Order
             return $dataProvider;
         }				
 		
-        $params = self::queryNumber([['id'],['customer_id'],['total'],['status'],['isdel']/*['id','{{%confirmations}}'],['id','{{%customer}}'],['id','{{%sales}}']*/]);
+        $params = self::queryNumber([['id',$this->tableName()],['customer_id'],['total'],['status'],['isdel']/*['id','{{%confirmations}}'],['id','{{%customer}}'],['id','{{%sales}}']*/]);
 		foreach ($params as $p)
 		{
 			$query->andFilterWhere($p);

@@ -159,7 +159,7 @@ class PaymentSearch extends Payment
             return $dataProvider;
         }				
 		
-        $params = self::queryNumber([['id'],['status'],['isdel']/*['id','{{%confirmations}}']*/]);
+        $params = self::queryNumber([['id',$this->tableName()],['status'],['isdel']/*['id','{{%confirmations}}']*/]);
 		foreach ($params as $p)
 		{
 			$query->andFilterWhere($p);

@@ -7,31 +7,21 @@ use yii\widgets\DetailView;
 /* @var $model amilna\yes\models\Confirmation */
 
 $this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Confirmations'), 'url' => ['index']];
+//$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Confirmations'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="confirmation-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
+    <h1><?= Html::encode($this->title) ?></h1>    
 
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
+            //'id',
+            'time',
             [
 				'attribute'=>'order_id',
-				'value'=>$model->order->reference
+				'value'=>$model->order?$model->order->reference:""
             ],
             [
 				'attribute'=>'payment_id',
@@ -44,8 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				'attribute'=>'amount',
 				'value'=>$model->toMoney($model->amount)
             ],
-            'remarks:ntext',
-            'time',
+            'remarks:ntext',            
             //'isdel',
         ],
     ]) ?>

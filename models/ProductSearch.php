@@ -195,7 +195,7 @@ class ProductSearch extends Product
             ['id','{{%catpros}}']*/
         ]);
 
-        $params = self::queryNumber([['id'],['author_id'],['status'],['price'],['discount'],['isdel']/*['id','{{%author}}'],['id','{{%sales}}'],['id','{{%catpros}}']*/]);
+        $params = self::queryNumber([['id',$this->tableName()],['author_id'],['status'],['price'],['discount'],['isdel']/*['id','{{%author}}'],['id','{{%sales}}'],['id','{{%catpros}}']*/]);
 		foreach ($params as $p)
 		{
 			$query->andFilterWhere($p);

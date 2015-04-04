@@ -9,8 +9,9 @@ use kartik\money\MaskMoney;
 use kartik\widgets\Select2;
 use kartik\widgets\SwitchInput;
 use kartik\datetime\DateTimePicker;
-use amilna\yes\models\Payment;
-use amilna\yes\models\Order;
+use amilna\yes\models\PaymentSearch;
+use amilna\yes\models\OrderSearch;
+use yii\web\JsExpression;
 
 /* @var $this yii\web\View */
 /* @var $model amilna\yes\models\Confirmation */
@@ -18,9 +19,9 @@ use amilna\yes\models\Order;
 
 $module = Yii::$app->getModule("yes");
 
-$listPayment = []+ArrayHelper::map(Payment::find()->where("status = 1")->all(), 'id', 'terminal');
+$listPayment = []+ArrayHelper::map(PaymentSearch::find()->select(["id","concat(terminal,' (',account,')') as terminal"])->andWhere("status = 1")->all(), 'id', 'terminal');
 $payment = ($model->isNewRecord?$model->id['payment']:false);
-$listOrder = []+ArrayHelper::map(Order::find()->where("status = 0 AND isdel = 0")->all(), 'id', 'reference');
+$listOrder = []+ArrayHelper::map(OrderSearch::find()->andWhere("status = 0")->all(), 'id', 'reference');
 ?>
 
 <div class="confirmation-form">
@@ -32,7 +33,7 @@ $listOrder = []+ArrayHelper::map(Order::find()->where("status = 0 AND isdel = 0"
 			<div class="well">
 				<h4><?= Yii::t("app","Payment for")?></h4>
 				<?php
-								
+					/*			
 					$field = $form->field($model,"order_id");				
 					echo $field->widget(Select2::classname(),[								
 						'data' => $listOrder,								
@@ -41,6 +42,34 @@ $listOrder = []+ArrayHelper::map(Order::find()->where("status = 0 AND isdel = 0"
 							'multiple' => false
 						],
 					]);
+					*/
+					
+					$url = Yii::$app->urlManager->createUrl("//yes/order/index?format=json&arraymap=text:reference,id:id");
+					$initScript = <<< SCRIPT
+					function (element, callback) {
+						var id=\$(element).val();							
+						if (id !== "") {
+							\$.ajax("{$url}&term="+id+"&OrderSearch[id]=" + id, {
+								dataType: "json"
+							}).done(function(data) { callback(data[0]);});
+						}
+					}
+SCRIPT;
+					echo $form->field($model, 'order_id')->widget(Select2::classname(), [
+						'options' => ['placeholder' => 'Select order reference ...'],
+						'pluginOptions' => [
+							'allowClear' => true,
+							'minimumInputLength' => 3,
+							'ajax' => [
+								'url' => $url,
+								'dataType' => 'json',
+								'data' => new JsExpression('function(term,page) { return {"OrderSearch[reference]":term}; }'),
+								'results' => new JsExpression('function(data,page) { return {results:data};console.log(data) }'),
+							],
+							'initSelection' => new JsExpression($initScript)
+						],
+					]);
+					 
 				?>
 				<?php			
 					$field = $form->field($model,"payment_id");				

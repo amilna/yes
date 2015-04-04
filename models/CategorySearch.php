@@ -178,7 +178,7 @@ class CategorySearch extends Category
             ['id','{{%catpros}}']*/
         ]);
 
-        $params = self::queryNumber([['id'],['parent_id'],['isdel']/*['id','{{%parent}}'],['id','{{%categories}}'],['id','{{%catpros}}']*/]);
+        $params = self::queryNumber([['id',$this->tableName()],['parent_id'],['isdel']/*['id','{{%parent}}'],['id','{{%categories}}'],['id','{{%catpros}}']*/]);
 		foreach ($params as $p)
 		{
 			$query->andFilterWhere($p);

@@ -19,7 +19,7 @@ use yii\captcha\Captcha;
 
 $module = Yii::$app->getModule("yes");
 
-$listPayment = []+ArrayHelper::map(PaymentSearch::find()->andWhere("status = 1")->all(), 'id', 'terminal');
+$listPayment = []+ArrayHelper::map(PaymentSearch::find()->select(["id","concat(terminal,' (',account,')') as terminal"])->andWhere("status = 1")->all(), 'id', 'terminal');
 $payment = ($model->isNewRecord?$model->id['payment']:false);
 ?>
 

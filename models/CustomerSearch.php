@@ -166,7 +166,7 @@ class CustomerSearch extends Customer
             return $dataProvider;
         }				
 		
-        $params = self::queryNumber([['id'],['last_action'],['isdel']/*['id','{{%yesorders}}']*/]);
+        $params = self::queryNumber([['id',$this->tableName()],['last_action'],['isdel']/*['id','{{%yesorders}}']*/]);
 		foreach ($params as $p)
 		{
 			$query->andFilterWhere($p);
