@@ -17,7 +17,7 @@ use amilna\yes\models\Payment;
 /* @var $form yii\widgets\ActiveForm */
 
 $this->title = 'Invoice '.$model->reference;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Orders'), 'url' => ['index']];
+//$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Orders'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
 $data = json_decode($model->data);
