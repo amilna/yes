@@ -44,14 +44,28 @@ $listOrder = []+ArrayHelper::map(OrderSearch::find()->andWhere("status = 0")->al
 					]);
 					*/
 					
-					$url = Yii::$app->urlManager->createUrl("//yes/order/index?format=json&arraymap=text:reference,id:id");
+					$url = Yii::$app->urlManager->createUrl("//yes/order/index?format=json&arraymap=text:reference,id:Obj");
 					$initScript = <<< SCRIPT
 					function (element, callback) {
 						var id=\$(element).val();							
 						if (id !== "") {
 							\$.ajax("{$url}&term="+id+"&OrderSearch[id]=" + id, {
 								dataType: "json"
-							}).done(function(data) { callback(data[0]);});
+							}).done(function(data) { 
+								var data0 = JSON.parse(data[0]["id"]);
+								var data1 = {"id":data0["id"],"text":data[0]["text"]};
+								callback(data1);
+								/*
+								console.log(data0);
+								var data2 = JSON.parse(data0["data"]);
+								\$("#confirmation-payment_id").val(data2["payment"]);
+								\$("#confirmation-amount").val(data0["total"]);
+								jQuery("#confirmation-amount-disp").maskMoney("mask", data0["total"]);
+								var \$el = \$("#confirmation-payment_id"),settings = \$el.attr('data-krajee-select2');
+								settings = window[settings];								
+								\$el.select2(settings);
+								*/
+							});
 						}
 					}
 SCRIPT;
@@ -64,10 +78,32 @@ SCRIPT;
 								'url' => $url,
 								'dataType' => 'json',
 								'data' => new JsExpression('function(term,page) { return {"OrderSearch[reference]":term}; }'),
-								'results' => new JsExpression('function(data,page) { return {results:data};console.log(data) }'),
+								'results' => new JsExpression('function(data,page) { return {results:data}; }'),								
 							],
-							'initSelection' => new JsExpression($initScript)
+							'initSelection' => new JsExpression($initScript)							
 						],
+						'pluginEvents' => [
+							'change'=>'function(){
+											var obj = $("#confirmation-order_id").val();											
+											if (obj != null)
+											{
+												var data0 = JSON.parse(obj);													
+												var data2 = JSON.parse(data0["data"]);
+												$("#confirmation-payment_id").val(data2["payment"]);
+												$("#confirmation-amount").val(data0["total"]);												
+												$("#confirmation-order_id").val(data0["id"]);
+											}
+											else
+											{
+												$("#confirmation-payment_id").val(false);
+												$("#confirmation-amount").val(0);												
+											}												
+											jQuery("#confirmation-amount-disp").maskMoney("mask", data0["total"]);
+											var $el = $("#confirmation-payment_id"),settings = $el.attr("data-krajee-select2");
+											settings = window[settings];								
+											$el.select2(settings);
+										}'
+						]	
 					]);
 					 
 				?>
