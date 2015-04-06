@@ -32,11 +32,13 @@ class ProductController extends Controller
      * @params string $format, array $arraymap, string $term
      * @return mixed
      */
-    public function actionIndex($format= false,$arraymap= false,$term = false)
+    public function actionIndex($format= false,$arraymap= false,$term = false,$time = false,$category = false)
     {
         $searchModel = new ProductSearch();        
         $req = Yii::$app->request->queryParams;
         if ($term) { $req[basename(str_replace("\\","/",get_class($searchModel)))]["term"] = $term;}        
+        if ($time) { $req[basename(str_replace("\\","/",get_class($searchModel)))]["time"] = $time;}        
+        if ($category) { $req[basename(str_replace("\\","/",get_class($searchModel)))]["category"] = $category;}        
         $dataProvider = $searchModel->search($req);				
         
         $query = $dataProvider->query;

@@ -220,7 +220,7 @@ $module = Yii::$app->getModule("yes");
 				<?php
 					foreach ($model->getRecent() as $m)
 					{
-						echo '<li>'.Html::a($m->title,["//yes/product/view?id=".$m->id]).'</li>';
+						echo '<li>'.Html::a($m->title,["//yes/product/view","id"=>$m->id,"title"=>$m->title]).'</li>';
 					}				
 				?>		
 			</ul>
@@ -230,7 +230,7 @@ $module = Yii::$app->getModule("yes");
 				<?php
 					foreach ($cat->parents() as $c)
 					{
-						echo '<li>'.Html::a($c->title,["//yes/product/index?ProductSearch[category]=".$c->title]).'</li>';
+						echo '<li>'.Html::a($c->title,["//yes/product/index","category"=>$c->title]).'</li>';
 					}				
 				?>						
 			</ul>
@@ -240,7 +240,7 @@ $module = Yii::$app->getModule("yes");
 				<?php
 					foreach ($model->getArchived() as $m)
 					{
-						echo '<li>'.Html::a(date('M Y',strtotime($m["month"])),["//yes/product/index?ProductSearch[time]=".$m["month"]]).'</li>';
+						echo '<li>'.Html::a(date('M Y',strtotime($m["month"])),["//yes/product/index","time"=>$m["month"]]).'</li>';
 					}				
 				?>				
 			</ul>

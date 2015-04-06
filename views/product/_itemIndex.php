@@ -29,12 +29,12 @@ $this->params['cboxTarget']['.colorbox-'.$model->id] =  [
 			}
 		?>													
 		<div class="caption">
-			<h4><?= Html::a($model->title,["//yes/product/view?id=".$model->id]) ?></h4>
+			<h4><?= Html::a($model->title,["//yes/product/view","id"=>$model->id,"title"=>$model->title]) ?></h4>
 			<h5><?= Html::encode($model->author->username) ?> <small><?= date('D d M, Y',strtotime($model->time)) ?></small></h5>								
 		
 			<p><?= Html::encode($model->description) ?></p>
 			<p>
-			<?= Html::a(Yii::t('app','Read More'),["//yes/product/view?id=".$model->id],['class'=>'btn btn-small btn-default']) ?>			
+			<?= Html::a(Yii::t('app','Read More'),["//yes/product/view","id"=>$model->id,"title"=>$model->title],['class'=>'btn btn-small btn-default']) ?>			
 			</p>		
 		</div>
 	</div>
