@@ -98,7 +98,7 @@ $module = Yii::$app->getModule('yes');
 				'value'=>function($data) {
 					if ($data->order_id != null)
 					{					
-						return Html::a($data->order->reference,['//yes/order/view',"id"=>$data->order_id]);	
+						return Html::a($data->order->reference,['//yes/order/view',"reference"=>$data->order->reference]);	
 					}
 					else
 					{

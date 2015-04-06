@@ -51,6 +51,94 @@ class OrderController extends Controller
         $req = Yii::$app->request->queryParams;
         if ($term) { $req[basename(str_replace("\\","/",get_class($searchModel)))]["term"] = $term;}        
         $dataProvider = $searchModel->search($req);				
+        $query = $dataProvider->query;        
+				
+				
+        if ($format == 'json')
+        {
+			$isall = false;
+			if (empty($req["OrderSearch"]["reference"]))
+			{		
+				if (!empty($req["OrderSearch"]["name"])) {
+					$isall = true;
+				}
+				elseif (!empty($req["OrderSearch"]["id"])) {
+					$isall = false;
+				}
+				else
+				{
+					$query->andWhere([$searchModel->tableName().".id"=>0]);			      
+				}
+			}																		
+			
+			$model = [];
+			foreach ($dataProvider->getModels() as $d)
+			{
+				$obj = $d->attributes;
+				if ($arraymap)
+				{					
+					$map = explode(",",$arraymap);
+					if (count($map) == 1)
+					{
+						$obj = $d[$arraymap];
+					}
+					else
+					{
+						$obj = [];					
+						foreach ($map as $a)
+						{
+							$k = explode(":",$a);						
+							$v = (count($k) > 1?$k[1]:$k[0]);
+							if (!$isall && $v == "Obj")
+							{								
+								$dattr = array_intersect_key($d->attributes, array_flip(["id","reference","total"]));								
+								$data = json_decode($d->data);													
+								$dattr["data"] = json_encode(array("payment"=>isset($data->payment)?$data->payment:null));										
+							}
+							else
+							{
+								$dattr = $d->attributes;	
+							}														
+							$obj[$k[0]] = ($v == "Obj"?json_encode($dattr):(isset($d->$v)?$d->$v:null));
+						}				
+					}
+				}
+				
+				if ($term)
+				{
+					if (!in_array($obj,$model))
+					{
+						array_push($model,$obj);
+					}
+				}
+				else
+				{	
+					array_push($model,$obj);
+				}
+			}			
+			return \yii\helpers\Json::encode($model);	
+		}
+		else
+		{
+			if (empty($req["OrderSearch"]["reference"]) && empty($req["OrderSearch"]["name"]))
+			{		
+				$query->andWhere([$searchModel->tableName().".id"=>0]);			      
+			}
+			
+			return $this->render('index', [
+				'searchModel' => $searchModel,
+				'dataProvider' => $dataProvider,
+			]);
+		}	
+    }
+
+    public function actionAdmin($format= false,$arraymap= false,$term = false)
+    {
+        $searchModel = new OrderSearch();        
+        $req = Yii::$app->request->queryParams;                
+        
+        if ($term) { $req[basename(str_replace("\\","/",get_class($searchModel)))]["term"] = $term;}        
+        $dataProvider = $searchModel->search($req);				
 		
 		if (Yii::$app->request->post('hasEditable')) {			
 			$Id = Yii::$app->request->post('editableKey');
@@ -142,7 +230,7 @@ class OrderController extends Controller
 		}
 		else
 		{
-			return $this->render('index', [
+			return $this->render('admin', [
 				'searchModel' => $searchModel,
 				'dataProvider' => $dataProvider,
 			]);
@@ -370,7 +458,7 @@ class OrderController extends Controller
         $model->save();
         //$model->delete(); //this will true delete        
         
-        return $this->redirect(['index']);
+        return $this->redirect(['admin']);
     }
 
     /**

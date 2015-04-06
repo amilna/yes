@@ -16,6 +16,7 @@ class OrderSearch extends Order
 	
 	/*public $confirmationsId;*/
 	public $customerName;
+	public $customerAdminName;
 	/*public $salesId;*/
 
     /**
@@ -25,7 +26,7 @@ class OrderSearch extends Order
     {
         return [
             [['id', 'customer_id', 'status', 'isdel'], 'integer'],
-            [['reference', 'customerName','total', 'data', 'time', 'complete_reference', 'complete_time', 'log'/*, 'confirmationsId', 'customerId', 'salesId'*/], 'safe'],
+            [['reference', 'customerName','customerAdminName','total', 'data', 'time', 'complete_reference', 'complete_time', 'log'/*, 'confirmationsId', 'customerId', 'salesId'*/], 'safe'],
         ];
     }
     
@@ -159,7 +160,12 @@ class OrderSearch extends Order
         ]);
         
         
-        $dataProvider->sort->attributes['customerName'] = [			
+        $dataProvider->sort->attributes['customerAdminName'] = [			
+			'asc' => ['{{%yes_customer}}.name' => SORT_ASC],
+			'desc' => ['{{%yes_customer}}.name' => SORT_DESC],
+		];
+		
+		$dataProvider->sort->attributes['customerName'] = [			
 			'asc' => ['{{%yes_customer}}.name' => SORT_ASC],
 			'desc' => ['{{%yes_customer}}.name' => SORT_DESC],
 		];
@@ -194,7 +200,11 @@ class OrderSearch extends Order
 			$query->andFilterWhere($p);
 		}
 		
-		$query->andFilterWhere(['like','lower({{%yes_customer}}.name)',strtolower($this->customerName)]);
+		$query->andFilterWhere(['like',"lower(concat({{%yes_customer}}.name,{{%yes_customer}}.email,{{%yes_customer}}.phones))",strtolower($this->customerAdminName)]);
+		if ($this->customerName)
+		{
+			$query->andFilterWhere(['like',"lower(concat(',',{{%yes_customer}}.name,',',{{%yes_customer}}.email,',',{{%yes_customer}}.phones,','))",strtolower(",".$this->customerName.",")]);
+		}
 		
         return $dataProvider;
     }

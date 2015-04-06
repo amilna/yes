@@ -28,7 +28,7 @@ $listOrder = []+ArrayHelper::map(OrderSearch::find()->andWhere("status = 0")->al
 
     <?php $form = ActiveForm::begin(); ?>
 
-	<div class='row'>
+	<div class='row'>		
 		<div class='col-md-4 col-sm-6 '>						
 			<div class="well">
 				<h4><?= Yii::t("app","Payment for")?></h4>
@@ -44,7 +44,7 @@ $listOrder = []+ArrayHelper::map(OrderSearch::find()->andWhere("status = 0")->al
 					]);
 					*/
 					$render = $model->order_id != null && $model->isNewRecord?'true':'false';
-					$url = Yii::$app->urlManager->createUrl("//yes/order/index?format=json&arraymap=text:reference,id:Obj");
+					$url = Yii::$app->urlManager->createUrl(["//yes/order/index","format"=>"json","arraymap"=>"text:reference,id:Obj"]);
 					$initScript = <<< SCRIPT
 					function (element, callback) {
 						var id=\$(element).val();							
@@ -145,7 +145,7 @@ SCRIPT;
 					<?= $form->field($model, 'remarks')->textarea(['rows' => 3,'placeholder'=>Yii::t('app','Note that attached while submited payment')]) ?>
 				</div>
 			</div>
-		</div>
+		</div>		
 	</div>
 	
 

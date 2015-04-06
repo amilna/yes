@@ -16,7 +16,12 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="order-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>    
+    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <p>
+        <?= Html::a(Yii::t('app', 'Create {modelClass}', [
+    'modelClass' => Yii::t('app', 'Order'),
+]), ['create'], ['class' => 'btn btn-success']) ?>
+    </p>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -25,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		'caption'=>Yii::t('app', 'Order'),
 		'headerRowOptions'=>['class'=>'kartik-sheet-style','style'=>'background-color: #fdfdfd'],
 		'filterRowOptions'=>['class'=>'kartik-sheet-style skip-export','style'=>'background-color: #fdfdfd'],
-		'pjax' => false,
+		'pjax' => true,
 		'bordered' => true,
 		'striped' => true,
 		'condensed' => true,
@@ -90,11 +95,11 @@ $this->params['breadcrumbs'][] = $this->title;
 				'attribute'=>'reference',
 				'format'=>'html',
 				'value'=>function($model){																				
-					return Html::encode($model->reference);					
+					return (count($model->confirmations) > 0?Html::a($model->reference.'<i class="badge pull-left">'.count($model->confirmations).'</i>',['//yes/confirmation','ConfirmationSearch[orderReference]'=>$model->reference]):Html::encode($model->reference));					
 				},				
             ],                        
             [
-				'attribute'=>'customerName',
+				'attribute'=>'customerAdminName',
 				'format'=>'html',
 				'value'=>function($model){																				
 					$html = Html::encode($model->customer->name);
@@ -150,9 +155,9 @@ $this->params['breadcrumbs'][] = $this->title;
 				'pageSummaryFunc'=>'sum'
 				
 			],            
-			[
+            [	
+				'class' => 'kartik\grid\EditableColumn',
 				'attribute'=>'status',
-				'format'=>'html',
 				'filterType'=>GridView::FILTER_SELECT2,				
 				'filterWidgetOptions'=>[
 					'data'=>$searchModel->itemAlias('status'),
@@ -162,12 +167,48 @@ $this->params['breadcrumbs'][] = $this->title;
 					],
 					
 				],
-				'value'=>function($model){									
-					$labels = ["warning","success","info","primary","danger"];
-					$html = "<span class='label label-".$labels[$model->status]."'>".Html::encode($model->itemAlias('status',$model->status))."</span>";										
-					return $html;
-				},				
-            ],              
+				'value'=>function($data){										
+					return $data->itemAlias('status',$data->status);
+				},
+				'editableOptions'=> function ($model, $key, $index) {
+					return [
+						'header'=>Yii::t('app','Status'), 
+						'size'=>'sm',
+						'inputType' => \kartik\editable\Editable::INPUT_SELECT2,
+						'options' => [
+							'data'=>$model->itemAlias('status'),
+							'options' => ['placeholder' => Yii::t('app','Filter by status...')],
+							'pluginOptions' => [
+								'allowClear' => false
+							],							
+						],
+						'placement'=>'left',	
+						'showButtons'=>false,	
+						'resetButton'=>false,
+						'afterInput' => function ($form, $widget) use ($model, $index) {
+							echo '<div class="form-group">';
+								echo Html::textArea(substr($model->className(),strrpos($model->className(),"\\")+1)."[".$index."][complete_reference]",$model->complete_reference,
+									["class"=>"form-control","placeholder"=>Yii::t("app","Complete Reference")]);							
+							echo '</div>';
+						},
+						'pluginEvents'=>[
+							'editableSuccess'=>"function(event, val, form, data) { 
+													var model = JSON.parse(data.data);													
+													for (m in model)
+													{
+														$('tr[data-key='+data.id+'] td').each(function(n,d){															
+															if (n == m) {
+																$(d).html(model[m]);
+															}
+														});																												
+													}													
+												}",
+						],
+					];
+				},
+				'hAlign'=>'right',
+            
+            ],
             'complete_reference',
             //'data:ntext',
             // 'status',
@@ -179,7 +220,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
             [
 				'class' => 'kartik\grid\ActionColumn',				
-				'template'=> '{view}',
 				'buttons'=>[
 					'view'=>function ($url, $model, $key) {
 						return Html::a('<span class="glyphicon glyphicon-eye-open"></span>',["view","reference"=>$model->reference],["title"=>Yii::t("yii","View")]);
