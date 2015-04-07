@@ -59,7 +59,7 @@ class OrderController extends Controller
 			$isall = false;
 			if (empty($req["OrderSearch"]["reference"]))
 			{		
-				if (!empty($req["OrderSearch"]["name"])) {
+				if (!empty($req["OrderSearch"]["customerName"])) {
 					$isall = true;
 				}
 				elseif (!empty($req["OrderSearch"]["id"])) {
@@ -120,8 +120,12 @@ class OrderController extends Controller
 		}
 		else
 		{
-			if (empty($req["OrderSearch"]["reference"]) && empty($req["OrderSearch"]["name"]))
-			{		
+			if (!empty($req["OrderSearch"]["reference"]) && !empty($req["OrderSearch"]["customerName"]))
+			{
+				
+			}
+			else
+			{			
 				$query->andWhere([$searchModel->tableName().".id"=>0]);			      
 			}
 			

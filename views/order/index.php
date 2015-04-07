@@ -16,6 +16,9 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="order-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
+    <div class="row-fluid">
+    <span class="col-xs-12 alert alert-info"><?= Yii::t('app', 'Be sure that reference column and customer column not empty') ?></span>
+    </div>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>    
 
     <?= GridView::widget([
