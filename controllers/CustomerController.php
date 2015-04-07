@@ -58,7 +58,7 @@ class CustomerController extends Controller
 				$output = '';	 	
 				if (isset($posted['last_action'])) {				   
 				   $output =  $model->itemAlias('last_action',$model->last_action); // new value for edited td
-				   $data = json_encode([5=>$model->last_time]); // affected td index with new html at the same row
+				   $data = json_encode([5=>$model->last_time,7=>$model->remarks]); // affected td index with new html at the same row
 				} 
 					 
 				$out = json_encode(['id'=>$model->id,'output'=>$output, "data"=>$data,'message'=>'']);

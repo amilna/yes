@@ -36,7 +36,7 @@ class Customer extends \yii\db\ActiveRecord
         return [
             [['name', 'phones', 'addresses'], 'required'],
             [['phones', 'addresses'], 'string'],
-            [['last_time'], 'safe'],
+            [['last_time','remarks'], 'safe'],
             [['last_action', 'isdel'], 'integer'],
             [['name', 'email'], 'string', 'max' => 255]
         ];
@@ -55,6 +55,7 @@ class Customer extends \yii\db\ActiveRecord
             'email' => Yii::t('app', 'Email'),
             'last_time' => Yii::t('app', 'Last Time'),
             'last_action' => Yii::t('app', 'Last Action'),
+            'remarks' => Yii::t('app', 'Remarks'),
             'isdel' => Yii::t('app', 'Isdel'),
         ];
     }

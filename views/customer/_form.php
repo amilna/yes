@@ -62,7 +62,9 @@ use kartik\datetime\DateTimePicker;
 						'todayHighlight' => true
 					]
 				]) 
-			?>					
+			?>
+			
+			<?= $form->field($model, 'remarks')->textArea(['rows' => 3]) ?>					
 		</div>	
 	</div>
 

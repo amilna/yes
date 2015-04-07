@@ -38,6 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				'attribute'=>'last_action',
 				'value'=>$model->itemAlias('last_action',$model->last_action)
             ],
+            'remarks:ntext',
            //'isdel',
         ],
     ]) ?>

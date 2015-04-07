@@ -124,7 +124,13 @@ $this->params['breadcrumbs'][] = $this->title;
 						],
 						'placement'=>'left',	
 						'showButtons'=>false,	
-						'resetButton'=>false,						
+						'resetButton'=>false,
+						'afterInput' => function ($form, $widget) use ($model, $index) {
+							echo '<div class="form-group">';
+								echo Html::textArea(substr($model->className(),strrpos($model->className(),"\\")+1)."[".$index."][remarks]",$model->remarks,
+									["class"=>"form-control","placeholder"=>Yii::t("app","Remarks")]);							
+							echo '</div>';
+						},						
 						'pluginEvents'=>[
 							'editableSuccess'=>"function(event, val, form, data) { 
 													var model = JSON.parse(data.data);													
@@ -142,7 +148,8 @@ $this->params['breadcrumbs'][] = $this->title;
 				},
 				'hAlign'=>'right',
             
-            ],  			
+            ], 
+            'remarks', 			
             //'last_action',
             // 'isdel',
 

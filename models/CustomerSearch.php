@@ -23,7 +23,7 @@ class CustomerSearch extends Customer
     {
         return [
             [['id', 'last_action', 'isdel'], 'integer'],
-            [['name', 'phones', 'addresses', 'email', 'term', 'last_time'/*, 'yesordersId'*/], 'safe'],
+            [['name', 'remarks','phones', 'addresses', 'email', 'term', 'last_time'/*, 'yesordersId'*/], 'safe'],
         ];
     }
 	
@@ -171,7 +171,7 @@ class CustomerSearch extends Customer
 		{
 			$query->andFilterWhere($p);
 		}
-        $params = self::queryString([['name'],['phones'],['addresses'],['email']/*['id','{{%yesorders}}']*/]);
+        $params = self::queryString([['name'],['remarks'],['phones'],['addresses'],['email']/*['id','{{%yesorders}}']*/]);
 		foreach ($params as $p)
 		{
 			$query->andFilterWhere($p);
