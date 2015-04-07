@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
     <div class="row-fluid">
-    <span class="col-xs-12 alert alert-info"><?= Yii::t('app', 'Be sure that reference column and customer column not empty') ?></span>
+    <span class="col-xs-12 alert alert-info"><?= Yii::t('app', 'Be sure that reference column and customer column not empty. You may fill customer colummn with name or email or phone that used in invoice.') ?></span>
     </div>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>    
 
