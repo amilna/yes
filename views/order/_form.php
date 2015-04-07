@@ -49,7 +49,7 @@ $payment = ($model->isNewRecord?$model->id['payment']:false);
 							$field->template = "{input}";
 							echo $field->widget(AutoComplete::classname(),[								
 								'clientOptions' => [
-									'source' => Yii::$app->urlManager->createUrl("//yes/customer/index?format=json&arraymap=name"),
+									'source' => Yii::$app->urlManager->createUrl(["//yes/customer/search","format"=>"json","arraymap"=>"name"]),
 								],
 								'clientEvents' => [				
 									'select' => 'function(event, ui) {												
@@ -111,7 +111,7 @@ $payment = ($model->isNewRecord?$model->id['payment']:false);
 							$field->template = "{input}";
 							echo $field->widget(AutoComplete::classname(),[								
 								'clientOptions' => [
-									'source' => Yii::$app->urlManager->createUrl("//yes/shipping/index?ShippingSearch[status]=> 0&format=json&arraymap=label:cityArea,value:Obj"),
+									'source' => Yii::$app->urlManager->createUrl(["//yes/shipping/index","ShippingSearch[status]"=>"> 0","format"=>"json","arraymap"=>"label:cityArea,value:Obj"]),
 								],
 								'clientEvents' => [										
 									'focus' => 'function(event, ui) {													

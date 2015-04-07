@@ -272,12 +272,12 @@ class CustomerController extends Controller
 				$search[":phones"] = "%,".$post["phones"].",%";				
 				$rs = true;
 			}			
-		}
+		}				
 		
 		if ($rs)
 		{
 			$arraymap = "name,email,phones,addresses";			
-		}
+		}				
 		
 		$models = Customer::find()->where($sql,$search)->all();	
 		

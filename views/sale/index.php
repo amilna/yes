@@ -97,7 +97,7 @@ $module = Yii::$app->getModule('yes');
 				'attribute'=>'orderReference',
 				'format'=>'html',
 				'value'=>function($data) {					
-					return Html::a($data->order->reference,['//yes/order/view',"id"=>$data->order_id]);	
+					return Html::a($data->order->reference,['//yes/order/view',"reference"=>$data->order->reference]);	
 				}
 			],
             [
