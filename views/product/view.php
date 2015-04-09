@@ -206,9 +206,9 @@ $module = Yii::$app->getModule("yes");
 			*/ ?> 
 			<h4><?= Yii::t("app","Search our Products")?></h4>
 			
-			<form action="<?=Yii::$app->urlManager->createUrl("//yes/product")?>" method="get">
+			<form action="<?=Yii::$app->urlManager->createUrl("//yes/product/index")?>" method="get">
 				<div class="input-group">
-					<input class="form-control input-md" name="ProductSearch[term]" id="appendedInputButtons" type="text">
+					<input class="form-control input-md" name="term" id="appendedInputButtons" type="text">
 					<span class="input-group-btn">
 						<button class="btn btn-md" type="submit"><?= Yii::t("app","Search")?></button>
 					</span>
