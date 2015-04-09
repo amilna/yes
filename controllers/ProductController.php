@@ -211,7 +211,8 @@ class ProductController extends Controller
 					$images = $post['Product']['images'];
 					$post['Product']['images'] = json_encode(empty($images)?null:$images);			
 				}	
-				$model->load($post);							
+				$model->load($post);	
+				$model->images = $model->images == "null"?null:$model->images;						
 				
 				if ($model->save()) {
 					
@@ -282,7 +283,8 @@ class ProductController extends Controller
 					$images = $post['Product']['images'];
 					$post['Product']['images'] = json_encode(empty($images)?null:$images);			
 				}	
-				$model->load($post);				
+				$model->load($post);
+				$model->images = $model->images == "null"?null:$model->images;				
 				
 				if ($model->save()) {
 					
