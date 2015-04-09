@@ -209,9 +209,9 @@ class ProductController extends Controller
 				if (isset($post['Product']['images']))
 				{
 					$images = $post['Product']['images'];
-					$post['Product']['images'] = json_encode($images);			
+					$post['Product']['images'] = json_encode(empty($images)?null:$images);			
 				}	
-				$model->load($post);			
+				$model->load($post);							
 				
 				if ($model->save()) {
 					
@@ -280,9 +280,9 @@ class ProductController extends Controller
 				if (isset($post['Product']['images']))
 				{
 					$images = $post['Product']['images'];
-					$post['Product']['images'] = json_encode($images);			
+					$post['Product']['images'] = json_encode(empty($images)?null:$images);			
 				}	
-				$model->load($post);
+				$model->load($post);				
 				
 				if ($model->save()) {
 					
