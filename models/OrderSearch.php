@@ -161,13 +161,13 @@ class OrderSearch extends Order
         
         
         $dataProvider->sort->attributes['customerAdminName'] = [			
-			'asc' => ['{{%yes_customer}}.name' => SORT_ASC],
-			'desc' => ['{{%yes_customer}}.name' => SORT_DESC],
+			'asc' => [Customer::tableName().'.name' => SORT_ASC],
+			'desc' => [Customer::tableName().'.name' => SORT_DESC],
 		];
 		
 		$dataProvider->sort->attributes['customerName'] = [			
-			'asc' => ['{{%yes_customer}}.name' => SORT_ASC],
-			'desc' => ['{{%yes_customer}}.name' => SORT_DESC],
+			'asc' => [Customer::tableName().'.name' => SORT_ASC],
+			'desc' => [Customer::tableName().'.name' => SORT_DESC],
 		];
 		
         /* uncomment to sort by relations table on respective column
@@ -200,10 +200,10 @@ class OrderSearch extends Order
 			$query->andFilterWhere($p);
 		}
 		
-		$query->andFilterWhere(['like',"lower(concat({{%yes_customer}}.name,{{%yes_customer}}.email,{{%yes_customer}}.phones))",strtolower($this->customerAdminName)]);
+		$query->andFilterWhere(['like',"lower(concat(".Customer::tableName().".name,".Customer::tableName().".email,".Customer::tableName().".phones))",strtolower($this->customerAdminName)]);
 		if ($this->customerName)
 		{
-			$query->andFilterWhere(['like',"lower(concat(',',{{%yes_customer}}.name,',',{{%yes_customer}}.email,',',{{%yes_customer}}.phones,','))",strtolower(",".$this->customerName.",")]);
+			$query->andFilterWhere(['like',"lower(concat(',',".Customer::tableName().".name,',',".Customer::tableName().".email,',',".Customer::tableName().".phones,','))",strtolower(",".$this->customerName.",")]);
 		}
 		
         return $dataProvider;

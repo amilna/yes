@@ -19,12 +19,15 @@ use yii\helpers\ArrayHelper;
  */
 class Payment extends \yii\db\ActiveRecord
 {
+    public $dynTableName = '{{%yes_payment}}';    
+    
     /**
      * @inheritdoc
      */
     public static function tableName()
-    {
-        return '{{%yes_payment}}';
+    {        
+        $mod = new Payment();        
+        return $mod->dynTableName;
     }
 
     /**

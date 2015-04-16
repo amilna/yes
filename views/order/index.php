@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
     <div class="row-fluid">
-    <span class="col-xs-12 alert alert-info"><?= Yii::t('app', 'Be sure that reference column and customer column not empty. You may fill customer colummn with name or email or phone that used in invoice.') ?></span>
+    <span class="col-xs-12 alert alert-info"><?= Yii::t('app', 'Be sure that reference column and customer column not empty. You may fill customer column with name or email or phone that used in invoice.') ?></span>
     </div>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>    
 
@@ -100,9 +100,17 @@ $this->params['breadcrumbs'][] = $this->title;
 				'attribute'=>'customerName',
 				'format'=>'html',
 				'value'=>function($model){																				
-					$html = Html::encode($model->customer->name);
-					$html .= "<h5>".Yii::t("app","Email")." <small>".Html::encode($model->customer->email)."</small></h5>";
-					$html .= "<h5>".Yii::t("app","Phones")." <small>".Html::encode($model->customer->phones)."</small></h5>";
+					
+					if ($model->customer)
+					{
+						$html = Html::encode($model->customer->name);
+						$html .= "<h5>".Yii::t("app","Email")." <small>".Html::encode($model->customer->email)."</small></h5>";
+						$html .= "<h5>".Yii::t("app","Phones")." <small>".Html::encode($model->customer->phones)."</small></h5>";
+					}
+					else
+					{
+						$html = "";	
+					}
 					
 					return $html;
 				},				

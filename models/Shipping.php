@@ -17,12 +17,15 @@ use Yii;
  */
 class Shipping extends \yii\db\ActiveRecord
 {
+    public $dynTableName = '{{%yes_shipping}}';    
+    
     /**
      * @inheritdoc
      */
     public static function tableName()
-    {
-        return '{{%yes_shipping}}';
+    {        
+        $mod = new Shipping();        
+        return $mod->dynTableName;
     }
 
     /**

@@ -101,10 +101,18 @@ $this->params['breadcrumbs'][] = $this->title;
             [
 				'attribute'=>'customerAdminName',
 				'format'=>'html',
-				'value'=>function($model){																				
-					$html = Html::encode($model->customer->name);
-					$html .= "<h5>".Yii::t("app","Email")." <small>".Html::encode($model->customer->email)."</small></h5>";
-					$html .= "<h5>".Yii::t("app","Phones")." <small>".Html::encode($model->customer->phones)."</small></h5>";
+				'value'=>function($model){
+																									
+					if ($model->customer)
+					{
+						$html = Html::encode($model->customer->name);
+						$html .= "<h5>".Yii::t("app","Email")." <small>".Html::encode($model->customer->email)."</small></h5>";
+						$html .= "<h5>".Yii::t("app","Phones")." <small>".Html::encode($model->customer->phones)."</small></h5>";
+					}
+					else
+					{
+						$html = "";	
+					}
 					
 					return $html;
 				},				

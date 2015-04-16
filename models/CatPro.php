@@ -16,12 +16,15 @@ use Yii;
  */
 class CatPro extends \yii\db\ActiveRecord
 {
+    public $dynTableName = '{{%yes_cat_pro}}';    
+    
     /**
      * @inheritdoc
      */
     public static function tableName()
-    {
-        return '{{%yes_cat_pro}}';
+    {        
+        $mod = new CatPro();        
+        return $mod->dynTableName;
     }
 
     /**

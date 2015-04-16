@@ -23,12 +23,15 @@ use Yii;
  */
 class Confirmation extends \yii\db\ActiveRecord
 {
+    public $dynTableName = '{{%yes_confirmation}}';    
+    
     /**
      * @inheritdoc
      */
     public static function tableName()
-    {
-        return '{{%yes_confirmation}}';
+    {        
+        $mod = new Confirmation();        
+        return $mod->dynTableName;
     }
 
     /**

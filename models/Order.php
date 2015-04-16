@@ -28,12 +28,15 @@ class Order extends \yii\db\ActiveRecord
     public $captcha;
     public $captchaRequired = true;
     
+    public $dynTableName = '{{%yes_order}}';    
+    
     /**
      * @inheritdoc
      */
     public static function tableName()
-    {
-        return '{{%yes_order}}';
+    {        
+        $mod = new Order();        
+        return $mod->dynTableName;
     }
 			
     /**

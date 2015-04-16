@@ -160,12 +160,12 @@ class ConfirmationSearch extends Confirmation
         
         /* uncomment to sort by relations table on respective column */
 		$dataProvider->sort->attributes['paymentTerminal'] = [			
-			'asc' => ['{{%yes_payment}}.terminal' => SORT_ASC],
-			'desc' => ['{{%yes_payment}}.terminal' => SORT_DESC],
+			'asc' => [Payment::tableName().'.terminal' => SORT_ASC],
+			'desc' => [Payment::tableName().'.terminal' => SORT_DESC],
 		];
 		$dataProvider->sort->attributes['orderReference'] = [			
-			'asc' => ['{{%yes_order}}.reference' => SORT_ASC],
-			'desc' => ['{{%yes_order}}.reference' => SORT_DESC],
+			'asc' => [Order::tableName().'.reference' => SORT_ASC],
+			'desc' => [Order::tableName().'.reference' => SORT_DESC],
 		];
 
         if (!($this->load($params) && $this->validate())) {
@@ -177,7 +177,7 @@ class ConfirmationSearch extends Confirmation
 		{
 			$query->andFilterWhere($p);
 		}
-        $params = self::queryString([['terminal','{{%yes_confirmation}}'],['account','{{%yes_confirmation}}'],['name','{{%yes_confirmation}}'],['remarks']/*['id','{{%order}}'],['id','{{%payment}}']*/]);
+        $params = self::queryString([['terminal',Confirmation::tableName()],['account',Confirmation::tableName()],['name',Confirmation::tableName()],['remarks']/*['id','{{%order}}'],['id','{{%payment}}']*/]);
 		foreach ($params as $p)
 		{
 			$query->andFilterWhere($p);
@@ -190,15 +190,15 @@ class ConfirmationSearch extends Confirmation
 		/* example to use search all in field1,field2,field3 or field4 */
 		if ($this->paymentTerminal)
 		{
-			$query->andFilterWhere(["OR","lower({{%yes_payment}}.terminal) like '%".strtolower($this->paymentTerminal)."%'",
-				["OR","lower({{%yes_payment}}.account) like '%".strtolower($this->paymentTerminal)."%'",
-					"lower({{%yes_payment}}.name) like '%".strtolower($this->paymentTerminal)."%'"						
+			$query->andFilterWhere(["OR","lower(".Payment::tableName().".terminal) like '%".strtolower($this->paymentTerminal)."%'",
+				["OR","lower(".Payment::tableName().".account) like '%".strtolower($this->paymentTerminal)."%'",
+					"lower(".Payment::tableName().".name) like '%".strtolower($this->paymentTerminal)."%'"						
 				]
 			]);	
 		}	
 		 
 						
-		$query->andFilterWhere(["like", "lower({{%yes_order}}.reference)", strtolower($this->orderReference)]);
+		$query->andFilterWhere(["like", "lower(".Order::tableName().".reference)", strtolower($this->orderReference)]);
 
         return $dataProvider;
     }

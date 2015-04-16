@@ -21,12 +21,15 @@ use Yii;
  */
 class Sale extends \yii\db\ActiveRecord
 {
+    public $dynTableName = '{{%yes_sale}}';    
+    
     /**
      * @inheritdoc
      */
     public static function tableName()
-    {
-        return '{{%yes_sale}}';
+    {        
+        $mod = new Sale();        
+        return $mod->dynTableName;
     }
 
     /**

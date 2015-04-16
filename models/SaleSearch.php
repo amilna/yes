@@ -161,12 +161,12 @@ class SaleSearch extends Sale
         
         /* uncomment to sort by relations table on respective column */
 		$dataProvider->sort->attributes['productTitle'] = [			
-			'asc' => ['{{%yes_product}}.title' => SORT_ASC],
-			'desc' => ['{{%yes_product}}.title' => SORT_DESC],
+			'asc' => [Product::tableName().'.title' => SORT_ASC],
+			'desc' => [Product::tableName().'.title' => SORT_DESC],
 		];
 		$dataProvider->sort->attributes['orderReference'] = [			
-			'asc' => ['{{%yes_order}}.reference' => SORT_ASC],
-			'desc' => ['{{%yes_order}}.reference' => SORT_DESC],
+			'asc' => [Order::tableName().'.reference' => SORT_ASC],
+			'desc' => [Order::tableName().'.reference' => SORT_DESC],
 		];
 
         if (!($this->load($params) && $this->validate())) {
@@ -201,8 +201,8 @@ class SaleSearch extends Sale
 		}	
 		*/
 		
-		$query->andFilterWhere(["like", "lower({{%yes_product}}.title)", strtolower($this->productTitle)]);
-		$query->andFilterWhere(["like", "lower({{%yes_order}}.reference)", strtolower($this->orderReference)]);
+		$query->andFilterWhere(["like", "lower(".Product::tableName().".title)", strtolower($this->productTitle)]);
+		$query->andFilterWhere(["like", "lower(".Order::tableName().".reference)", strtolower($this->orderReference)]);
 
         return $dataProvider;
     }

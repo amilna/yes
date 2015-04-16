@@ -21,13 +21,16 @@ use Yii;
  */
 class Category extends \yii\db\ActiveRecord
 {
+    public $dynTableName = '{{%yes_category}}';    
+    
     /**
      * @inheritdoc
      */
     public static function tableName()
-    {
-        return '{{%yes_category}}';
-    }
+    {        
+        $mod = new Category();        
+        return $mod->dynTableName;
+    }    
 
     /**
      * @inheritdoc

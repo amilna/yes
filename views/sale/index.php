@@ -96,14 +96,29 @@ $module = Yii::$app->getModule('yes');
 			[
 				'attribute'=>'orderReference',
 				'format'=>'html',
-				'value'=>function($data) {					
-					return Html::a($data->order->reference,['//yes/order/view',"reference"=>$data->order->reference]);	
+				'value'=>function($data) {	
+					if ($data->order)
+					{				
+						return Html::a($data->order->reference,['//yes/order/view',"reference"=>$data->order->reference]);	
+					}
+					else
+					{
+						return "";	
+					}
 				}
 			],
             [
 				'attribute'=>'productTitle',
 				'value'=>function($data) {
-					return $data->product->title;	
+					if ($data->product)
+					{
+					
+						return $data->product->title;	
+					}	
+					else
+					{
+						return "";	
+					}
 				}
 			],
             'data:ntext',

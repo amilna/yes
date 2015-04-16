@@ -217,9 +217,9 @@ class ProductSearch extends Product
 		{
 			$term = ($this->term?$this->term:$this->category);
 			$cquery =  $this->find()
-					->select(["array_agg({{%yes_product}}.id)"])					
-					->leftJoin("{{%yes_cat_pro}} as cp","{{%yes_product}}.id = cp.product_id")
-					->leftJoin("{{%yes_category}} as c","cp.category_id = c.id");
+					->select(["array_agg(".$this->tableName().".id)"])					
+					->leftJoin(CatPro::tableName()." as cp",$this->tableName().".id = cp.product_id")
+					->leftJoin(Category::tableName()." as c","cp.category_id = c.id");
 					
 			if ($this->category)
 			{				
@@ -235,7 +235,7 @@ class ProductSearch extends Product
 				
 			if ($this->category)
 			{
-				$query->andFilterWhere(["OR","false","{{%yes_product}}.id = ANY ('".$res."')"]);				
+				$query->andFilterWhere(["OR","false",$this->tableName().".id = ANY ('".$res."')"]);				
 			}
 			else
 			{		
@@ -244,7 +244,7 @@ class ProductSearch extends Product
 						["OR","lower(tags) like '%".strtolower($this->term)."%'",
 							["OR","lower(sku) like '%".strtolower($this->term)."%'",
 								["OR","lower(content) like '%".strtolower($this->term)."%'",
-									"{{%yes_product}}.id = ANY ('".$res."')"
+									$this->tableName().".id = ANY ('".$res."')"
 								]
 							]	
 						]

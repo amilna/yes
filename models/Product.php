@@ -26,12 +26,15 @@ use Yii;
  */
 class Product extends \yii\db\ActiveRecord
 {
+    public $dynTableName = '{{%yes_product}}';    
+    
     /**
      * @inheritdoc
      */
     public static function tableName()
-    {
-        return '{{%yes_product}}';
+    {        
+        $mod = new Product();        
+        return $mod->dynTableName;
     }
 
     /**
