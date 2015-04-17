@@ -5,7 +5,7 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 use yii\jui\AutoComplete;
-use kartik\money\MaskMoney;
+use amilna\yap\Money;
 use kartik\widgets\Select2;
 use kartik\widgets\SwitchInput;
 use kartik\datetime\DateTimePicker;
@@ -61,7 +61,7 @@ $listOrder = []+ArrayHelper::map(OrderSearch::find()->andWhere("status = 0")->al
 									var data2 = JSON.parse(data0["data"]);
 									\$("#confirmation-payment_id").val(data2["payment"]);
 									\$("#confirmation-amount").val(data0["total"]);
-									jQuery("#confirmation-amount-disp").maskMoney("mask", data0["total"]);
+									\$("#confirmation-amount-disp").val(data0["total"]);									
 									var \$el = \$("#confirmation-payment_id"),settings = \$el.attr('data-krajee-select2');
 									settings = window[settings];								
 									\$el.select2(settings);
@@ -91,15 +91,16 @@ SCRIPT;
 												var data0 = JSON.parse(obj);													
 												var data2 = JSON.parse(data0["data"]);
 												$("#confirmation-payment_id").val(data2["payment"]);
-												$("#confirmation-amount").val(data0["total"]);												
+												$("#confirmation-amount").val(data0["total"]);
+												$("#confirmation-amount-disp").val(data0["total"]);
 												$("#confirmation-order_id").val(data0["id"]);
 											}
 											else
 											{
 												$("#confirmation-payment_id").val(false);
-												$("#confirmation-amount").val(0);												
-											}												
-											jQuery("#confirmation-amount-disp").maskMoney("mask", data0["total"]);
+												$("#confirmation-amount").val(0);
+												$("#confirmation-amount-disp").val(0);
+											}																							
 											var $el = $("#confirmation-payment_id"),settings = $el.attr("data-krajee-select2");
 											settings = window[settings];								
 											$el.select2(settings);
@@ -119,16 +120,20 @@ SCRIPT;
 					]);
 				?>
 				<?php 
-					echo $form->field($model, 'amount')->widget(MaskMoney::classname(), [								
-						'pluginOptions' => [
-							'prefix' => $module->currency["symbol"],
-							'suffix' => '',
-							'thousands' => $module->currency["thousand_separator"],
-							'decimal' => $module->currency["decimal_separator"],
-							'precision' => 2, 
-							'allowNegative' => false
-						],
-						'options'=>['style'=>'text-align:right']
+					echo $form->field($model, 'amount')->widget(Money::classname(), [			
+						"pluginOptions"=>	[
+							 "radixPoint"=>$module->currency["decimal_separator"], 
+							 "groupSeparator"=> $module->currency["thousand_separator"], 
+							 "digits"=> 2,
+							 "autoGroup"=> true,
+							 "prefix"=> $module->currency["symbol"]
+						 ],
+						 "pluginEvents"=>[
+							"change"=>"function(){
+									
+								}",
+						 ],
+						"options"=>['placeholder' => Yii::t('app','0,00')]
 					]); 
 				?>
 			</div>

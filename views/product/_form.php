@@ -5,7 +5,7 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 use yii\jui\AutoComplete;
-use kartik\money\MaskMoney;
+use amilna\yap\Money;
 use kartik\widgets\Select2;
 use kartik\widgets\SwitchInput;
 use kartik\datetime\DateTimePicker;
@@ -168,17 +168,21 @@ foreach ($model->catPro as $c)
 				<br>
 				<?php		
 					$module = Yii::$app->getModule('yes');
-					echo $form->field($model, 'price')->widget(MaskMoney::classname(), [								
-							'pluginOptions' => [
-								'prefix' => $module->currency["symbol"],
-								'suffix' => '',
-								'thousands' => $module->currency["thousand_separator"],
-								'decimal' => $module->currency["decimal_separator"],
-								'precision' => 2, 
-								'allowNegative' => false
-							],
-							'options'=>['style'=>'text-align:right']
-						]);
+					echo $form->field($model, 'price')->widget(Money::classname(), [			
+						"pluginOptions"=>	[
+							 "radixPoint"=>$module->currency["decimal_separator"], 
+							 "groupSeparator"=> $module->currency["thousand_separator"], 
+							 "digits"=> 2,
+							 "autoGroup"=> true,
+							 "prefix"=> $module->currency["symbol"]
+						 ],
+						 "pluginEvents"=>[
+							"change"=>"function(){
+									
+								}",
+						 ],
+						"options"=>['placeholder' => Yii::t('app','0,00')]
+					]);	
 											
 				?>						
 				
