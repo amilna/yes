@@ -34,6 +34,7 @@ class OrderSearch extends Order
     {
         return array_merge(parent::attributeLabels(),[
             'customerName' => Yii::t('app', 'Customer'),                                    
+            'customerAdminName' => Yii::t('app', 'Customer'),                                    
         ]);
     }
 
