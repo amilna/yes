@@ -188,14 +188,14 @@ class ProductSearch extends Product
             return $dataProvider;
         }				
 		
-        $query->andFilterWhere([            
+        $query->andFilterWhere([
+            'status' => $this->status,           
+            'isdel' => $this->isdel,
             'isfeatured' => $this->isfeatured,
-            /*['id','{{%author}}']
-            ['id','{{%sales}}']
-            ['id','{{%catpros}}']*/
+            /**/
         ]);
 
-        $params = self::queryNumber([['id',$this->tableName()],['author_id'],['status'],['price'],['discount'],['isdel']/*['id','{{%author}}'],['id','{{%sales}}'],['id','{{%catpros}}']*/]);
+        $params = self::queryNumber([['id',$this->tableName()],['author_id'],['price'],['discount']/*['id','{{%author}}'],['id','{{%sales}}'],['id','{{%catpros}}']*/]);
 		foreach ($params as $p)
 		{
 			$query->andFilterWhere($p);
