@@ -251,8 +251,8 @@ class CustomerController extends Controller
 		$format = (isset($post["format"])?$post["format"]:$format);
 		$term = (isset($post["term"])?$post["term"]:$term);				
 		
-		$sql = "name=:name";
-		$search = [":name"=>$term];
+		$sql = "lower(name) LIKE :name";
+		$search = [":name"=>"%".strtolower($term)."%"];
 		$arraymap = "name";
 		$rs = false;
 		if (isset($post["email"]))		

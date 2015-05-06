@@ -174,9 +174,13 @@ function enAsci(a,s) {
 		//console.log(total,shipcost);
 		var defvat = <?=$module->defaults["vat"]?$module->defaults["vat"]:0?>;
 		var vat = (defvat?(total+shipcost)*defvat:0);	
-		*/
+		*/				
 		
 		var vat = parseFloat($(".shopcart-box h4").attr("data-vat"));
+		
+		total = isNaN(total)?0:total;
+		shipcost = isNaN(shipcost)?0:shipcost;
+		vat = isNaN(vat)?0:vat;
 		
 		var html = "";	
 		if (vat > 0)
@@ -300,7 +304,7 @@ function enAsci(a,s) {
 				}
 			}
 		);	
-		console.log(d);
+		//console.log(d);
 		var idata = enAsci(idata);
 		d["idata"] = idata;								
 		var val = {"shopcart":{}};
