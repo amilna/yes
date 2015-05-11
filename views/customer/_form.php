@@ -26,8 +26,10 @@ use kartik\datetime\DateTimePicker;
 				'options' => [
 					'placeholder' => Yii::t('app','Add phones ...'),
 				],
+				'data'=>$model->getPhones(),
 				'pluginOptions' => [
-					'tags' => $model->getPhones(),
+					'tags' => true,
+					'tokenSeparators'=>[',',' '],
 				],
 			]) ?>		
 			<?/*= $form->field($model, 'addresses')->textarea(['rows' => 3]) */?>

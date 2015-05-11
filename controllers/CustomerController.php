@@ -165,6 +165,11 @@ class CustomerController extends Controller
 				$post['Customer']['addresses'] = json_encode($addresses);
 			}	
 			
+			if (is_array($post['Customer']['phones']))
+			{
+				$post['Customer']['phones'] = implode(",",$post['Customer']['phones']);
+			}
+			
 			$model->load($post);			
 			
 			if ($model->save()) {															
@@ -188,7 +193,9 @@ class CustomerController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+				
+		$model->phones = !empty($model->phones)?explode(",",$model->phones):[];
+		
 		if (Yii::$app->request->post())        
         {
 			$post = Yii::$app->request->post();						
@@ -200,6 +207,11 @@ class CustomerController extends Controller
 				$addresses = $post['Customer']['addresses'];
 				$post['Customer']['addresses'] = json_encode($addresses);
 			}	
+			
+			if (is_array($post['Customer']['phones']))
+			{
+				$post['Customer']['phones'] = implode(",",$post['Customer']['phones']);
+			}
 			
 			$model->load($post);			
 			

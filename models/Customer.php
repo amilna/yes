@@ -38,8 +38,8 @@ class Customer extends \yii\db\ActiveRecord
     {
         return [
             [['name', 'phones', 'addresses'], 'required'],
-            [['phones', 'addresses'], 'string'],
-            [['last_time','remarks'], 'safe'],
+            [['addresses'], 'string'],
+            [['phones', 'last_time','remarks'], 'safe'],
             [['last_action', 'isdel'], 'integer'],
             [['name', 'email'], 'string', 'max' => 255]
         ];
@@ -126,7 +126,7 @@ class Customer extends \yii\db\ActiveRecord
 			{	
 				if (!in_array($t,$phones))
 				{
-					array_push($phones,$t);	
+					$phones[$t] = $t;
 				}
 			}	
 		}

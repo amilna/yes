@@ -44,14 +44,14 @@ class Product extends \yii\db\ActiveRecord
     {
         return [
             [['title', 'sku', 'description', 'content', 'data','status'], 'required'],
-            [['content', 'data', 'images'], 'string'],
+            [['content', 'images'], 'string'],
             [['author_id', 'status', 'isdel'], 'integer'],
             [['isfeatured'], 'boolean'],
             [['price','discount'], 'number'],
-            [['time'], 'safe'],
+            [['data', 'tags', 'time'], 'safe'],
             [['title','sku'], 'string', 'max' => 65],
             [['description'], 'string', 'max' => 155],
-            [['tags'], 'string', 'max' => 255]
+            //[['tags'], 'string', 'max' => 255]
         ];
     }
 
@@ -166,7 +166,7 @@ class Product extends \yii\db\ActiveRecord
 			{	
 				if (!in_array($t,$tags))
 				{
-					array_push($tags,$t);	
+					$tags[$t] = $t;
 				}
 			}	
 		}

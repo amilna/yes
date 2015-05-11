@@ -211,6 +211,12 @@ class ProductController extends Controller
 					$images = $post['Product']['images'];
 					$post['Product']['images'] = json_encode(empty($images)?null:$images);			
 				}	
+				
+				if (is_array($post['Product']['tags']))
+				{
+					$post['Product']['tags'] = implode(",",$post['Product']['tags']);
+				}
+				
 				$model->load($post);	
 				$model->images = $model->images == "null"?null:$model->images;						
 				
@@ -260,6 +266,8 @@ class ProductController extends Controller
     {
         $model = $this->findModel($id);
         
+        $model->tags = !empty($model->tags)?explode(",",$model->tags):[];
+        
 		if (Yii::$app->request->post())        
         {
 			$transaction = Yii::$app->db->beginTransaction();
@@ -283,6 +291,12 @@ class ProductController extends Controller
 					$images = $post['Product']['images'];
 					$post['Product']['images'] = json_encode(empty($images)?null:$images);			
 				}	
+				
+				if (is_array($post['Product']['tags']))
+				{
+					$post['Product']['tags'] = implode(",",$post['Product']['tags']);
+				}
+				
 				$model->load($post);
 				$model->images = $model->images == "null"?null:$model->images;				
 				
