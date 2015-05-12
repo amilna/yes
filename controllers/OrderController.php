@@ -45,7 +45,7 @@ class OrderController extends Controller
      * @params string $format, array $arraymap, string $term
      * @return mixed
      */
-    public function actionIndex($format= false,$arraymap= false,$term = false)
+    public function actionIndex($format= false,$arraymap= false,$term = false,$results = false)
     {
         $searchModel = new OrderSearch();        
         $req = Yii::$app->request->queryParams;
@@ -116,7 +116,14 @@ class OrderController extends Controller
 					array_push($model,$obj);
 				}
 			}			
-			return \yii\helpers\Json::encode($model);	
+			if ($results)
+			{
+				return \yii\helpers\Json::encode(["results"=>$model]);		
+			}
+			else
+			{
+				return \yii\helpers\Json::encode($model);	
+			}	
 		}
 		else
 		{

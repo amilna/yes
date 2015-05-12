@@ -78,7 +78,7 @@ SCRIPT;
 							'ajax' => [
 								'url' => $url,
 								'dataType' => 'json',
-								'data' => new JsExpression('function(term,page) { return {"OrderSearch[reference]":term}; }'),
+								'data' => new JsExpression('function(params) { return {"OrderSearch[reference]":params.term,"results":"true"}; }'),
 								'results' => new JsExpression('function(data,page) { return {results:data}; }'),								
 							],
 							'initSelection' => new JsExpression($initScript)							
