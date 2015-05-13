@@ -38,7 +38,8 @@ class ProductController extends Controller
         $req = Yii::$app->request->queryParams;
         if ($term) { $req[basename(str_replace("\\","/",get_class($searchModel)))]["term"] = $term;}        
         if ($time) { $req[basename(str_replace("\\","/",get_class($searchModel)))]["time"] = $time;}        
-        if ($category) { $req[basename(str_replace("\\","/",get_class($searchModel)))]["category"] = $category;}        
+        if ($category) { $req[basename(str_replace("\\","/",get_class($searchModel)))]["category"] = $category;}                        
+        
         $dataProvider = $searchModel->search($req);				
         
         $query = $dataProvider->query;
@@ -218,7 +219,7 @@ class ProductController extends Controller
 				}
 				
 				$model->load($post);	
-				$model->images = $model->images == "null"?null:$model->images;						
+				$model->images = $model->images == "null"?null:$model->images;										
 				
 				if ($model->save()) {
 					

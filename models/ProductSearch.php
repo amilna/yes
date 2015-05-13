@@ -26,8 +26,8 @@ class ProductSearch extends Product
     {
         return [
             [['id', 'author_id', 'status', 'isdel'], 'integer'],
-            [['price','discount'], 'number'],
-            [['title', 'sku', 'description', 'content', 'data', 'tags', 'images', 'time', 'authorName', 'term', 'category'/*, 'salesId'*/], 'safe'],
+            [[], 'number'],
+            [['discount','price','title', 'sku', 'description', 'content', 'data', 'tags', 'images', 'time', 'authorName', 'term', 'category'/*, 'salesId'*/], 'safe'],
             [['isfeatured'], 'boolean'],
         ];
     }
@@ -86,6 +86,7 @@ class ProductSearch extends Product
 			if (!empty($this->$field))
 			{				
 				$number = explode(" ",trim($this->$field));							
+				
 				if (count($number) == 2)
 				{									
 					if (in_array($number[0],['>','>=','<','<=','<>']) && is_numeric($number[1]))
@@ -98,7 +99,7 @@ class ProductSearch extends Product
 					if (is_numeric($number[0]) && is_numeric($number[2]))
 					{
 						array_push($params,['>=', ($tab?$tab.".":"").$field, $number[0]]);		
-						array_push($params,['<=', ($tab?$tab.".":"").$field, $number[2]]);		
+						array_push($params,['<=', ($tab?$tab.".":"").$field, $number[2]]);														
 					}
 				}
 				elseif (count($number) == 1)

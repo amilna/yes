@@ -36,6 +36,16 @@ class Product extends \yii\db\ActiveRecord
         $mod = new Product();        
         return $mod->dynTableName;
     }
+    
+    public function beforeSave($insert)
+	{
+		if (parent::beforeSave($insert)) {
+			$this->discount = ($this->discount == null?0:$this->discount);
+			return true;
+		} else {
+			return false;
+		}
+	}
 
     /**
      * @inheritdoc
