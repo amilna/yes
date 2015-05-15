@@ -31,7 +31,7 @@ use yii\helpers\Url;
 				$("#Product_data_"+n+"_value").val(typeof d["value"] !== "undefined"?d["value"]:"");				
 			}			
 			
-			var select2_x = {"allowClear":false,"width":"resolve"};			
+			var select2_x = {"allowClear":false,"width":"resolve","theme":"krajee"};			
 			jQuery("#w0"+n).prepend("<option val></option>");
 			jQuery.when(jQuery("#w0"+n).select2(select2_x)).done(initSelect2Loading("w0"+n));
 			jQuery("#w0"+n).on("select2-open", function(){
