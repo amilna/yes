@@ -74,7 +74,13 @@ $this->params['breadcrumbs'][] = $this->title;
             //'id',
             'name',
             'email:email',
-            'phones:ntext',
+            //'phones:ntext',
+            [				
+				'attribute' => 'phones',
+				'value' => function($data) {
+					return Html::encode(str_replace(",",", ",$data->phones));
+				},
+			],
             'addresses:ntext',            
             [				
 				'attribute' => 'last_time',
