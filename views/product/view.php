@@ -75,7 +75,7 @@ $module = Yii::$app->getModule("yes");
 						</div>
 						
 						<?= Html::encode($model->description) ?>
-						<div class="well col-sm-6 pull-right" style="margin-top:20px">
+						<div id="item-shopcart-<?= $model->id ?>" class="well col-sm-6 pull-right" style="margin-top:20px">
 														
 							<?php 
 								$price = ($model->discount > 0?$model->price-($model->price*$model->discount/100):$model->price);
@@ -181,7 +181,7 @@ $module = Yii::$app->getModule("yes");
 								}
 							}							
 							?>
-							<a id="order_itemcart_<?=$model->id?>" class="btn btn-primary order_itemcart"><?= Yii::t("app","Add to Chart")?></a>
+							<a id="order_itemcart_<?=$model->id?>" class="btn btn-primary order_itemcart"><?= Yii::t("app","Add to Cart")?></a>
 						</div>
 													
 						<?= HtmlPurifier::process($model->content) ?>

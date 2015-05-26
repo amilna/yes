@@ -290,7 +290,7 @@ function enAsci(a,s) {
 		var id = parseInt($(this).attr("id").replace("order_itemcart_",""));
 		var d = {};
 		var idata = id;		
-		$(".item-shopcart").each(
+		$("#item-shopcart-"+id+" .item-shopcart").each(
 			function(v,i)
 			{				
 				var atr = $(i).attr("id");						

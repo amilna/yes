@@ -42,7 +42,7 @@ class m150212_091226_amilna_yes extends Migration
             'product_id' => Schema::TYPE_INTEGER. ' NOT NULL',            
             'isdel' => Schema::TYPE_SMALLINT.' NOT NULL DEFAULT 0',
         ]);
-        $this->addForeignKey( $this->db->tablePrefix.'yes_cat_pro_categroy_id', $this->db->tablePrefix.'yes_cat_pro', 'category_id', $this->db->tablePrefix.'yes_category', 'id', 'CASCADE', null );
+        $this->addForeignKey( $this->db->tablePrefix.'yes_cat_pro_category_id', $this->db->tablePrefix.'yes_cat_pro', 'category_id', $this->db->tablePrefix.'yes_category', 'id', 'CASCADE', null );
         $this->addForeignKey( $this->db->tablePrefix.'yes_cat_pro_product_id', $this->db->tablePrefix.'yes_cat_pro', 'product_id', $this->db->tablePrefix.'yes_product', 'id', 'CASCADE', null );
         
         $this->createTable($this->db->tablePrefix.'yes_customer', [
