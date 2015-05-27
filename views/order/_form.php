@@ -201,11 +201,18 @@ $payment = ($model->isNewRecord?$model->id['payment']:false);
 						<div class="form-group">
 						<?= Html::label(Yii::t("app","Additional Notes"))?>	
 						<?php 
-						
+							
+							$data = $model->data;
+							if (!isset($data["note"]))
+							{
+								$model->data = ["note"=>"-"];
+							}							
+							
 							$field = $form->field($model,"data[note]");
 							$field->template = "{input}";
 							echo $field->textArea(["class"=>"form-control required","placeholder"=>Yii::t("app","Notes for us / special request")]);
-						
+							
+							$model->data = $data;
 						?>	
 						</div>
 						
