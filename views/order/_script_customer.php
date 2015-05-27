@@ -14,7 +14,7 @@ $module = Yii::$app->getModule("yes");
 		var email = $("#order-complete_reference-email").val();
 		var phones = $("#order-customer_id-phones").val();
 		name = (name==""?"false":name);
-		email = (email==""?"false":email);
+		email = (email==""?"":email);
 		phones = (phones==""?"false":phones);
 						
 		var val = {"name":name,"email":email,"phones":phones,"format":"json","term":name};
