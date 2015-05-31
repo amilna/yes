@@ -147,6 +147,78 @@ class ShippingController extends Controller
 		}
 		else
 		{
+			$res = ["status"=>false,"count"=>0,"n"=>0];
+			$post = Yii::$app->request->post();
+			$session = Yii::$app->session;
+			if ($post)        
+			{				
+				$n = isset($post['Shipping']['n'])?$post['Shipping']['n']:false;				
+							
+				$data = [];	
+				if (isset($session["yes-shipping-f"]))				
+				{																																			
+					$data = $session["yes-shipping-f"];										
+					$res = \amilna\yes\components\Helpers::importCsv(false,$data,$n);
+				}
+				elseif ($n == -1)
+				{
+					$session["yes-shipping-dn"] = 0;
+					unset($session["yes-shipping-dn"]);
+					$res = ["status"=>true,"count"=>1,"n"=>0];
+				}		
+				else
+				{																			
+					$session["tes"] = "tos";
+					if (isset($post['Shipping']['csv']))
+					{
+						$file = $post['Shipping']['csv'];												
+						
+						if (strpos($file,"http") !== false)
+						{				
+							$curl = curl_init();					
+							if ($curl)
+							{				
+								
+								$f = fopen('php://temp', 'w+');					
+								curl_setopt($curl, CURLOPT_URL, $file);
+								curl_setopt($curl, CURLOPT_FILE, $f);					
+								curl_exec($curl);
+								curl_close($curl);
+
+								rewind($f);															
+								$res = \amilna\yes\components\Helpers::importCsv($f);
+								fclose($f);
+				
+							}
+						}
+						elseif (strpos($file,"http") === false)
+						{					
+							
+							$module = Yii::$app->getModule("yes");
+							$path = \Yii::getAlias($module->uploadDir);
+							$f = $path."/files/".$file;																			
+							
+							if(file_exists($f) && is_readable($f))
+							{						
+								
+								$f = fopen($f,"r");
+								$res = \amilna\yes\components\Helpers::importCsv($f);						
+								fclose($f);
+							}
+						}
+					}
+				}				
+								
+				return \yii\helpers\Json::encode($res);	
+			}
+			else
+			{				
+				unset($session["yes-shipping-f"]);
+				unset($session["yes-shipping-dn"]);	
+			}
+			
+			
+			
 			return $this->render('admin', [
 				'searchModel' => $searchModel,
 				'dataProvider' => $dataProvider,
@@ -274,5 +346,78 @@ class ShippingController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+    
+     /**
+     * Import data from csv (example of csv available inside migrations folder).
+     * If creation is successful, the browser will be redirected to the 'index' page.
+     * @return mixed
+     */
+    public function actionImport($n = false)
+    {        	
+		$file = "";
+		$session = Yii::$app->session;
+		if (Yii::$app->request->post() || $n)        
+        {
+			$post = Yii::$app->request->post();									
+						
+			$data = [];	
+			if (!isset($session["yes-shipping-f"]))
+			{																				
+				if (isset($post['Shipping']['csv']))
+				{
+					$file = $post['Shipping']['csv'];												
+					
+					if (strpos($file,"http") !== false)
+					{				
+						$curl = curl_init();					
+						if ($curl)
+						{				
+							
+							$f = fopen('php://temp', 'w+');					
+							curl_setopt($curl, CURLOPT_URL, $file);
+							curl_setopt($curl, CURLOPT_FILE, $f);					
+							curl_exec($curl);
+							curl_close($curl);
+
+							rewind($f);
+														
+							$res = \amilna\yes\components\Helpers::importCsv($f);
+							print_r($res);
+
+							fclose($f);
+			
+						}
+					}
+					elseif (strpos($file,"http") === false)
+					{					
+						
+						$module = Yii::$app->getModule("yes");
+						$path = \Yii::getAlias($module->uploadDir);
+						$f = $path.$file;
+						
+						$f = str_replace(["../backend/web/static/yii2/advanced/backend/","%20"],[""," "],$f);
+						//					
+						
+						if(file_exists($f) && is_readable($f))
+						{						
+							$f = fopen($f,"r");
+							$res = \amilna\yes\components\Helpers::importCsv($f);						
+							fclose($f);
+						}
+					}
+				}
+			}
+			else
+			{				
+				$data = $session["yes-shipping-f"];				
+				$res = \amilna\yes\components\Helpers::importCsv(false,$data,$n);
+			}			
+		}	
+        
+		return $this->render('import', [
+			'file' => $file,
+		]);
+        
     }
 }

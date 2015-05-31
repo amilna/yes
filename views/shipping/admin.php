@@ -4,6 +4,41 @@ use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use amilna\yap\GridView;
 
+use iutbay\yii2kcfinder\KCFinderInputWidget;
+
+$module = Yii::$app->getModule('yes');
+// kcfinder options
+// http://kcfinder.sunhater.com/install#dynamic
+$kcfOptions = array_merge([], [
+    'uploadURL' => Yii::getAlias($module->uploadURL),
+    'uploadDir' => Yii::getAlias($module->uploadDir),
+    'access' => [
+        'files' => [
+            'upload' => true,
+            'delete' => true,
+            'copy' => true,
+            'move' => true,
+            'rename' => true,
+        ],
+        'dirs' => [
+            'create' => true,
+            'delete' => true,
+            'rename' => true,
+        ],
+    ],
+    'types'=>[
+		'files'    =>  "",        
+        'images'   =>  "*img",
+    ],
+    'thumbWidth' => 200,
+    'thumbHeight' => 200,        
+]);
+
+// Set kcfinder session options
+Yii::$app->session->set('KCFINDER', $kcfOptions);
+
+
+
 /* @var $this yii\web\View */
 /* @var $searchModel amilna\yes\models\ShippingSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -15,13 +50,44 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="shipping-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-    <p>
-        <?= Html::a(Yii::t('app', 'Create {modelClass}', [
-    'modelClass' => Yii::t('app', 'Shipping'),
-]), ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
+    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>    
+	
+	<div class="row">
+		<div class="col-sm-3">
+			<p>
+				<?= Html::a(Yii::t('app', 'Create {modelClass}', [
+					'modelClass' => Yii::t('app', 'Shipping'),
+				]), ['create'], ['class' => 'btn btn-success']) ?>
+			</p>
+			
+			<div id="csvs" class="well">
+			<h4><?= Yii::t("app","Import")?></h4>	
+			<?php 				
+				echo Html::textInput("Shipping[csv]",false,['id'=>'shipping-csv','class'=>'form-control','placeholder'=>Yii::t('app','Url of csv or uploaded csv')]);
+				echo KCFinderInputWidget::widget([
+					'name'=>'csv_url',
+					//'value'=>$file,
+					'multiple' => false,
+					'kcfOptions'=>$kcfOptions,	
+					'kcfBrowseOptions'=>[
+						'type'=>'files',
+						'lng'=>substr(Yii::$app->language,0,2),				
+					]	
+				]);	
+			?>	
+							
+			</div>																		
+			
+			<div class="form-group">					
+				<a id='shipping-import-cancel' class='btn btn-danger'><?= Yii::t('app', 'Cancel') ?></a>
+				<a id='shipping-import' class='btn btn-primary pull-right'><?= Yii::t('app', 'Import') ?></a>
+			</div>
+			<div id='shipping-import-bar'>
+				<div class="progress progress-info progress-striped"><div class="bar" style="width: 0%"></div></div>
+			</div>
+			
+		</div>	
+		<div class="col-sm-9">
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         
@@ -109,5 +175,106 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'kartik\grid\ActionColumn'],
         ],
     ]); ?>
+    </div>
 
 </div>
+
+<script type="text/javascript">
+<?php $this->beginBlock('SHIP_IMPORT') ?>		
+	
+	function importCsv(data)
+	{
+		var url = '<?= \yii\helpers\Url::toRoute(["//yes/shipping/admin"]) ?>';
+		
+		$.post(url, data, 
+			function(json) 
+			{						
+				json = jQuery.parseJSON(json);	
+				if (json.status == 1 && json.count >= 0)
+				{					
+					tot = parseInt(json.count);										
+					//data["Shipping[n]"] = parseInt(json.n)+1;															
+					
+					if (parseInt(json.n) < tot)
+					{
+						importCsv(data);
+					}
+										
+					var pw = (parseInt(json.n)/tot*100);										
+					var prog = "<div class=\"progress\"><div class=\"progress-bar progress-bar-primary progress-bar-striped\" role=\"progressbar\" aria-valuenow=\"+pw+\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: "+pw+"%\"><span class=\"sr-only\">"+pw+"% Complete (success)</span></div></div>";
+					$("#shipping-import-bar").html(prog);
+					
+					if (tot == 0)
+					{
+						window.location.reload();
+					}
+				}				
+				else if (json.status == 1 && json.count == 0)
+				{
+					var prog = "<div class=\"progress progress-info progress-striped\"><div class=\"bar\" style=\"width: 100%\"></div></div>";
+					$("#shipping-import-bar").html(prog);					
+					window.location.reload();
+				}				
+				else
+				{										
+					alert("<?= Yii::t("app","Import failed!") ?>");
+				}
+				
+			}
+		);	
+	}
+	
+	function baseName(str,wext)
+	{
+		var base = new String(str).substring(str.lastIndexOf('/') + 1); 
+		if(base.lastIndexOf(".") != -1 && typeof wext == "undefined") {
+			base = base.substring(0, base.lastIndexOf("."));		
+		}    
+		return base;
+	}
+	
+	$('#csvs .kcf-thumbs').bind("DOMSubtreeModified",function(){	
+		var sel = $('#csvs .kcf-thumbs input[name=csv_url]');
+		var url = "";
+		if (sel.length > 0 && $('#csvs .kcf-thumbs').html().replace(/ /g,"") != "")
+		{
+			url = sel.val();
+			$('#csvs .kcf-thumbs img').each(function(i,img){
+				var src = $(img).attr("src");
+				var ext = baseName(src);
+				if (ext != 'xls')
+				{
+					$(img).attr("src",src.replace(ext+".png","xls.png"));
+				}			
+			});
+			url = baseName(url.replace(/%20/g," "),true);
+		}	
+		$('#shipping-csv').val(url);
+	});
+	
+	$("#shipping-import-cancel").click(
+		function()
+		{
+			window.location.reload();
+			var data = {};											
+			data = {"Shipping[n]":-1};
+			importCsv(data);														
+		}
+	);
+	
+	$("#shipping-import").click(
+		function()
+		{
+			var data = {};											
+			//data = {"Shipping[csv]":$("#shipping-csv").val(),"Shipping[n]":0};
+			data = {"Shipping[csv]":$("#shipping-csv").val()};
+			importCsv(data);														
+		}
+	);	
+
+<?php $this->endBlock(); ?>
+</script>
+
+<?php
+yii\web\YiiAsset::register($this);
+$this->registerJs($this->blocks['SHIP_IMPORT'], yii\web\View::POS_END);
