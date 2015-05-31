@@ -30,7 +30,7 @@ $this->params['cboxTarget']['.colorbox-'.$model->id] =  [
 		?>													
 		<div class="caption">
 			<h4><?= Html::a($model->title,["//yes/product/view","id"=>$model->id,"title"=>$model->title]) ?></h4>
-			<h5><?= Html::encode($model->author->username) ?> <small><?= date('D d M, Y',strtotime($model->time)) ?></small></h5>								
+			<h5><?= Html::encode($model->author?$model->author->username:"") ?> <small><?= date('D d M, Y',strtotime($model->time)) ?></small></h5>								
 		
 			<p><?= Html::encode($model->description) ?></p>
 			<p>

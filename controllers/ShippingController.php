@@ -198,7 +198,8 @@ class ShippingController extends Controller
 			$model->load($post);			
 			
 			if ($model->save()) {																
-				return $this->redirect(['view', 'id' => $model->id]);            
+				//return $this->redirect(['view', 'id' => $model->id]);            
+				return $this->redirect(['admin']);            
 			} else {				
 				$model->data = json_encode($data);
 			}
@@ -233,7 +234,8 @@ class ShippingController extends Controller
 			$model->load($post);			
 			
 			if ($model->save()) {																
-				return $this->redirect(['view', 'id' => $model->id]);            			
+				//return $this->redirect(['view', 'id' => $model->id]);            			
+				return $this->redirect(['admin']);            
 			}
 		}					
         
