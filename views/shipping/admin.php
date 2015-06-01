@@ -6,38 +6,41 @@ use amilna\yap\GridView;
 
 use iutbay\yii2kcfinder\KCFinderInputWidget;
 
+
 $module = Yii::$app->getModule('yes');
-// kcfinder options
-// http://kcfinder.sunhater.com/install#dynamic
-$kcfOptions = array_merge([], [
-    'uploadURL' => Yii::getAlias($module->uploadURL),
-    'uploadDir' => Yii::getAlias($module->uploadDir),
-    'access' => [
-        'files' => [
-            'upload' => true,
-            'delete' => true,
-            'copy' => true,
-            'move' => true,
-            'rename' => true,
-        ],
-        'dirs' => [
-            'create' => true,
-            'delete' => true,
-            'rename' => true,
-        ],
-    ],
-    'types'=>[
-		'files'    =>  "",        
-        'images'   =>  "*img",
-    ],
-    'thumbWidth' => 200,
-    'thumbHeight' => 200,        
-]);
+if ($module->enableUpload)
+{
+	// kcfinder options
+	// http://kcfinder.sunhater.com/install#dynamic
+	$kcfOptions = array_merge([], [
+		'uploadURL' => Yii::getAlias($module->uploadURL),
+		'uploadDir' => Yii::getAlias($module->uploadDir),
+		'access' => [
+			'files' => [
+				'upload' => true,
+				'delete' => true,
+				'copy' => true,
+				'move' => true,
+				'rename' => true,
+			],
+			'dirs' => [
+				'create' => true,
+				'delete' => true,
+				'rename' => true,
+			],
+		],
+		'types'=>[
+			'files'    =>  "",        
+			'images'   =>  "*img",
+		],
+		'thumbWidth' => 200,
+		'thumbHeight' => 200,        
+	]);
 
-// Set kcfinder session options
-Yii::$app->session->set('KCFINDER', $kcfOptions);
+	// Set kcfinder session options
+	Yii::$app->session->set('KCFINDER', $kcfOptions);
 
-
+}
 
 /* @var $this yii\web\View */
 /* @var $searchModel amilna\yes\models\ShippingSearch */
@@ -59,6 +62,8 @@ $this->params['breadcrumbs'][] = $this->title;
 					'modelClass' => Yii::t('app', 'Shipping'),
 				]), ['create'], ['class' => 'btn btn-success']) ?>
 			</p>
+			
+			<?php if ($module->enableUpload) { ?>
 			
 			<div id="csvs" class="well">
 			<h4><?= Yii::t("app","Import")?></h4>	
@@ -85,6 +90,8 @@ $this->params['breadcrumbs'][] = $this->title;
 			<div id='shipping-import-bar'>
 				<div class="progress progress-info progress-striped"><div class="bar" style="width: 0%"></div></div>
 			</div>
+			
+			<?php } ?>
 			
 		</div>	
 		<div class="col-sm-9">
@@ -178,6 +185,8 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
 </div>
+
+<?php if ($module->enableUpload) { ?>
 
 <script type="text/javascript">
 <?php $this->beginBlock('SHIP_IMPORT') ?>		
@@ -278,3 +287,6 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php
 yii\web\YiiAsset::register($this);
 $this->registerJs($this->blocks['SHIP_IMPORT'], yii\web\View::POS_END);
+?>
+
+<?php } ?>

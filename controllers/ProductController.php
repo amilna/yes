@@ -210,6 +210,13 @@ class ProductController extends Controller
 				if (isset($post['Product']['images']))
 				{
 					$images = $post['Product']['images'];
+					foreach ($images as $i=>$img)
+					{
+						if (empty($img))
+						{
+							unset($images[$i]);	
+						}
+					}
 					$post['Product']['images'] = json_encode(empty($images)?null:$images);			
 				}	
 				
@@ -290,6 +297,13 @@ class ProductController extends Controller
 				if (isset($post['Product']['images']))
 				{
 					$images = $post['Product']['images'];
+					foreach ($images as $i=>$img)
+					{
+						if (empty($img))
+						{
+							unset($images[$i]);	
+						}
+					}
 					$post['Product']['images'] = json_encode(empty($images)?null:$images);			
 				}	
 				

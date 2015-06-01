@@ -14,7 +14,7 @@ use yii\helpers\Url;
 
         <p><?= Html::a(Yii::t('app','Get start to manage a product category'),['//yes/category'],["class"=>"btn btn-lg btn-success"])?>
         <?= Html::a(Yii::t('app','or manage payment terminals'),['//yes/payment'],["class"=>"btn btn-lg btn-warning"])?>
-        <?= Html::a(Yii::t('app','or manage shippings'),['//yes/shipping'],["class"=>"btn btn-lg btn-default"])?>
+        <?= Html::a(Yii::t('app','or manage shippings'),['//yes/shipping/admin'],["class"=>"btn btn-lg btn-default"])?>
         </p>
     </div>
 
@@ -34,7 +34,7 @@ use yii\helpers\Url;
 
                 <p>Requests sent to obtain purchased goods and services, and closed by exchange of a commodity for money or service in return for money.</p>
 
-                <p><?= Html::a(Yii::t('app','Manage Orders'),['//yes/order'],["class"=>"btn btn-primary"])?>
+                <p><?= Html::a(Yii::t('app','Manage Orders'),['//yes/order/admin'],["class"=>"btn btn-primary"])?>
                 <?= Html::a(Yii::t('app','Manage Sales'),['//yes/sale'],["class"=>"btn btn-danger"])?></p>
             </div>
             <div class="col-md-4">
