@@ -35,12 +35,16 @@ class ShippingController extends Controller
     {
         $searchModel = new ShippingSearch();                
         $req = Yii::$app->request->queryParams;
-        if ($term) { $req[basename(str_replace("\\","/",get_class($searchModel)))]["term"] = $term;}        
-        $dataProvider = $searchModel->search($req);				
-		
-		$post = Yii::$app->request->post();
+        
+        $post = Yii::$app->request->post();
 		$format = (isset($post["format"])?$post["format"]:$format);
 		$term = (isset($post["term"])?$post["term"]:$term);
+        
+        $req = array_merge($req,$post);        
+        
+        if ($term) { $req[basename(str_replace("\\","/",get_class($searchModel)))]["term"] = $term;}        
+        $dataProvider = $searchModel->search($req);						
+		
 		
         if ($format == 'json')
         {
