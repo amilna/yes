@@ -28,8 +28,8 @@ $module = Yii::$app->getModule("yes");
 						{
 							json = json[0];
 							$("#order-customer_id-name").val(json.name);	
-							$("#order-customer_id-email").val(json.email);	
-							$("#order-customer_id-phones").val(json.phones);
+							$("#order-customer_id-email").val(json.email);															
+							//$("#order-customer_id-phones").val(json.phones);
 							var html = "";
 							var addrs = JSON.parse(json.addresses);							
 							for (a in addrs)
