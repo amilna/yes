@@ -108,8 +108,15 @@ class Shipping extends \yii\db\ActiveRecord
 	
 	public function toMoney($val,$dec = 2,$sym = true)
     {
-		$module = Yii::$app->getModule("yes");
-		return ($sym?$module->currency["symbol"]:"").number_format($val,$dec,$module->currency["decimal_separator"],$module->currency["thousand_separator"]);	
+		if (is_numeric($val))
+		{
+			$module = Yii::$app->getModule("yes");
+			return ($sym?$module->currency["symbol"]:"").number_format($val,$dec,$module->currency["decimal_separator"],$module->currency["thousand_separator"]);	
+		}
+		else
+		{
+			return $val;	
+		}
 	}
 		
 }
