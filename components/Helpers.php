@@ -47,6 +47,7 @@ class Helpers extends Component
 		
 		$transaction = Yii::$app->db->beginTransaction();
 		$res = true;
+		$error = [];
 		try {											
 			
 			if ($dno >= 0)
@@ -96,7 +97,9 @@ class Helpers extends Component
 								if (!$model->save())
 								{
 									$res = $res?false:$res;	
-								}
+									$error[] = [$model->attributes,$model->getErrors()];
+								}									
+								
 							}
 						}
 					}
@@ -124,7 +127,15 @@ class Helpers extends Component
 		}				
 		
 		$session["yes-shipping-dn"] = $dn;		
-		return ["status"=>$res,"count"=>count($data),"n"=>$dn];
+		
+		if ($res)
+		{
+			return ["status"=>$res,"count"=>count($data),"n"=>$dn];
+		}
+		else
+		{
+			return ["status"=>$res,"count"=>count($data),"n"=>$dn,"error"=>$error];
+		}
 	}
         
 }	
