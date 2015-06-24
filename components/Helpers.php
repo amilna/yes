@@ -72,6 +72,7 @@ class Helpers extends Component
 								$old = empty($model->data)?[]:json_decode($model->data,true);				
 								$exists = false;
 								$n = 1;
+								$new = [];
 								foreach ($old as $o)
 								{
 									if ($o["provider"] == $d["provider"])
@@ -80,17 +81,19 @@ class Helpers extends Component
 										$o["cost"] = $d["cost"];
 										$o["remarks"] = $d["remarks"];
 									}
+									$new[] = $o;
 									$n += 1;	
-								}				 										
+								}
+												 										
 								if (!$exists)
 								{
-									$old[$n.""] = ["provider"=>$d["provider"],"cost"=>$d["cost"],"remarks"=>$d["remarks"]];
+									$new[$n.""] = ["provider"=>$d["provider"],"cost"=>$d["cost"],"remarks"=>$d["remarks"]];
 								}
 								
 								$model->code = $d["code"];
 								$model->city = $d["city"];
 								$model->area = $d["area"];
-								$model->data = json_encode($old);
+								$model->data = json_encode($new);
 								$model->isdel = 0;
 								$model->status = 1;								
 								
