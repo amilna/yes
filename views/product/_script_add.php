@@ -246,7 +246,7 @@ function enAsci(a,s) {
 		html += "	<div class=\"media-body\"><h6>"+title+" <small>"+remarks+"</small></h6>";											
 		html += "	<div class='input-group'>";		
 		html += "		<div class=\"input-group-addon\" style=\"background:#fff\"><?= $module->currency["symbol"]?>"+toMoney(price)+" x </div>";
-		html += "		<input type=\"number\" class=\"form-control quantity_itemcart\" data-price="+price+" data-weight="+weight+" data-vat="+vat+" id=\"quantity_itemcart_"+idata+"\" min=\"1\" max=\"999\" value=\""+quantity+"\"/>";
+		html += "		<input type=\"number\" class=\"form-control quantity_itemcart\" data-price="+price+" data-weight="+weight+" data-vat="+vat+" id=\"quantity_itemcart_"+idata+"\" min=\"1\" value=\""+quantity+"\"/>";
 		html += "		<div id=\"remove_itemcart_"+idata+"\" class=\"remove_itemcart input-group-addon danger\" title=\"<?= Yii::t('app','Remove Item')?>\" style=\"cursor:pointer;\"><i class=\"glyphicon glyphicon-trash\"></i></div>";
 		html += "	</div></div></div>";								
 		html += "</td></tr>";													
