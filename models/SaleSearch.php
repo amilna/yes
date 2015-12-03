@@ -183,7 +183,7 @@ class SaleSearch extends Sale
 		{
 			$query->andFilterWhere($p);
 		}
-        $params = self::queryTime([['time']/*['id','{{%product}}'],['id','{{%order}}']*/]);
+        $params = self::queryTime([['time',$this->tableName()]/*['id','{{%product}}'],['id','{{%order}}']*/]);
 		foreach ($params as $p)
 		{
 			$query->andFilterWhere($p);
