@@ -133,6 +133,6 @@ class Category extends \yii\db\ActiveRecord
 
 	public function	parents($id = false)
     {
-		return $this->findBySql("SELECT id,title FROM ".$this->tableName().($id?" WHERE id != :id":"")." order by title",($id?['id'=>$id]:[]))->all();		
+		return $this->findBySql("SELECT id,title FROM ".$this->tableName().($id?" WHERE id != :id AND isdel = 0":"WHERE isdel = 0")." order by title",($id?['id'=>$id]:[]))->all();		
 	}	    
 }
