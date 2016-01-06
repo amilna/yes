@@ -158,7 +158,7 @@ class CouponController extends Controller
 				if ($model)
 				{
 					$valid = true;
-					if ($model->isdel == 0)
+					if ($model->isdel > 0)
 					{
 						$valid = false;	
 						$remarks = Yii::t('app','Coupon is deleted');

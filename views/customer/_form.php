@@ -32,7 +32,9 @@ use kartik\datetime\DateTimePicker;
 					'tokenSeparators'=>[',',' '],
 				],
 			]) ?>		
-			<?/*= $form->field($model, 'addresses')->textarea(['rows' => 3]) */?>
+			<?php
+				/*= $form->field($model, 'addresses')->textarea(['rows' => 3]) */
+			?>
 			<div class="row">		
 				<div class="col-sm-12">
 					<div class="well addresses">		

@@ -33,9 +33,14 @@ use yii\helpers\Url;
 			
 			var select2_x = {"allowClear":false,"width":"resolve","theme":"krajee"};			
 			jQuery("#w0"+n).prepend("<option val></option>");
-			jQuery.when(jQuery("#w0"+n).select2(select2_x)).done(initSelect2Loading("w0"+n));
-			jQuery("#w0"+n).on("select2-open", function(){
-				initSelect2DropStyle("w0"+n);				
+			jQuery.when(jQuery("#w0"+n).select2(select2_x)).done(
+				typeof initSelect2Loading != 'undefined'?initSelect2Loading("w0"+n):initS2Loading("w0"+n)
+			);
+			jQuery("#w0"+n).on("select2-open", function(){						
+				if (typeof initSelect2DropStyle != 'undefined')
+				{
+					initSelect2DropStyle("w0"+n);	
+				}	
 			});												
 			
 			$("#data-del"+n).bind("click",function(){

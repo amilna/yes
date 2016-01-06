@@ -84,7 +84,9 @@ foreach ($model->catPro as $c)
 				</div>
 			</div>
 			<?= $form->field($model, 'description')->textArea(['maxlength' => 155,'placeholder'=>Yii::t('app','This description also used as meta description')]) ?>
-			<?/*= $form->field($model, 'data')->textArea(['placeholder'=>Yii::t('app','Product Data')]) */?>
+			<?php
+				/*= $form->field($model, 'data')->textArea(['placeholder'=>Yii::t('app','Product Data')]) */
+			?>
 			
 			<div class="row">		
 				<div class="col-sm-12">
