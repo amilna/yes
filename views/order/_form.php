@@ -80,6 +80,8 @@ $encoupon = CouponSearch::find()->where("isdel = 0 and status = 1 and time_from 
 						<?php 
 							$field = $form->field($model,"customer_id[phones]");
 							$field->template = "{input}";
+							echo $field->textInput(["class"=>"form-control","placeholder"=>Yii::t("app","Please include country code and area code, ex: 62-21-740xxxx...")]);						
+							/*
 							echo $field->widget(Select2::classname(), [
 								'options' => [
 									'placeholder' => Yii::t('app','Please include country code and area code, ex: 62-21-740xxxx...'),
@@ -88,6 +90,7 @@ $encoupon = CouponSearch::find()->where("isdel = 0 and status = 1 and time_from 
 									'tags' => [],
 								],
 							]);
+							*/ 
 						?>		
 						</div> 
 						<hr>
