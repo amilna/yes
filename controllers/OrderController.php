@@ -360,7 +360,8 @@ class OrderController extends Controller
 					$couponcode = isset($post['Order']['complete_reference'])?(isset($post['Order']['complete_reference']['coupon'])?$post['Order']['complete_reference']['coupon']:null):null;
 					if ($couponcode != null)
 					{
-						$coupon = Coupon::findOne(['code'=>$couponcode]);
+						$now = date('Y-m-d H:i:s');
+						$coupon = Coupon::find()->where("isdel = 0 and status = 1 and time_from <= '".$now."' and time_to >= '".$now."' and code = :code",[':code'=>$couponcode])->one();
 						if ($coupon)
 						{
 							if ($coupon->price > 0)
@@ -371,6 +372,8 @@ class OrderController extends Controller
 							{
 								$redeem = $coupon->discount/100*$ptotal*(-1);	
 							}
+							$data["coupon"] = $redeem;
+							$data["couponcode"] = $couponcode;
 						}
 					}
 					
@@ -528,8 +531,9 @@ class OrderController extends Controller
 					$redeem = 0;
 					$couponcode = isset($post['Order']['complete_reference'])?(isset($post['Order']['complete_reference']['coupon'])?$post['Order']['complete_reference']['coupon']:null):null;
 					if ($couponcode != null)
-					{
-						$coupon = Coupon::findOne(['code'=>$couponcode]);
+					{						
+						$now = date('Y-m-d H:i:s');
+						$coupon = Coupon::find()->where("isdel = 0 and status = 1 and time_from <= '".$now."' and time_to >= '".$now."' and code = :code",[':code'=>$couponcode])->one();
 						if ($coupon)
 						{
 							if ($coupon->price > 0)
@@ -540,6 +544,8 @@ class OrderController extends Controller
 							{
 								$redeem = $coupon->discount/100*$ptotal*(-1);	
 							}
+							$data["coupon"] = $redeem;
+							$data["couponcode"] = $couponcode;
 						}
 					}
 					

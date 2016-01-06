@@ -31,6 +31,12 @@ function findCoupon(code,callBack)
 				{
 					redeem = discount/100*total*(-1);
 				}
+				else
+				{
+					$("#order-complete_reference-coupon").val("");				
+					alert(json["remarks"]);
+				}
+				
 				$(".order-data-coupon").val(redeem);				
 				updateVat();
 				

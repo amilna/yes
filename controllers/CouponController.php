@@ -147,7 +147,7 @@ class CouponController extends Controller
 
     public function actionSearch()
     {        
-        $res = ['price'=>0,'discount'=>0];
+        $res = ['price'=>0,'discount'=>0,'remarks'=>Yii::t('app','Coupon is invalid')];
         
         if (Yii::$app->request->post())
         {
@@ -157,8 +157,35 @@ class CouponController extends Controller
 				$model = Coupon::findOne(['code'=>$post['code']]);
 				if ($model)
 				{
-					$res['price'] = $model->price;	
-					$res['discount'] = $model->discount;
+					$valid = true;
+					if ($model->isdel == 0)
+					{
+						$valid = false;	
+						$remarks = Yii::t('app','Coupon is deleted');
+					}
+					
+					if ($model->status == 0)
+					{
+						$valid = false;	
+						$remarks = Yii::t('app','Coupon is inactive');
+					}
+					
+					$now = date('Y-m-d H:i:s');
+					if ($model->time_from > $now || $model->time_to < $now)
+					{
+						$valid = false;	
+						$remarks = Yii::t('app','Coupon out of period');
+					}
+					
+					if ($valid)
+					{
+						$res['price'] = $model->price;	
+						$res['discount'] = $model->discount;
+					}
+					else
+					{
+						$res['remarks'] = $remarks;	
+					}
 					
 				}
 			}
