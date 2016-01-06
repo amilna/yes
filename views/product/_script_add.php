@@ -165,7 +165,7 @@ function enAsci(a,s) {
 	}	
 
 	function updateVat()
-	{			
+	{							
 		var total = parseFloat($(".shopcart-box h4").attr("data-total"));
 		var shipcost = parseFloat($(".order-data-shippingcost").val());
 		shipcost = (isNaN(shipcost)?0:shipcost);
@@ -187,10 +187,20 @@ function enAsci(a,s) {
 		{
 			html = "<h4><?=Yii::t("app","VAT")." <small>(".Yii::t("app","Value Added Tax").")</small> <small class='pull-right'>Total ".$module->currency["symbol"]?>"+toMoney(vat)+"</small></h4>";
 			$(".order-data-vat").val(vat);
-		}	
-		var grand = total+shipcost+vat;
+		}
+		
+		var coupon = 0;	
+		var ctml = "";
+		if ($(".order-data-coupon").length > 0)
+		{
+			coupon = parseFloat($(".order-data-coupon").val());	
+			ctml = "<h4><small class='pull-right'><?=Yii::t("app","Discounts")." ".$module->currency["symbol"]?>"+toMoney(coupon)+"</small></h4>";			
+		}
+			
+		var grand = Math.max(total+shipcost+vat+coupon,0);
 		var gtml = "<h3><?=Yii::t("app","Total Payment")." <small class='pull-right'>Grand Total ".$module->currency["symbol"]?>"+toMoney(grand)+"</small></h3>";	
 		$(".order-vat-label").html(html);	
+		$(".order-coupon-label").html(ctml);
 		$(".order-grandtotal-label").html(gtml);
 		$(".order-total").val(grand);
 		

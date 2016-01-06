@@ -153,7 +153,7 @@ $subject = '<strong>'.Html::encode($customer->name).'</strong><br>
 		<table class="table">
 		  <tr>
 			<th style="width:50%">Subtotal:</th>
-			<td style="text-align:right"><?= $model->toMoney($model->total-($data->shippingcost+$data->vat),0)?></td>
+			<td style="text-align:right"><?= $model->toMoney($model->total-($data->shippingcost+$data->vat+(isset($data->coupon)?$data->coupon:0)),0)?></td>
 		  </tr>
 		  <?php
 			if ($data->vat > 0)
@@ -170,6 +170,17 @@ $subject = '<strong>'.Html::encode($customer->name).'</strong><br>
 						<th style="width:50%"><h5>'.Yii::t("app","Shipping Cost").' <small><i>'.$shipping->provider.' '.$shipping->code.'</i> '.Yii::t("app","destination ").$shipping->city.' ('.$shipping->area.')</small> '.$model->toMoney($data->shippingcost/$shipping->cost,2,false).' Kg</h5></th>
 						<td style="text-align:right">'.$model->toMoney($data->shippingcost,0).'</td>
 					</tr>';
+			}
+			
+			if (isset($data->coupon))
+			{
+				if ($data->coupon < 0)
+				{				
+					echo '<tr>
+							<th style="width:50%"><h5>'.Yii::t("app","Coupon").' <small>'.Yii::t("app","Discounts").'</small></h5></th>
+							<td style="text-align:right;vertical-align:middle;">'.$model->toMoney($data->coupon,0).'</td>
+						</tr>';
+				}
 			}
 		  ?>
 		  		  		   

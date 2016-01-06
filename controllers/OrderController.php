@@ -6,6 +6,8 @@ use Yii;
 use amilna\yes\models\Order;
 use amilna\yes\models\OrderSearch;
 use amilna\yes\models\Customer;
+use amilna\yes\models\Shipping;
+use amilna\yes\models\Coupon;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -303,11 +305,82 @@ class OrderController extends Controller
 				$data = [];			
 				if (isset($post['Order']['data']))
 				{
+					$cart = Yii::$app->session->get('YES_SHOPCART');
 					$data = $post['Order']['data'];
+					$data["cart"] = json_encode($cart);					
+					
+					$vtotal = 0;
+					$wtotal = 0;
+					$ptotal = 0;
+					foreach ($cart as $c)
+					{						
+						$qty = $c['quantity'];
+						$wtotal += $c['data_weight']*$qty;
+						$vtotal += ($c['data_vat']*$c['price'])*$qty;
+						$ptotal += (($c['data_vat']*$c['price'])+$c['price'])*$qty;
+					}	
+					$data["vat"] = $vtotal;									
+					
+					$shipping = false;
+					if (isset($data["shipping"]))
+					{									
+						$shipping = json_decode($data["shipping"]);												
+						if (empty($shipping->code))
+						{
+							$shipping = false;	
+						}
+					}
+					
+					$valid = true;
+					if (!$shipping)
+					{
+						if ($wtotal > 0)
+						{
+							$valid = false;
+						}
+					}
+					else
+					{
+						$ship = Shipping::findOne(['code'=>$shipping->code]);
+						$shipdata = json_decode($ship->data);
+						foreach ($shipdata as $s)
+						{
+							if ($s->provider == $shipping->provider)
+							{
+								$shipping->cost = $s->cost;
+								$shippingcost = $shipping->cost*ceil($wtotal);
+								$ptotal += $shippingcost;
+							}								
+						}
+						$data["shipping"] = json_encode($shipping);												
+						$data["shippingcost"] = $shippingcost;												
+					}																				
+										
+					$redeem = 0;
+					$couponcode = isset($post['Order']['complete_reference'])?(isset($post['Order']['complete_reference']['coupon'])?$post['Order']['complete_reference']['coupon']:null):null;
+					if ($couponcode != null)
+					{
+						$coupon = Coupon::findOne(['code'=>$couponcode]);
+						if ($coupon)
+						{
+							if ($coupon->price > 0)
+							{
+								$redeem = $coupon->price*(-1);
+							}
+							elseif ($coupon->price <= 0 && $coupon->discount > 0)
+							{
+								$redeem = $coupon->discount/100*$ptotal*(-1);	
+							}
+						}
+					}
+					
+					$ptotal = max(0,$ptotal+$redeem);
+					
 					if (isset($post['Order']['customer_id']))
 					{	
-						$email = isset($post['Order']['complete_reference'])?(isset($post['Order']['complete_reference']['email'])?$post['Order']['complete_reference']['email']:null):null;
-						$post['Order']['complete_reference'] = null;
+						$email = isset($post['Order']['complete_reference'])?(isset($post['Order']['complete_reference']['email'])?$post['Order']['complete_reference']['email']:null):null;						
+						unset($post['Order']['complete_reference']);
+						
 						$data["customer"] = $post['Order']['customer_id'];
 						//$customer = Customer::find()->where(["name"=>$data["customer"]["name"],"email"=>$data["customer"]["email"]])->one();
 						if ($email != null)
@@ -323,12 +396,8 @@ class OrderController extends Controller
 						{
 							$customer = new Customer();	
 							$customer->isdel = 0;
-						}
-						$shipping = false;
-						if (isset($data["shipping"]))
-						{									
-							$shipping = json_decode($data["shipping"]);					
-						}
+						}						
+						
 						$phones = (empty($customer->phones)?[]:explode(",",$customer->phones));
 						$phones = array_unique(array_merge($phones,explode(",",$data["customer"]['phones'])));
 						$addresses = array_unique(array_merge(json_decode($customer->addresses == null?"[]":$customer->addresses),array($data["customer"]['address'].", code:".($shipping?$shipping->code:""))));
@@ -348,8 +417,16 @@ class OrderController extends Controller
 							$post['Order']['customer_id'] = null;
 						}
 					}
-					$data["cart"] = json_encode(Yii::$app->session->get('YES_SHOPCART'));
-					$post['Order']['data'] = json_encode($data);
+					
+					if (!$valid)
+					{
+						$post['Order']['data'] = null;
+					}
+					else
+					{
+						$post['Order']['data'] = json_encode($data);
+					}	
+					$post['Order']['total'] = $ptotal;					
 				}				
 				$model->load($post);			
 				$model->log = json_encode($_SERVER["REMOTE_ADDR"]);
@@ -396,12 +473,94 @@ class OrderController extends Controller
 				$post = Yii::$app->request->post();
 				$data = [];			
 				if (isset($post['Order']['data']))
-				{
+				{					
+					$cart = Yii::$app->session->get('YES_SHOPCART');
 					$data = $post['Order']['data'];
+					$data["cart"] = json_encode($cart);					
+					
+					$vtotal = 0;
+					$wtotal = 0;
+					$ptotal = 0;
+					foreach ($cart as $c)
+					{						
+						$qty = $c['quantity'];
+						$wtotal += $c['data_weight']*$qty;
+						$vtotal += ($c['data_vat']*$c['price'])*$qty;
+						$ptotal += (($c['data_vat']*$c['price'])+$c['price'])*$qty;
+					}	
+					$data["vat"] = $vtotal;									
+					
+					$shipping = false;
+					if (isset($data["shipping"]))
+					{									
+						$shipping = json_decode($data["shipping"]);												
+						if (empty($shipping->code))
+						{
+							$shipping = false;	
+						}
+					}
+					
+					$valid = true;
+					if (!$shipping)
+					{
+						if ($wtotal > 0)
+						{
+							$valid = false;
+						}
+					}
+					else
+					{
+						$ship = Shipping::findOne(['code'=>$shipping->code]);
+						$shipdata = json_decode($ship->data);
+						foreach ($shipdata as $s)
+						{
+							if ($s->provider == $shipping->provider)
+							{
+								$shipping->cost = $s->cost;
+								$shippingcost = $shipping->cost*ceil($wtotal);
+								$ptotal += $shippingcost;
+							}								
+						}
+						$data["shipping"] = json_encode($shipping);												
+						$data["shippingcost"] = $shippingcost;												
+					}																				
+					
+					$redeem = 0;
+					$couponcode = isset($post['Order']['complete_reference'])?(isset($post['Order']['complete_reference']['coupon'])?$post['Order']['complete_reference']['coupon']:null):null;
+					if ($couponcode != null)
+					{
+						$coupon = Coupon::findOne(['code'=>$couponcode]);
+						if ($coupon)
+						{
+							if ($coupon->price > 0)
+							{
+								$redeem = $coupon->price*(-1);
+							}
+							elseif ($coupon->price <= 0 && $coupon->discount > 0)
+							{
+								$redeem = $coupon->discount/100*$ptotal*(-1);	
+							}
+						}
+					}
+					
+					$ptotal = max(0,$ptotal+$redeem);
+					
 					if (isset($post['Order']['customer_id']))
 					{	
+						$email = isset($post['Order']['complete_reference'])?(isset($post['Order']['complete_reference']['email'])?$post['Order']['complete_reference']['email']:null):null;
+						unset($post['Order']['complete_reference']);
+						
 						$data["customer"] = $post['Order']['customer_id'];
-						$customer = Customer::find()->where(["name"=>$data["customer"]["name"],"email"=>$data["customer"]["email"]])->one();
+						//$customer = Customer::find()->where(["name"=>$data["customer"]["name"],"email"=>$data["customer"]["email"]])->one();
+						if ($email != null)
+						{
+							$customer = Customer::find()->where("email = :email OR concat(',',phones,',') like :phone",[":email"=>$email,":phone"=>"%,".$data["customer"]["phones"].",%"])->one();
+						}
+						else
+						{
+							$customer = Customer::find()->where("concat(',',phones,',') like :phone",[":phone"=>"%,".$data["customer"]["phones"].",%"])->one();
+						}												
+												
 						if (!$customer)
 						{
 							$customer = new Customer();	
@@ -423,9 +582,16 @@ class OrderController extends Controller
 						{						
 							$post['Order']['customer_id'] = null;
 						}
+					}										
+					if (!$valid)
+					{
+						$post['Order']['data'] = null;
 					}
-					$data["cart"] = json_encode(Yii::$app->session->get('YES_SHOPCART'));	
-					$post['Order']['data'] = json_encode($data);
+					else
+					{
+						$post['Order']['data'] = json_encode($data);
+					}	
+					$post['Order']['total'] = $ptotal;					
 				}				
 				$model->load($post);			
 				$model->log = json_encode($_SERVER);

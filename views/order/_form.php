@@ -10,6 +10,7 @@ use kartik\widgets\Select2;
 use kartik\widgets\SwitchInput;
 use kartik\datetime\DateTimePicker;
 use amilna\yes\models\PaymentSearch;
+use amilna\yes\models\CouponSearch;
 
 use yii\captcha\Captcha;
 
@@ -21,6 +22,9 @@ $module = Yii::$app->getModule("yes");
 
 $listPayment = []+ArrayHelper::map(PaymentSearch::find()->select(["id","concat(terminal,' (',account,')') as terminal"])->andWhere("status = 1")->all(), 'id', 'terminal');
 $payment = ($model->isNewRecord?$model->id['payment']:false);
+
+$now = date('Y-m-d H:i:s');
+$encoupon = CouponSearch::find()->where("isdel = 0 and status = 1 and time_from <= '".$now."' and time_to >= '".$now."'")->select(["id"])->one();
 ?>
 
 <div class="order-form">
@@ -168,6 +172,22 @@ $payment = ($model->isNewRecord?$model->id['payment']:false);
 						<br>
 						<div class="order-vat-label"></div>						
 						<?= Html::hiddenInput('Order[data][vat]',0,["class"=>"form-control order-data-vat"]); ?>
+						<br>
+						<?php
+							if ($encoupon)
+							{
+								echo '<h4>'.Yii::t('app','Coupon').'</h4>';
+								echo '<div class="row">';
+								echo '<div class="col-xs-6">';
+								$field = $form->field($model,"complete_reference[coupon]");
+								$field->template = "{input}";
+								echo $field->textInput(["class"=>"form-control","class"=>"form-control","placeholder"=>Yii::t("app","Coupon Code")]);														
+								echo '</div>';
+								echo '<div class="col-xs-6"><div class="order-coupon-label"></div></div>';
+								echo '</div>';
+							}						
+						?>						
+						<?= Html::hiddenInput('Order[data][coupon]',0,["class"=>"form-control order-data-coupon"]); ?>
 						<div class="order-grandtotal-label"></div>
 						<?= Html::hiddenInput('Order[total]',0,["class"=>"form-control order-total"]); ?>
 						</div>
@@ -257,5 +277,6 @@ $payment = ($model->isNewRecord?$model->id['payment']:false);
 
 $this->render('@amilna/yes/views/product/_script_add',['model'=>$model]);
 $this->render('@amilna/yes/views/order/_script_ship',['model'=>$model]);
+$this->render('@amilna/yes/views/order/_script_coupon',['model'=>$model]);
 $this->render('@amilna/yes/views/order/_script_customer',['model'=>$model]);
 $this->render('@amilna/yes/views/order/_script_load',['model'=>$model]);
