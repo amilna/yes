@@ -315,9 +315,17 @@ class OrderController extends Controller
 					foreach ($cart as $c)
 					{						
 						$qty = $c['quantity'];
-						$wtotal += $c['data_weight']*$qty;
-						$vtotal += ($c['data_vat']*$c['price'])*$qty;
-						$ptotal += (($c['data_vat']*$c['price'])+$c['price'])*$qty;
+						$vp = 0;
+						if (isset($c['data_weight']))
+						{
+							$wtotal += $c['data_weight']*$qty;
+						}
+						if (isset($c['data_vat']))
+						{
+							$vtotal += ($c['data_vat']*$c['price'])*$qty;							
+							$vp = $vtotal;
+						}
+						$ptotal += $vp+($c['price']*$qty);
 					}	
 					$data["vat"] = $vtotal;									
 					
@@ -360,8 +368,7 @@ class OrderController extends Controller
 					$couponcode = isset($post['Order']['complete_reference'])?(isset($post['Order']['complete_reference']['coupon'])?$post['Order']['complete_reference']['coupon']:null):null;
 					if ($couponcode != null)
 					{
-						$now = date('Y-m-d H:i:s');
-						$coupon = Coupon::find()->where("isdel = 0 and status = 1 and time_from <= '".$now."' and time_to >= '".$now."' and code = :code",[':code'=>$couponcode])->one();
+						$coupon = Coupon::findOne(['code'=>$couponcode]);
 						if ($coupon)
 						{
 							if ($coupon->price > 0)
@@ -372,8 +379,6 @@ class OrderController extends Controller
 							{
 								$redeem = $coupon->discount/100*$ptotal*(-1);	
 							}
-							$data["coupon"] = $redeem;
-							$data["couponcode"] = $couponcode;
 						}
 					}
 					
@@ -468,6 +473,19 @@ class OrderController extends Controller
 			$model->captchaRequired = false;	
 		}
 		
+		$cart = Yii::$app->session->get('YES_SHOPCART') == null?[]:Yii::$app->session->get('YES_SHOPCART');
+		$data = json_decode($model->data,true);	
+		
+		if (empty($cart))				
+		{			
+			Yii::$app->session->set('YES_SHOPCART',json_decode($data['cart'],true));			
+		}
+		else
+		{			
+			$data["cart"] = json_encode($cart);	
+			$model->data = json_encode($data);			
+		}
+		
         if (Yii::$app->request->post())        
         {
 			$transaction = Yii::$app->db->beginTransaction();
@@ -485,11 +503,19 @@ class OrderController extends Controller
 					$wtotal = 0;
 					$ptotal = 0;
 					foreach ($cart as $c)
-					{						
+					{												
 						$qty = $c['quantity'];
-						$wtotal += $c['data_weight']*$qty;
-						$vtotal += ($c['data_vat']*$c['price'])*$qty;
-						$ptotal += (($c['data_vat']*$c['price'])+$c['price'])*$qty;
+						$vp = 0;
+						if (isset($c['data_weight']))
+						{
+							$wtotal += $c['data_weight']*$qty;
+						}
+						if (isset($c['data_vat']))
+						{
+							$vtotal += ($c['data_vat']*$c['price'])*$qty;							
+							$vp = $vtotal;
+						}
+						$ptotal += $vp+($c['price']*$qty);
 					}	
 					$data["vat"] = $vtotal;									
 					
@@ -531,9 +557,8 @@ class OrderController extends Controller
 					$redeem = 0;
 					$couponcode = isset($post['Order']['complete_reference'])?(isset($post['Order']['complete_reference']['coupon'])?$post['Order']['complete_reference']['coupon']:null):null;
 					if ($couponcode != null)
-					{						
-						$now = date('Y-m-d H:i:s');
-						$coupon = Coupon::find()->where("isdel = 0 and status = 1 and time_from <= '".$now."' and time_to >= '".$now."' and code = :code",[':code'=>$couponcode])->one();
+					{
+						$coupon = Coupon::findOne(['code'=>$couponcode]);
 						if ($coupon)
 						{
 							if ($coupon->price > 0)
@@ -544,8 +569,6 @@ class OrderController extends Controller
 							{
 								$redeem = $coupon->discount/100*$ptotal*(-1);	
 							}
-							$data["coupon"] = $redeem;
-							$data["couponcode"] = $couponcode;
 						}
 					}
 					

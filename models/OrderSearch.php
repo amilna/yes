@@ -190,7 +190,7 @@ class OrderSearch extends Order
 		{
 			$query->andFilterWhere($p);
 		}
-        $params = self::queryString([['reference'],['data'],['complete_reference'],['log']/*['id','{{%confirmations}}'],['id','{{%customer}}'],['id','{{%sales}}']*/]);
+        $params = self::queryString([['reference'],['data','{{%yes_order}}'],['complete_reference'],['log']/*['id','{{%confirmations}}'],['id','{{%customer}}'],['id','{{%sales}}']*/]);
 		foreach ($params as $p)
 		{
 			$query->andFilterWhere($p);

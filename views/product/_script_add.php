@@ -142,7 +142,10 @@ function enAsci(a,s) {
 		$.each(data,function(i,d){			
 			n += 1;
 			total += parseFloat(d["price"])*parseFloat(d["quantity"]);	
-			weight += parseFloat(d["quantity"])*parseFloat(d["data_weight"]);			
+			if (typeof d["data_weight"] != "undefined")
+			{
+				weight += parseFloat(d["quantity"])*parseFloat(d["data_weight"]);			
+			}
 			var aktvat = (typeof d["data_vat"] == "undefined"?defvat:parseFloat(d["data_vat"]));
 			vat += parseFloat(d["quantity"])*aktvat*parseFloat(d["price"]);
 			

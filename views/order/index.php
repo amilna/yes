@@ -13,7 +13,7 @@ $this->title = Yii::t('app', 'Orders');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'YES'), 'url' => ['/yes/default']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="order-index">
+<div class="order-index"  style="margin-bottom:100px;">
 
     <h1><?= Html::encode($this->title) ?></h1>
     <div class="row-fluid">
@@ -35,8 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		'responsive' => true,
 		'hover' => true,
 		'showPageSummary' => true,
-		'pageSummaryRowOptions'=>['class'=>'kv-page-summary','style'=>'background-color: #fdfdfd'],
-		'tableOptions'=>["style"=>"margin-bottom:50px;"],
+		'pageSummaryRowOptions'=>['class'=>'kv-page-summary','style'=>'background-color: #fdfdfd'],		
 		'panel' => [
 			'type' => GridView::TYPE_DEFAULT,
 			'heading' => false,

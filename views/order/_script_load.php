@@ -23,6 +23,7 @@ if (orderdata != null)
 	$("#order-data-note").val(o.note);	
 	//console.log(JSON.parse(o.cart));
 	if (typeof o.cart != "undefined") {
+		shopcart = JSON.parse(o.cart);
 		createCart(JSON.parse(o.cart));
 	}
 	if (typeof o.shipping != "undefined") {
